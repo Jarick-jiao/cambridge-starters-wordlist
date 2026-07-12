@@ -1,0 +1,18 @@
+# Ignore Go build outputs
+starters-server
+*.exe
+*.test
+*.out
+
+# Ignore local SQLite state
+database/
+progress.db-shm
+progress.db-wal
+*.db
+
+# macOS files
+.DS_Store
+
+# Editor folders
+.vscode/
+.idea/

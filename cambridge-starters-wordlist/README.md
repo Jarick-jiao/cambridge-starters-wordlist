@@ -71,3 +71,14 @@ PORT=3000 ./starters-server
 ## 升级日志
 
 - v2.0：补充完整官方 Starters 词汇表、新增 5 个语法点、嵌入英式发音、自动进度保存、性能优化、Go Gin 本地服务
+
+## 需求
+
+- 当前应用主要适用于 小学生学习剑桥英语，以及基本数学运算学习程序
+- 要求增加进度跟踪，任务分配机制
+
+### 参考
+
+1. Oxford Phonics World <https://elt.oup.com/catalogue/items/global/young_learners/oxford_phonics_world/?cc=cn&selLanguage=zh>
+2. Oxford Phonics Starter <https://elt.oup.com/catalogue/items/global/young_learners/cambridge_english_qualifications_young_learners_practice_tests/?cc=cn&selLanguage=zh&mode=hub>
+3. 剑桥考试网站<https://www.cambridgeenglish.cn/exams-and-tests/young-learners-english/starters/>
