@@ -1590,7 +1590,7 @@
       });
 
     // ===== EVENT DELEGATION =====
-    document.querySelector('.content').addEventListener('click', function(e) {
+    document.addEventListener('click', function(e) {
       var card = e.target.closest('.word-card');
       if (!card) return;
       if (e.target.closest('.speak-btn')) return;
