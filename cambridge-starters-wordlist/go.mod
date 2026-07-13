@@ -1,6 +1,8 @@
 module starters-server
 
-go 1.18
+go 1.25
+
+toolchain go1.25.1
 
 require github.com/gin-gonic/gin v1.9.1
 

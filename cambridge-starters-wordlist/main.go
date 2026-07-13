@@ -20,7 +20,13 @@ func main() {
 		dir = d
 	}
 
-	dbPath := filepath.Join(dir, "database", "progress.db")
+	dbDir := filepath.Join(dir, "database")
+	dbPath := filepath.Join(dbDir, "progress.db")
+
+	// Ensure database directory exists
+	if err := os.MkdirAll(dbDir, 0755); err != nil {
+		log.Fatalf("Failed to create database directory: %v", err)
+	}
 
 	// Init MCP Client (connects to mcp-server-sqlite via stdio)
 	var err error
@@ -37,7 +43,7 @@ func main() {
 	log.Printf("[MCP] Database ready: %s", dbPath)
 
 	// Start server
-	if err := serve(dir, port); err != nil {
+	if err := serve(dir, port, dbPath); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
 }

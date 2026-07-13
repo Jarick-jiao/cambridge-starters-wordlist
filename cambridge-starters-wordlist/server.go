@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func serve(dir, port string) error {
+func serve(dir, port, dbPath string) error {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
@@ -29,9 +29,25 @@ func serve(dir, port string) error {
 	// --- API routes ---
 	api := r.Group("/api")
 	{
+		// Word progress
 		api.GET("/progress", apiGetProgress)
 		api.PUT("/progress/toggle", apiToggleWord)
 		api.DELETE("/progress", apiResetProgress)
+
+		// Math
+		api.POST("/math/generate", apiGenerateMath)
+		api.POST("/math/submit", apiSubmitMath)
+
+		// Tasks
+		api.GET("/tasks", apiGetTasks)
+		api.POST("/tasks", apiCreateTask)
+		api.PUT("/tasks/:id/progress", apiUpdateTaskProgress)
+		api.DELETE("/tasks/:id", apiDeleteTask)
+
+		// Dashboard & Stats
+		api.GET("/dashboard", apiGetDashboard)
+		api.GET("/stats/timeline", apiGetTimeline)
+		api.GET("/stats/summary", apiGetStatsSummary)
 	}
 
 	// --- Page routes ---
@@ -40,15 +56,18 @@ func serve(dir, port string) error {
 	})
 	r.StaticFS("/assets", http.Dir(filepath.Join(dir, "assets")))
 	r.StaticFS("/_shared", http.Dir(filepath.Join(dir, "_shared")))
+	r.StaticFS("/docs", http.Dir(filepath.Join(dir, "docs")))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(filepath.Join(dir, "cambridge-starters-wordlist.html"))
 	})
 
+	// Print startup banner
 	fmt.Println()
 	fmt.Println("  ================================================")
 	fmt.Println("    Starters Learning Server (Gin + MCP SQLite)")
 	fmt.Println("  ================================================")
 	fmt.Printf("    Serving:   %s\n", absDir)
+	fmt.Printf("    Database:  %s\n", dbPath)
 	fmt.Printf("    Local:     http://localhost:%s\n", port)
 	fmt.Printf("    Network:   http://<your-lan-ip>:%s\n", port)
 	fmt.Println("  ================================================")

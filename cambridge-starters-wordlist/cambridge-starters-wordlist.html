@@ -171,9 +171,52 @@
       <a href="#grammar9">语法:疑问句</a>
       <a href="#grammar10">语法:现在进行时</a>
       <a href="#phrases">常用短句</a>
-    </nav>
+    
+      <a href="#dashboard" class="nav-link" onclick="showPage('dashboard');return false;">首页</a>
+      <a href="#math" class="nav-link" onclick="showPage('math');return false;">数学练习</a>
+      <a href="#tasks" class="nav-link" onclick="showPage('tasks');return false;">任务</a>
+</nav>
 
+    
+  <!-- ========== DASHBOARD PAGE ========== -->
+  <section id="page-dashboard" class="page-section" style="display:block;">
     <div class="content">
+      <h2 style="text-align:center;margin-top:0.5rem;">今日学习仪表盘</h2>
+      <div id="dashboard-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1rem 0;">
+        <div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:var(--accent);" id="dash-tasks">0/0</div>
+          <div style="font-size:0.8rem;color:var(--muted);">今日任务</div>
+        </div>
+        <div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:var(--green);" id="dash-streak">0</div>
+          <div style="font-size:0.8rem;color:var(--muted);">连续天数</div>
+        </div>
+        <div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:var(--pink);" id="dash-words">0</div>
+          <div style="font-size:0.8rem;color:var(--muted);">已掌握单词</div>
+        </div>
+        <div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;font-weight:700;color:var(--purple);" id="dash-math">0%</div>
+          <div style="font-size:0.8rem;color:var(--muted);">今日数学正确率</div>
+        </div>
+      </div>
+      <div id="dashboard-tasks" style="margin:1rem 0;">
+        <h3>今日任务</h3>
+        <div id="task-list" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
+          <p style="color:var(--muted);">加载中...</p>
+        </div>
+      </div>
+      <div id="dashboard-progress" style="margin:1rem 0;">
+        <h3>学习进度</h3>
+        <div id="dash-progress-bars"></div>
+      </div>
+      <div style="text-align:center;margin:1.5rem 0;">
+        <button onclick="showPage('content')" style="padding:0.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">开始学习</button>
+      </div>
+    </div>
+  </section>
+  <section id="page-content" class="page-section" style="display:none;">
+<div class="content">
 
       <!-- VOICE HINT -->
       <div class="voice-hint">
@@ -899,13 +942,300 @@
       </section>
 
     </div><!-- /content -->
-  </article>
+    </section>
+
+  <!-- ========== MATH PAGE ========== -->
+<section id="page-math" class="page-section" style="display:none;">
+    <div class="content">
+      <h2 style="text-align:center;margin-top:0.5rem;">数学运算练习</h2>
+      <div style="text-align:center;margin:1rem 0;">
+        <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin:0.5rem 0;">
+          <button onclick="setMathOp('+')" class="math-op-btn active" data-op="+">加法</button>
+          <button onclick="setMathOp('-')" class="math-op-btn" data-op="-">减法</button>
+          <button onclick="setMathOp('*')" class="math-op-btn" data-op="*">乘法</button>
+          <button onclick="setMathOp('/')" class="math-op-btn" data-op="/">除法</button>
+        </div>
+        <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin:0.5rem 0;">
+          <button onclick="setMathDiff('L1')" class="math-diff-btn active" data-diff="L1">L1 个位</button>
+          <button onclick="setMathDiff('L2')" class="math-diff-btn" data-diff="L2">L2 两位数</button>
+          <button onclick="setMathDiff('L3')" class="math-diff-btn" data-diff="L3">L3 进退位</button>
+        </div>
+        <div style="margin:0.5rem 0;">
+          <label style="color:var(--muted);font-size:0.85rem;">题数：</label>
+          <select id="math-count" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--rule);">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <button onclick="startMath()" style="padding:0.6rem 2rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">开始练习</button>
+      </div>
+      <div id="math-area" style="display:none;">
+        <div id="math-question" style="text-align:center;padding:2rem;background:var(--surface);border-radius:12px;margin:1rem 0;">
+          <div style="font-size:2rem;font-weight:700;" id="math-q-text">3 + 5 = ?</div>
+          <div style="margin-top:1rem;">
+            <input type="number" id="math-answer" style="font-size:1.5rem;padding:0.5rem 1rem;width:120px;text-align:center;border:2px solid var(--accent);border-radius:8px;" autofocus>
+            <button onclick="submitMathAnswer()" style="padding:0.6rem 1.5rem;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-left:0.5rem;">提交</button>
+          </div>
+          <div style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;" id="math-status">第 1 / 20 题</div>
+        </div>
+        <div id="math-result" style="display:none;text-align:center;padding:2rem;background:var(--surface);border-radius:12px;margin:1rem 0;">
+          <div style="font-size:1.5rem;font-weight:700;" id="math-result-text">练习完成！</div>
+          <div style="margin:1rem 0;font-size:1.2rem;" id="math-result-detail"></div>
+          <button onclick="startMath()" style="padding:0.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">再来一组</button>
+          <button onclick="showPage('dashboard')" style="padding:0.6rem 1.5rem;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:8px;cursor:pointer;margin-left:0.5rem;">返回首页</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TASKS PAGE ========== -->
+  <section id="page-tasks" class="page-section" style="display:none;">
+    <div class="content">
+      <h2 style="text-align:center;margin-top:0.5rem;">任务管理</h2>
+      <div style="background:var(--surface);border-radius:8px;padding:1rem;margin:1rem 0;">
+        <h3>新建任务</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.5rem;margin:0.5rem 0;">
+          <select id="task-subject" style="padding:0.4rem;">
+            <option value="english">英语</option>
+            <option value="math">数学</option>
+          </select>
+          <select id="task-type" style="padding:0.4rem;">
+            <option value="vocab">词汇</option>
+            <option value="grammar">语法</option>
+            <option value="arithmetic">运算</option>
+          </select>
+          <input type="number" id="task-count" placeholder="数量" value="10" style="padding:0.4rem;">
+          <select id="task-diff" style="padding:0.4rem;">
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+          </select>
+        </div>
+        <button onclick="createTask()" style="padding:0.5rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">添加任务</button>
+      </div>
+      <div id="task-manage-list" style="margin:1rem 0;">
+        <h3>今日任务</h3>
+        <div id="task-manage-items" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
+          <p style="color:var(--muted);">加载中...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </section>
+</article>
 
   <script>
   (function() {
     var API = '/api';
     var ukVoice = null;
     var ready = false; // true after initial progress loaded from server
+
+
+    // ===== PAGE NAVIGATION =====
+    function showPage(page) {
+      document.querySelectorAll('.page-section').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      var target = document.getElementById('page-' + page);
+      if (target) target.style.display = 'block';
+      window.scrollTo(0, 0);
+      if (page === 'dashboard') loadDashboard();
+      if (page === 'tasks') loadTaskManager();
+    }
+
+    // ===== DASHBOARD =====
+    function loadDashboard() {
+      fetch(API + '/dashboard')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var tasks = data.tasks || [];
+          var completed = tasks.filter(function(t) { return t.status === 'completed'; }).length;
+          document.getElementById('dash-tasks').textContent = completed + '/' + tasks.length;
+          document.getElementById('dash-streak').textContent = data.streak_days || 0;
+          document.getElementById('dash-words').textContent = data.word_mastered || 0;
+          var mathAcc = data.math_total > 0 ? Math.round(data.math_correct / data.math_total * 100) : 0;
+          document.getElementById('dash-math').textContent = mathAcc + '%';
+
+          // Task list
+          var taskHTML = '';
+          if (tasks.length === 0) {
+            taskHTML = '<p style="color:var(--muted);">今日暂无任务，去任务页面添加吧！</p>';
+          } else {
+            tasks.forEach(function(t) {
+              var statusClass = t.status === 'completed' ? 'done' : (t.status === 'in_progress' ? 'p1' : 'p0');
+              var statusText = t.status === 'completed' ? '已完成' : (t.status === 'in_progress' ? '进行中' : '待开始');
+              var pct = t.target_count > 0 ? Math.round(t.completed_count / t.target_count * 100) : 0;
+              taskHTML += '<div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--rule);">' +
+                '<span>' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + ' (' + t.completed_count + '/' + t.target_count + ')</span>' +
+                '<span class="tag ' + statusClass + '">' + statusText + '</span></div>' +
+                '<div style="background:var(--bg);border-radius:4px;height:6px;margin-bottom:0.5rem;">' +
+                '<div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;"></div></div>';
+            });
+          }
+          document.getElementById('task-list').innerHTML = taskHTML;
+        })
+        .catch(function(err) { console.warn('Dashboard load failed', err); });
+    }
+    loadDashboard();
+
+    // ===== MATH PRACTICE =====
+    var mathState = { op: '+', diff: 'L1', count: 20, sessionId: null, questions: [], current: 0, answers: [], startTime: null };
+
+    function setMathOp(op) {
+      mathState.op = op;
+      document.querySelectorAll('.math-op-btn').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-op') === op);
+      });
+    }
+    function setMathDiff(diff) {
+      mathState.diff = diff;
+      document.querySelectorAll('.math-diff-btn').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-diff') === diff);
+      });
+    }
+
+    function startMath() {
+      mathState.count = parseInt(document.getElementById('math-count').value) || 20;
+      document.getElementById('math-area').style.display = 'block';
+      document.getElementById('math-result').style.display = 'none';
+      document.getElementById('math-question').style.display = 'block';
+
+      fetch(API + '/math/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({operation: mathState.op, difficulty: mathState.diff, count: mathState.count})
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        mathState.sessionId = data.session_id;
+        mathState.questions = data.questions;
+        mathState.current = 0;
+        mathState.answers = [];
+        mathState.startTime = Date.now();
+        showMathQuestion();
+      })
+      .catch(function(err) { alert('出题失败: ' + err.message); });
+    }
+
+    function showMathQuestion() {
+      var q = mathState.questions[mathState.current];
+      document.getElementById('math-q-text').textContent = q.num1 + ' ' + q.operator + ' ' + q.num2 + ' = ?';
+      document.getElementById('math-status').textContent = '第 ' + (mathState.current + 1) + ' / ' + mathState.questions.length + ' 题';
+      document.getElementById('math-answer').value = '';
+      document.getElementById('math-answer').focus();
+    }
+
+    function submitMathAnswer() {
+      var ans = parseInt(document.getElementById('math-answer').value);
+      if (isNaN(ans)) { alert('请输入数字'); return; }
+      mathState.answers.push(ans);
+      mathState.current++;
+      if (mathState.current < mathState.questions.length) {
+        showMathQuestion();
+      } else {
+        finishMath();
+      }
+    }
+    document.getElementById('math-answer').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') submitMathAnswer();
+    });
+
+    function finishMath() {
+      document.getElementById('math-question').style.display = 'none';
+      document.getElementById('math-result').style.display = 'block';
+
+      fetch(API + '/math/submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({session_id: mathState.sessionId, answers: mathState.answers})
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var acc = Math.round(data.accuracy * 100);
+        var emoji = acc >= 90 ? '🎉' : (acc >= 60 ? '👍' : '💪');
+        document.getElementById('math-result-text').textContent = emoji + ' 练习完成！';
+        document.getElementById('math-result-detail').innerHTML =
+          '共 <strong>' + data.total + '</strong> 题，答对 <strong>' + data.correct + '</strong> 题<br>' +
+          '正确率：<strong>' + acc + '%</strong>，用时：<strong>' + data.time_spent + '</strong> 秒';
+      })
+      .catch(function(err) { document.getElementById('math-result-detail').textContent = '提交失败: ' + err.message; });
+    }
+
+    // ===== TASK MANAGER =====
+    function loadTaskManager() {
+      var today = new Date().toISOString().slice(0, 10);
+      fetch(API + '/tasks?date=' + today)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var tasks = data.tasks || [];
+          var html = '';
+          if (tasks.length === 0) {
+            html = '<p style="color:var(--muted);">今日暂无任务</p>';
+          } else {
+            tasks.forEach(function(t) {
+              var pct = t.target_count > 0 ? Math.round(t.completed_count / t.target_count * 100) : 0;
+              html += '<div style="padding:0.6rem;border-bottom:1px solid var(--rule);">' +
+                '<div style="display:flex;justify-content:space-between;">' +
+                '<strong>' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + '</strong>' +
+                '<span style="font-size:0.8rem;color:var(--muted);">' + t.completed_count + '/' + t.target_count + '</span></div>' +
+                '<div style="background:var(--bg);border-radius:4px;height:6px;margin-top:0.3rem;">' +
+                '<div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;"></div></div>' +
+                '<div style="display:flex;gap:0.3rem;margin-top:0.3rem;">' +
+                '<button onclick="updateTaskProgress(' + t.id + ', ' + Math.min(t.completed_count + 1, t.target_count) + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">+1</button>' +
+                '<button onclick="deleteTask(' + t.id + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--bg);color:var(--muted);border:1px solid var(--rule);border-radius:4px;cursor:pointer;">删除</button></div>' +
+                '</div>';
+            });
+          }
+          document.getElementById('task-manage-items').innerHTML = html;
+        })
+        .catch(function(err) { console.warn('Task load failed', err); });
+    }
+
+    function createTask() {
+      var subject = document.getElementById('task-subject').value;
+      var type = document.getElementById('task-type').value;
+      var count = parseInt(document.getElementById('task-count').value) || 10;
+      var diff = document.getElementById('task-diff').value;
+      var today = new Date().toISOString().slice(0, 10);
+
+      fetch(API + '/tasks', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({task_date: today, subject: subject, task_type: type, target_count: count, difficulty: diff})
+      })
+      .then(function(r) { return r.json(); })
+      .then(function() { loadTaskManager(); loadDashboard(); })
+      .catch(function(err) { alert('创建失败: ' + err.message); });
+    }
+
+    function updateTaskProgress(id, count) {
+      fetch(API + '/tasks/' + id + '/progress', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({completed_count: count, time_spent: 0, accuracy: 0})
+      })
+      .then(function() { loadTaskManager(); loadDashboard(); })
+      .catch(function(err) { alert('更新失败: ' + err.message); });
+    }
+
+    function deleteTask(id) {
+      if (!confirm('确定删除此任务？')) return;
+      fetch(API + '/tasks/' + id, {method: 'DELETE'})
+        .then(function() { loadTaskManager(); loadDashboard(); })
+        .catch(function(err) { alert('删除失败: ' + err.message); });
+    }
+
+    // CSS for math buttons
+    var style = document.createElement('style');
+    style.textContent = '.math-op-btn,.math-diff-btn{padding:0.4rem 1rem;margin:0.2rem;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer;font-size:0.9rem;}' +
+      '.math-op-btn.active,.math-diff-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}' +
+      '.tag{padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;margin:2px;display:inline-block;}' +
+      '.tag.done{background:#E8F8E8;color:#27AE60;}' +
+      '.tag.p1{background:#FFF3E0;color:#E67E22;}' +
+      '.tag.p0{background:#FFE0E0;color:#C0392B;}';
+    document.head.appendChild(style);
 
     // ===== VOICE (init once) =====
     function initVoice() {
@@ -1055,6 +1385,16 @@
           .catch(function() { alert('重置失败，请检查服务器连接'); });
       }
     };
+
+    // Expose page functions to global scope for onclick handlers
+    window.showPage = showPage;
+    window.setMathOp = setMathOp;
+    window.setMathDiff = setMathDiff;
+    window.startMath = startMath;
+    window.submitMathAnswer = submitMathAnswer;
+    window.createTask = createTask;
+    window.updateTaskProgress = updateTaskProgress;
+    window.deleteTask = deleteTask;
   })();
   </script>
 </body>
