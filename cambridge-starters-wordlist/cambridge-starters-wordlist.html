@@ -44,9 +44,13 @@
     .hero-overlay h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
     .hero-overlay p { font-size: 0.95rem; opacity: 0.9; }
 
-    .nav-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 1rem 1.5rem; margin-bottom: 1.5rem; position: sticky; top: 0; background: var(--bg); z-index: 10; }
-    .nav-pills a { display: inline-block; padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.78rem; font-weight: 600; text-decoration: none; color: var(--ink); background: var(--bg2); border: 1.5px solid var(--rule); transition: all 0.2s; white-space: nowrap; }
-    .nav-pills a:hover, .nav-pills a:focus { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .page-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.8rem 1.5rem; margin-bottom: 0; position: sticky; top: 0; background: var(--bg); z-index: 11; border-bottom: 1px solid var(--rule); }
+    .page-nav a { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--bg2); border: 1.5px solid var(--rule); transition: all 0.2s; white-space: nowrap; }
+    .page-nav a:hover, .page-nav a:focus { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .page-nav a.active { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+    .cat-nav { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.6rem 1.5rem; margin-bottom: 1rem; position: sticky; top: 46px; background: var(--bg); z-index: 10; }
+    .cat-nav a { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 16px; font-size: 0.73rem; font-weight: 600; text-decoration: none; color: var(--ink); background: var(--bg2); border: 1px solid var(--rule); transition: all 0.2s; white-space: nowrap; }
+    .cat-nav a:hover, .cat-nav a:focus { background: var(--accent); color: #fff; border-color: var(--accent); }
 
     .content { padding: 0 1.5rem 3rem; }
     section { margin-bottom: 2.5rem; }
@@ -111,8 +115,6 @@
 @keyframes toastOut{to{transform:translateX(120%);opacity:0;}}
 
 /* ===== NAV ACTIVE ===== */
-.nav-pills .nav-link.active{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important;}
-
 /* ===== PAGE TRANSITION ===== */
 .page-section{animation:fadeIn 0.25s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -160,7 +162,7 @@
     .voice-hint .vol-icon { font-size: 1rem; }
 
     @media print {
-      .nav-pills, .voice-hint, .speak-btn, .progress-section { display: none !important; }
+      .page-nav, .cat-nav, .voice-hint, .speak-btn, .progress-section { display: none !important; }
       .hero { border-radius: 0; }
       .word-card { border-color: transparent !important; }
       .word-card:hover { transform: none; }
@@ -188,7 +190,15 @@
       </div>
     </div>
 
-    <nav class="nav-pills">
+    <!-- 页面级导航 -->
+    <nav class="page-nav" id="page-nav">
+      <a href="#content" onclick="showPage('content');return false;">英语学习</a>
+      <a href="#math" onclick="showPage('math');return false;">数学练习</a>
+      <a href="#dashboard" class="active" onclick="showPage('dashboard');return false;">仪表盘</a>
+      <a href="#tasks" onclick="showPage('tasks');return false;">任务</a>
+    </nav>
+    <!-- 英语分类导航（仅在英语学习页显示） -->
+    <nav class="cat-nav" id="cat-nav" style="display:none;">
       <a href="#numbers">数字</a>
       <a href="#colors">颜色</a>
       <a href="#family">家庭</a>
@@ -215,13 +225,8 @@
       <a href="#grammar9">语法:疑问句</a>
       <a href="#grammar10">语法:现在进行时</a>
       <a href="#phrases">常用短句</a>
-    
-      <a href="#dashboard" class="nav-link active" onclick="showPage('dashboard');return false;">首页</a>
-      <a href="#math" class="nav-link" onclick="showPage('math');return false;">数学练习</a>
-      <a href="#tasks" class="nav-link" onclick="showPage('tasks');return false;">任务</a>
-</nav>
+    </nav>
 
-    
   <!-- ========== DASHBOARD PAGE ========== -->
   <section id="page-dashboard" class="page-section" style="display:block;">
     <div class="content">
@@ -1150,8 +1155,11 @@
       window.scrollTo(0, 0);
       currentPage = page;
 
-      // Update nav active state
-      document.querySelectorAll('.nav-pills .nav-link').forEach(function(a) {
+      // Show/hide category nav (only for English page)
+      document.getElementById('cat-nav').style.display = (page === 'content') ? 'flex' : 'none';
+
+      // Update page-nav active state
+      document.querySelectorAll('#page-nav a').forEach(function(a) {
         a.classList.remove('active');
         if (a.getAttribute('href') === '#' + page) a.classList.add('active');
       });
