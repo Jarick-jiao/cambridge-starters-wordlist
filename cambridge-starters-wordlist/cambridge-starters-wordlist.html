@@ -99,6 +99,50 @@
     .tip { background: #FFF8E0; border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 0.7rem 1rem; margin: 0.75rem 0; font-size: 0.85rem; }
     .tip strong { color: #D4A017; }
 
+/* ===== TOAST ===== */
+.toast-container{position:fixed;top:1rem;right:1rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;}
+.toast{pointer-events:auto;padding:0.7rem 1.2rem;border-radius:10px;color:#fff;font-size:0.9rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.15);transform:translateX(120%);animation:toastIn 0.35s ease forwards;max-width:320px;display:flex;align-items:center;gap:0.5rem;}
+.toast.out{animation:toastOut 0.3s ease forwards;}
+.toast.success{background:#5CB85C;}
+.toast.error{background:#E74C3C;}
+.toast.info{background:#3DB5E6;}
+.toast.warn{background:#F5C542;color:#2D2A24;}
+@keyframes toastIn{to{transform:translateX(0);}}
+@keyframes toastOut{to{transform:translateX(120%);opacity:0;}}
+
+/* ===== NAV ACTIVE ===== */
+.nav-pills .nav-link.active{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important;}
+
+/* ===== PAGE TRANSITION ===== */
+.page-section{animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== MATH FEEDBACK ===== */
+.math-correct{animation:correctPulse 0.5s ease;}
+.math-wrong{animation:wrongShake 0.5s ease;}
+@keyframes correctPulse{0%{background:#E8F8E8;}50%{background:#5CB85C;color:#fff;}100%{background:var(--surface);color:var(--ink);}}
+@keyframes wrongShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+.math-timer{font-size:1.1rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;}
+.math-feedback-icon{font-size:2.5rem;display:block;margin:0.5rem 0;}
+.wrong-answer-list{background:#FFF5F5;border:1px solid #FFCDD2;border-radius:10px;padding:1rem;margin:1rem 0;text-align:left;}
+.wrong-answer-list h4{color:#E74C3C;margin-bottom:0.5rem;}
+.wrong-answer-item{display:flex;justify-content:space-between;padding:0.3rem 0;border-bottom:1px solid #FFEBEE;font-size:0.9rem;}
+.wrong-answer-item:last-child{border-bottom:none;}
+.wrong-answer-item .wrong-q{font-weight:600;}
+.wrong-answer-item .wrong-ans{color:#E74C3C;text-decoration:line-through;}
+.wrong-answer-item .correct-ans{color:#5CB85C;font-weight:700;}
+.skip-btn{padding:0.6rem 1.2rem;background:var(--bg2);color:var(--muted);border:1px solid var(--rule);border-radius:8px;font-size:0.9rem;cursor:pointer;margin-left:0.5rem;transition:all 0.15s;}
+.skip-btn:hover{background:var(--rule);color:var(--ink);}
+
+/* ===== DASHBOARD TASK CARD ===== */
+.dash-task-card{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.8rem;border-bottom:1px solid var(--rule);border-radius:8px;cursor:pointer;transition:background 0.15s;margin-bottom:0.3rem;}
+.dash-task-card:hover{background:var(--bg2);}
+.dash-task-card .task-info{flex:1;}
+.dash-task-card .task-subject{font-weight:700;font-size:0.9rem;}
+.dash-task-card .task-meta{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+.dash-task-card .task-arrow{color:var(--muted);font-size:1.1rem;}
+
+
     /* PROGRESS */
     .progress-section { background: #fff; border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; border: 1px solid var(--rule); }
     .progress-section h3 { margin-top: 0; font-size: 0.95rem; color: var(--ink); }
@@ -172,7 +216,7 @@
       <a href="#grammar10">语法:现在进行时</a>
       <a href="#phrases">常用短句</a>
     
-      <a href="#dashboard" class="nav-link" onclick="showPage('dashboard');return false;">首页</a>
+      <a href="#dashboard" class="nav-link active" onclick="showPage('dashboard');return false;">首页</a>
       <a href="#math" class="nav-link" onclick="showPage('math');return false;">数学练习</a>
       <a href="#tasks" class="nav-link" onclick="showPage('tasks');return false;">任务</a>
 </nav>
@@ -972,18 +1016,26 @@
       </div>
       <div id="math-area" style="display:none;">
         <div id="math-question" style="text-align:center;padding:2rem;background:var(--surface);border-radius:12px;margin:1rem 0;">
-          <div style="font-size:2rem;font-weight:700;" id="math-q-text">3 + 5 = ?</div>
-          <div style="margin-top:1rem;">
-            <input type="number" id="math-answer" style="font-size:1.5rem;padding:0.5rem 1rem;width:120px;text-align:center;border:2px solid var(--accent);border-radius:8px;" autofocus>
-            <button onclick="submitMathAnswer()" style="padding:0.6rem 1.5rem;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-left:0.5rem;">提交</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+            <span class="math-timer" id="math-timer">00:00</span>
+            <span style="color:var(--muted);font-size:0.85rem;" id="math-status">第 1 / 20 题</span>
           </div>
-          <div style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;" id="math-status">第 1 / 20 题</div>
+          <div style="font-size:2.5rem;font-weight:700;padding:1rem 0;" id="math-q-text">3 + 5 = ?</div>
+          <div id="math-feedback" style="min-height:3.5rem;display:flex;align-items:center;justify-content:center;"></div>
+          <div style="margin-top:0.5rem;">
+            <input type="number" id="math-answer" style="font-size:1.5rem;padding:0.5rem 1rem;width:130px;text-align:center;border:2px solid var(--accent);border-radius:8px;" autofocus>
+            <button onclick="submitMathAnswer()" id="math-submit-btn" style="padding:0.6rem 1.5rem;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-left:0.5rem;">提交</button>
+            <button onclick="skipMathQuestion()" class="skip-btn">跳过</button>
+          </div>
         </div>
         <div id="math-result" style="display:none;text-align:center;padding:2rem;background:var(--surface);border-radius:12px;margin:1rem 0;">
           <div style="font-size:1.5rem;font-weight:700;" id="math-result-text">练习完成！</div>
           <div style="margin:1rem 0;font-size:1.2rem;" id="math-result-detail"></div>
-          <button onclick="startMath()" style="padding:0.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">再来一组</button>
-          <button onclick="showPage('dashboard')" style="padding:0.6rem 1.5rem;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:8px;cursor:pointer;margin-left:0.5rem;">返回首页</button>
+          <div id="math-wrong-list"></div>
+          <div style="margin-top:1rem;">
+            <button onclick="startMath()" style="padding:0.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">再来一组</button>
+            <button onclick="showPage('dashboard')" style="padding:0.6rem 1.5rem;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:8px;cursor:pointer;margin-left:0.5rem;">返回首页</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1030,8 +1082,57 @@
   (function() {
     var API = '/api';
     var ukVoice = null;
-    var ready = false; // true after initial progress loaded from server
+    var ready = false;
+    var currentPage = 'dashboard';
 
+    // ===== TOAST SYSTEM =====
+    function showToast(msg, type, duration) {
+      type = type || 'info';
+      duration = duration || 2500;
+      var container = document.getElementById('toast-container');
+      var t = document.createElement('div');
+      t.className = 'toast ' + type;
+      var icons = { success: '\u2714', error: '\u2718', info: '\u2139', warn: '\u26A0' };
+      t.innerHTML = '<span>' + (icons[type] || '') + '</span><span>' + msg + '</span>';
+      container.appendChild(t);
+      setTimeout(function() {
+        t.classList.add('out');
+        setTimeout(function() { t.remove(); }, 300);
+      }, duration);
+    }
+
+    // ===== AUTO TASK CHECK-IN =====
+    var todayTasks = [];
+    function fetchTodayTasks() {
+      var today = new Date().toISOString().slice(0, 10);
+      fetch(API + '/tasks?date=' + today)
+        .then(function(r) { return r.json(); })
+        .then(function(d) { todayTasks = d.tasks || []; })
+        .catch(function() {});
+    }
+    fetchTodayTasks();
+
+    function autoCheckin(subject, taskType, count) {
+      var candidates = todayTasks.filter(function(t) {
+        return t.status !== 'completed' && t.subject === subject && t.task_type === taskType;
+      });
+      if (candidates.length === 0) return;
+      // Pick the one closest to completion
+      candidates.sort(function(a, b) {
+        return (a.completed_count / a.target_count) - (b.completed_count / b.target_count);
+      });
+      var task = candidates[0];
+      var newCount = Math.min(task.completed_count + count, task.target_count);
+      fetch(API + '/tasks/' + task.id + '/progress', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({completed_count: newCount, time_spent: 0, accuracy: 0})
+      }).then(function() {
+        task.completed_count = newCount;
+        if (newCount >= task.target_count) task.status = 'completed';
+        showToast((subject === 'english' ? '英语' : '数学') + '任务进度 ' + newCount + '/' + task.target_count + (newCount >= task.target_count ? ' 已完成!' : ''), newCount >= task.target_count ? 'success' : 'info');
+      }).catch(function() {});
+    }
 
     // ===== PAGE NAVIGATION =====
     function showPage(page) {
@@ -1039,10 +1140,25 @@
         el.style.display = 'none';
       });
       var target = document.getElementById('page-' + page);
-      if (target) target.style.display = 'block';
+      if (target) {
+        target.style.display = 'block';
+        // Re-trigger animation
+        target.style.animation = 'none';
+        target.offsetHeight; // reflow
+        target.style.animation = '';
+      }
       window.scrollTo(0, 0);
+      currentPage = page;
+
+      // Update nav active state
+      document.querySelectorAll('.nav-pills .nav-link').forEach(function(a) {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + page) a.classList.add('active');
+      });
+
       if (page === 'dashboard') loadDashboard();
-      if (page === 'tasks') loadTaskManager();
+      if (page === 'tasks') { loadTaskManager(); fetchTodayTasks(); }
+      if (page === 'math') stopMathTimer();
     }
 
     // ===== DASHBOARD =====
@@ -1058,7 +1174,7 @@
           var mathAcc = data.math_total > 0 ? Math.round(data.math_correct / data.math_total * 100) : 0;
           document.getElementById('dash-math').textContent = mathAcc + '%';
 
-          // Task list
+          // Task list (clickable cards)
           var taskHTML = '';
           if (tasks.length === 0) {
             taskHTML = '<p style="color:var(--muted);">今日暂无任务，去任务页面添加吧！</p>';
@@ -1067,21 +1183,39 @@
               var statusClass = t.status === 'completed' ? 'done' : (t.status === 'in_progress' ? 'p1' : 'p0');
               var statusText = t.status === 'completed' ? '已完成' : (t.status === 'in_progress' ? '进行中' : '待开始');
               var pct = t.target_count > 0 ? Math.round(t.completed_count / t.target_count * 100) : 0;
-              taskHTML += '<div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--rule);">' +
-                '<span>' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + ' (' + t.completed_count + '/' + t.target_count + ')</span>' +
-                '<span class="tag ' + statusClass + '">' + statusText + '</span></div>' +
-                '<div style="background:var(--bg);border-radius:4px;height:6px;margin-bottom:0.5rem;">' +
-                '<div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;"></div></div>';
+              var targetPage = (t.subject === 'math') ? 'math' : 'content';
+              taskHTML += '<div class="dash-task-card" onclick="showPage(\'' + targetPage + '\')">' +
+                '<div class="task-info">' +
+                '<div class="task-subject">' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + ' (' + t.completed_count + '/' + t.target_count + ')</div>' +
+                '<div style="background:var(--bg);border-radius:4px;height:5px;margin-top:4px;"><div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;transition:width 0.3s;"></div></div>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:0.4rem;">' +
+                '<span class="tag ' + statusClass + '">' + statusText + '</span>' +
+                '<span class="task-arrow">\u203A</span></div></div>';
             });
           }
           document.getElementById('task-list').innerHTML = taskHTML;
+
+          // Progress bars in dashboard
+          var progHTML = '';
+          for (var gid in groupMap) {
+            var info = groupMap[gid];
+            var name = groupNames[gid] || gid;
+            var pctVal = info.total > 0 ? Math.round(info.mastered / info.total * 100) : 0;
+            progHTML += '<div style="margin-bottom:0.4rem;">' +
+              '<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">' +
+              '<span>' + name + '</span><span style="color:var(--muted);">' + pctVal + '%</span></div>' +
+              '<div style="background:var(--bg2);border-radius:4px;height:6px;">' +
+              '<div style="width:' + pctVal + '%;height:100%;background:var(--accent2);border-radius:4px;transition:width 0.5s;"></div></div></div>';
+          }
+          document.getElementById('dash-progress-bars').innerHTML = progHTML;
         })
         .catch(function(err) { console.warn('Dashboard load failed', err); });
     }
     loadDashboard();
 
     // ===== MATH PRACTICE =====
-    var mathState = { op: '+', diff: 'L1', count: 20, sessionId: null, questions: [], current: 0, answers: [], startTime: null };
+    var mathState = { op: '+', diff: 'L1', count: 20, sessionId: null, questions: [], current: 0, answers: [], startTime: null, timerInterval: null, elapsed: 0, isSubmitting: false, correctAnswers: [] };
 
     function setMathOp(op) {
       mathState.op = op;
@@ -1096,11 +1230,32 @@
       });
     }
 
+    function startMathTimer() {
+      mathState.elapsed = 0;
+      updateTimerDisplay();
+      mathState.timerInterval = setInterval(function() {
+        mathState.elapsed++;
+        updateTimerDisplay();
+      }, 1000);
+    }
+    function stopMathTimer() {
+      if (mathState.timerInterval) { clearInterval(mathState.timerInterval); mathState.timerInterval = null; }
+    }
+    function updateTimerDisplay() {
+      var m = String(Math.floor(mathState.elapsed / 60)).padStart(2, '0');
+      var s = String(mathState.elapsed % 60).padStart(2, '0');
+      var el = document.getElementById('math-timer');
+      if (el) el.textContent = m + ':' + s;
+    }
+
     function startMath() {
       mathState.count = parseInt(document.getElementById('math-count').value) || 20;
+      mathState.isSubmitting = false;
+      mathState.correctAnswers = [];
       document.getElementById('math-area').style.display = 'block';
       document.getElementById('math-result').style.display = 'none';
       document.getElementById('math-question').style.display = 'block';
+      document.getElementById('math-feedback').innerHTML = '';
 
       fetch(API + '/math/generate', {
         method: 'POST',
@@ -1115,8 +1270,9 @@
         mathState.answers = [];
         mathState.startTime = Date.now();
         showMathQuestion();
+        startMathTimer();
       })
-      .catch(function(err) { alert('出题失败: ' + err.message); });
+      .catch(function(err) { showToast('出题失败: ' + err.message, 'error'); });
     }
 
     function showMathQuestion() {
@@ -1124,13 +1280,65 @@
       document.getElementById('math-q-text').textContent = q.num1 + ' ' + q.operator + ' ' + q.num2 + ' = ?';
       document.getElementById('math-status').textContent = '第 ' + (mathState.current + 1) + ' / ' + mathState.questions.length + ' 题';
       document.getElementById('math-answer').value = '';
+      document.getElementById('math-feedback').innerHTML = '';
+      document.getElementById('math-submit-btn').disabled = false;
       document.getElementById('math-answer').focus();
+      mathState.isSubmitting = false;
     }
 
     function submitMathAnswer() {
-      var ans = parseInt(document.getElementById('math-answer').value);
-      if (isNaN(ans)) { alert('请输入数字'); return; }
-      mathState.answers.push(ans);
+      if (mathState.isSubmitting) return;
+      var input = document.getElementById('math-answer');
+      var ans = input.value.trim();
+      if (ans === '') { showToast('请输入答案', 'warn', 1500); input.focus(); return; }
+      var numAns = parseInt(ans);
+      if (isNaN(numAns)) { showToast('请输入有效数字', 'warn', 1500); input.focus(); return; }
+
+      mathState.isSubmitting = true;
+      mathState.answers.push(numAns);
+
+      // Calculate correct answer for feedback
+      var q = mathState.questions[mathState.current];
+      var correctAns = q.num1 + ' ' + q.operator + ' ' + q.num2;
+      var realAns = 0;
+      switch (q.operator) {
+        case '+': realAns = q.num1 + q.num2; break;
+        case '-': realAns = q.num1 - q.num2; break;
+        case '*': realAns = q.num1 * q.num2; break;
+        case '/': realAns = q.num1 / q.num2; break;
+      }
+      var isCorrect = numAns === realAns;
+      mathState.correctAnswers.push(isCorrect);
+
+      // Show feedback
+      var fb = document.getElementById('math-feedback');
+      var qEl = document.getElementById('math-q-text');
+      if (isCorrect) {
+        qEl.classList.add('math-correct');
+        fb.innerHTML = '<span class="math-feedback-icon" style="color:var(--green);">\u2714 \u6B63\u786E!</span>';
+      } else {
+        qEl.classList.add('math-wrong');
+        fb.innerHTML = '<span class="math-feedback-icon" style="color:var(--accent);">\u2718</span>' +
+          '<span style="font-size:1rem;color:var(--accent);">正确答案: <strong>' + realAns + '</strong></span>';
+      }
+      document.getElementById('math-submit-btn').disabled = true;
+
+      // Next question after delay
+      setTimeout(function() {
+        qEl.classList.remove('math-correct', 'math-wrong');
+        mathState.current++;
+        if (mathState.current < mathState.questions.length) {
+          showMathQuestion();
+        } else {
+          finishMath();
+        }
+      }, isCorrect ? 400 : 1200);
+    }
+
+    function skipMathQuestion() {
+      if (mathState.isSubmitting) return;
+      mathState.answers.push(0);
+      mathState.correctAnswers.push(false);
       mathState.current++;
       if (mathState.current < mathState.questions.length) {
         showMathQuestion();
@@ -1138,11 +1346,13 @@
         finishMath();
       }
     }
+
     document.getElementById('math-answer').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') submitMathAnswer();
     });
 
     function finishMath() {
+      stopMathTimer();
       document.getElementById('math-question').style.display = 'none';
       document.getElementById('math-result').style.display = 'block';
 
@@ -1154,13 +1364,38 @@
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var acc = Math.round(data.accuracy * 100);
-        var emoji = acc >= 90 ? '🎉' : (acc >= 60 ? '👍' : '💪');
+        var emoji = acc >= 90 ? '\uD83C\uDF89' : (acc >= 60 ? '\uD83D\uDC4D' : '\uD83D\uDCAA');
         document.getElementById('math-result-text').textContent = emoji + ' 练习完成！';
         document.getElementById('math-result-detail').innerHTML =
           '共 <strong>' + data.total + '</strong> 题，答对 <strong>' + data.correct + '</strong> 题<br>' +
-          '正确率：<strong>' + acc + '%</strong>，用时：<strong>' + data.time_spent + '</strong> 秒';
+          '正确率：<strong>' + acc + '%</strong>，用时：<strong>' + mathState.elapsed + '</strong> 秒';
+
+        // Show wrong answers
+        var wrongList = document.getElementById('math-wrong-list');
+        var wrongs = (data.results || []).filter(function(r) { return !r.is_correct; });
+        if (wrongs.length > 0) {
+          var html = '<div class="wrong-answer-list"><h4>\u2718 错题 (' + wrongs.length + ' 题)</h4>';
+          wrongs.forEach(function(w) {
+            html += '<div class="wrong-answer-item">' +
+              '<span class="wrong-q">' + w.question + '</span>' +
+              '<span><span class="wrong-ans">' + w.user_answer + '</span> \u2192 <span class="correct-ans">' + w.correct + '</span></span></div>';
+          });
+          html += '</div>';
+          wrongList.innerHTML = html;
+        } else {
+          wrongList.innerHTML = acc === 100 ? '<p style="color:var(--green);font-weight:700;margin:0.5rem 0;">\u2B50 全部正确！太棒了！</p>' : '';
+        }
+
+        // Auto check-in task
+        autoCheckin('math', 'arithmetic', data.total);
+
+        // Refresh today tasks for dashboard
+        fetchTodayTasks();
       })
-      .catch(function(err) { document.getElementById('math-result-detail').textContent = '提交失败: ' + err.message; });
+      .catch(function(err) {
+        document.getElementById('math-result-detail').textContent = '提交失败: ' + err.message;
+        showToast('提交失败', 'error');
+      });
     }
 
     // ===== TASK MANAGER =====
@@ -1176,16 +1411,20 @@
           } else {
             tasks.forEach(function(t) {
               var pct = t.target_count > 0 ? Math.round(t.completed_count / t.target_count * 100) : 0;
+              var statusTag = t.status === 'completed'
+                ? '<span class="tag done" style="margin-left:0.5rem;">已完成</span>'
+                : (pct > 0 ? '<span class="tag p1" style="margin-left:0.5rem;">进行中</span>' : '<span class="tag p0" style="margin-left:0.5rem;">待开始</span>');
               html += '<div style="padding:0.6rem;border-bottom:1px solid var(--rule);">' +
-                '<div style="display:flex;justify-content:space-between;">' +
-                '<strong>' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + '</strong>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                '<div><strong>' + (t.subject === 'english' ? '英语' : '数学') + ' - ' + t.task_type + '</strong>' + statusTag + '</div>' +
                 '<span style="font-size:0.8rem;color:var(--muted);">' + t.completed_count + '/' + t.target_count + '</span></div>' +
                 '<div style="background:var(--bg);border-radius:4px;height:6px;margin-top:0.3rem;">' +
-                '<div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;"></div></div>' +
-                '<div style="display:flex;gap:0.3rem;margin-top:0.3rem;">' +
-                '<button onclick="updateTaskProgress(' + t.id + ', ' + Math.min(t.completed_count + 1, t.target_count) + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">+1</button>' +
-                '<button onclick="deleteTask(' + t.id + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--bg);color:var(--muted);border:1px solid var(--rule);border-radius:4px;cursor:pointer;">删除</button></div>' +
-                '</div>';
+                '<div style="width:' + pct + '%;height:100%;background:var(--accent2);border-radius:4px;transition:width 0.3s;"></div></div>' +
+                '<div style="display:flex;gap:0.3rem;margin-top:0.3rem;">';
+              if (t.status !== 'completed') {
+                html += '<button onclick="updateTaskProgress(' + t.id + ', ' + Math.min(t.completed_count + 1, t.target_count) + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;">+1</button>';
+              }
+              html += '<button onclick="deleteTask(' + t.id + ')" style="padding:2px 8px;font-size:0.75rem;background:var(--bg);color:var(--muted);border:1px solid var(--rule);border-radius:4px;cursor:pointer;">删除</button></div></div>';
             });
           }
           document.getElementById('task-manage-items').innerHTML = html;
@@ -1206,8 +1445,13 @@
         body: JSON.stringify({task_date: today, subject: subject, task_type: type, target_count: count, difficulty: diff})
       })
       .then(function(r) { return r.json(); })
-      .then(function() { loadTaskManager(); loadDashboard(); })
-      .catch(function(err) { alert('创建失败: ' + err.message); });
+      .then(function() {
+        loadTaskManager();
+        loadDashboard();
+        fetchTodayTasks();
+        showToast('任务创建成功', 'success');
+      })
+      .catch(function(err) { showToast('创建失败: ' + err.message, 'error'); });
     }
 
     function updateTaskProgress(id, count) {
@@ -1216,20 +1460,30 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({completed_count: count, time_spent: 0, accuracy: 0})
       })
-      .then(function() { loadTaskManager(); loadDashboard(); })
-      .catch(function(err) { alert('更新失败: ' + err.message); });
+      .then(function() {
+        loadTaskManager();
+        loadDashboard();
+        fetchTodayTasks();
+        showToast('进度已更新', 'success', 1500);
+      })
+      .catch(function(err) { showToast('更新失败: ' + err.message, 'error'); });
     }
 
     function deleteTask(id) {
       if (!confirm('确定删除此任务？')) return;
       fetch(API + '/tasks/' + id, {method: 'DELETE'})
-        .then(function() { loadTaskManager(); loadDashboard(); })
-        .catch(function(err) { alert('删除失败: ' + err.message); });
+        .then(function() {
+          loadTaskManager();
+          loadDashboard();
+          fetchTodayTasks();
+          showToast('任务已删除', 'info');
+        })
+        .catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
     }
 
-    // CSS for math buttons
+    // CSS for math/task buttons (injected)
     var style = document.createElement('style');
-    style.textContent = '.math-op-btn,.math-diff-btn{padding:0.4rem 1rem;margin:0.2rem;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer;font-size:0.9rem;}' +
+    style.textContent = '.math-op-btn,.math-diff-btn{padding:0.4rem 1rem;margin:0.2rem;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer;font-size:0.9rem;transition:all 0.15s;}' +
       '.math-op-btn.active,.math-diff-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}' +
       '.tag{padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;margin:2px;display:inline-block;}' +
       '.tag.done{background:#E8F8E8;color:#27AE60;}' +
@@ -1298,6 +1552,7 @@
       groupMap[gid].fillEl = document.getElementById('pf-' + gid);
       groupMap[gid].countEl = document.getElementById('pc-' + gid);
     });
+
 
     // ===== UPDATE PROGRESS BARS =====
     function updateBars() {
@@ -1382,7 +1637,7 @@
             document.querySelectorAll('.word-card.mastered').forEach(function(c){c.classList.remove('mastered');});
             updateBars();
           })
-          .catch(function() { alert('重置失败，请检查服务器连接'); });
+          .catch(function() { showToast('重置失败，请检查服务器连接', 'error'); });
       }
     };
 
@@ -1392,10 +1647,13 @@
     window.setMathDiff = setMathDiff;
     window.startMath = startMath;
     window.submitMathAnswer = submitMathAnswer;
+    window.skipMathQuestion = skipMathQuestion;
     window.createTask = createTask;
     window.updateTaskProgress = updateTaskProgress;
     window.deleteTask = deleteTask;
+    window.showToast = showToast;
   })();
   </script>
+<div class="toast-container" id="toast-container"></div>
 </body>
 </html>
