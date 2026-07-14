@@ -103,6 +103,14 @@
     .tip { background: #FFF8E0; border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 0.7rem 1rem; margin: 0.75rem 0; font-size: 0.85rem; }
     .tip strong { color: #D4A017; }
 
+    /* ===== CHAPTER DIVIDERS ===== */
+    .chapter-header{margin:2.5rem 0 1rem;padding:0.9rem 1.5rem;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);border-radius:12px;color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.6rem;box-shadow:0 2px 8px rgba(61,181,230,0.25);}
+    .chapter-header .chap-num{background:rgba(255,255,255,0.2);padding:0.25rem 0.7rem;border-radius:8px;font-size:0.85rem;font-weight:800;}
+    .chapter-header .chap-icon{font-size:1.3rem;}
+    .chapter-wrap{padding:0 0.5rem;}
+    .chapter-wrap + .chapter-wrap{margin-top:0.5rem;}
+
+
 /* ===== TOAST ===== */
 .toast-container{position:fixed;top:1rem;right:1rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;}
 .toast{pointer-events:auto;padding:0.7rem 1.2rem;border-radius:10px;color:#fff;font-size:0.9rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.15);transform:translateX(120%);animation:toastIn 0.35s ease forwards;max-width:320px;display:flex;align-items:center;gap:0.5rem;}
@@ -230,7 +238,6 @@
       <a href="#phrases">常用短句</a>
       <a href="#transport">交通工具</a>
       <a href="#sports">运动</a>
-      <a href="#food-more">更多食物</a>
     </nav>
 
   <!-- ========== DASHBOARD PAGE ========== -->
@@ -288,7 +295,9 @@
       </div>
 
       <!-- ====== 1. NUMBERS ====== -->
-      <section id="numbers">
+            <!-- ====== 第一章 基础认知 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x1F3AF;</span><span class="chap-num">第一章</span>基础认知</div>
+<section id="numbers">
         <h2><span class="icon bg-orange">1</span>数字 Numbers</h2>
         <p class="section-intro">从最简单的数字开始！</p>
         <h3>1 - 10</h3>
@@ -356,14 +365,7 @@
         <h2><span class="icon bg-green">&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467;</span>家庭 Family</h2>
         <p class="section-intro">学会介绍家人！</p>
         <div class="word-grid" data-group="family">
-          <div class="word-card" data-word="family"><span class="master-check">&#10003;</span><div class="en">family <button class="speak-btn" onclick="event.stopPropagation();speak('family')">&#x1F50A;</button>
-      <div class="word-card" data-word="grandfather"><span class="master-check">&#10003;</span><div class="en">grandfather <button class="speak-btn" onclick="event.stopPropagation();speak('grandfather')">&#x1F50A;</button></div><div class="phonetic">/ˈɡrænˌfɑːðər/</div><div class="cn">爷爷</div></div>
-      <div class="word-card" data-word="grandmother"><span class="master-check">&#10003;</span><div class="en">grandmother <button class="speak-btn" onclick="event.stopPropagation();speak('grandmother')">&#x1F50A;</button></div><div class="phonetic">/ˈɡrænˌmʌðər/</div><div class="cn">奶奶</div></div>
-      <div class="word-card" data-word="cousin"><span class="master-check">&#10003;</span><div class="en">cousin <button class="speak-btn" onclick="event.stopPropagation();speak('cousin')">&#x1F50A;</button></div><div class="phonetic">/ˈkʌzən/</div><div class="cn">堂/表兄弟姐妹</div></div>
-      <div class="word-card" data-word="children"><span class="master-check">&#10003;</span><div class="en">children <button class="speak-btn" onclick="event.stopPropagation();speak('children')">&#x1F50A;</button></div><div class="phonetic">/ˈtʃɪldrən/</div><div class="cn">孩子们</div></div>
-      <div class="word-card" data-word="people"><span class="master-check">&#10003;</span><div class="en">people <button class="speak-btn" onclick="event.stopPropagation();speak('people')">&#x1F50A;</button></div><div class="phonetic">/ˈpiːpl/</div><div class="cn">人们</div></div>
-      <div class="word-card" data-word="kid"><span class="master-check">&#10003;</span><div class="en">kid <button class="speak-btn" onclick="event.stopPropagation();speak('kid')">&#x1F50A;</button></div><div class="phonetic">/kɪd/</div><div class="cn">小孩</div></div>
-        </div><div class="phonetic">/&#x02C8;f&#x00E6;m&#x0259;li/</div><div class="cn">家庭</div></div>
+          <div class="word-card" data-word="family"><span class="master-check">&#10003;</span><div class="en">family <button class="speak-btn" onclick="event.stopPropagation();speak('family')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;f&#x00E6;m&#x0259;li/</div><div class="cn">家庭</div></div>
           <div class="word-card" data-word="mother"><span class="master-check">&#10003;</span><div class="en">mother <button class="speak-btn" onclick="event.stopPropagation();speak('mother')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;m&#x028C;&#xF0;&#x0259;r/</div><div class="cn">妈妈</div></div>
           <div class="word-card" data-word="father"><span class="master-check">&#10003;</span><div class="en">father <button class="speak-btn" onclick="event.stopPropagation();speak('father')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;f&#x0251;&#x02D0;&#xF0;&#x0259;r/</div><div class="cn">爸爸</div></div>
           <div class="word-card" data-word="mum"><span class="master-check">&#10003;</span><div class="en">mum <button class="speak-btn" onclick="event.stopPropagation();speak('mum')">&#x1F50A;</button></div><div class="phonetic">/m&#x028C;m/</div><div class="cn">妈妈（口语）</div></div>
@@ -378,7 +380,14 @@
           <div class="word-card" data-word="baby"><span class="master-check">&#10003;</span><div class="en">baby <button class="speak-btn" onclick="event.stopPropagation();speak('baby')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;be&#x026A;bi/</div><div class="cn">宝宝</div></div>
           <div class="word-card" data-word="man"><span class="master-check">&#10003;</span><div class="en">man <button class="speak-btn" onclick="event.stopPropagation();speak('man')">&#x1F50A;</button></div><div class="phonetic">/m&#x00E6;n/</div><div class="cn">男人</div></div>
           <div class="word-card" data-word="woman"><span class="master-check">&#10003;</span><div class="en">woman <button class="speak-btn" onclick="event.stopPropagation();speak('woman')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;w&#x028A;m&#x0259;n/</div><div class="cn">女人</div></div>
-        </div>
+        
+          <div class="word-card" data-word="grandfather"><span class="master-check">&#10003;</span><div class="en">grandfather <button class="speak-btn" onclick="event.stopPropagation();speak('grandfather')">&#x1F50A;</button></div><div class="phonetic">/ˈɡrænˌfɑːðər/</div><div class="cn">爷爷</div></div>
+          <div class="word-card" data-word="grandmother"><span class="master-check">&#10003;</span><div class="en">grandmother <button class="speak-btn" onclick="event.stopPropagation();speak('grandmother')">&#x1F50A;</button></div><div class="phonetic">/ˈɡrænˌmʌðər/</div><div class="cn">奶奶</div></div>
+          <div class="word-card" data-word="cousin"><span class="master-check">&#10003;</span><div class="en">cousin <button class="speak-btn" onclick="event.stopPropagation();speak('cousin')">&#x1F50A;</button></div><div class="phonetic">/ˈkʌzən/</div><div class="cn">堂/表兄弟姐妹</div></div>
+          <div class="word-card" data-word="children"><span class="master-check">&#10003;</span><div class="en">children <button class="speak-btn" onclick="event.stopPropagation();speak('children')">&#x1F50A;</button></div><div class="phonetic">/ˈtʃɪldrən/</div><div class="cn">孩子们</div></div>
+          <div class="word-card" data-word="people"><span class="master-check">&#10003;</span><div class="en">people <button class="speak-btn" onclick="event.stopPropagation();speak('people')">&#x1F50A;</button></div><div class="phonetic">/ˈpiːpl/</div><div class="cn">人们</div></div>
+          <div class="word-card" data-word="kid"><span class="master-check">&#10003;</span><div class="en">kid <button class="speak-btn" onclick="event.stopPropagation();speak('kid')">&#x1F50A;</button></div><div class="phonetic">/kɪd/</div><div class="cn">小孩</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">This is my <span class="highlight">mother</span>.</td><td class="cn-sentence">这是我的妈妈。</td></tr>
@@ -394,9 +403,7 @@
         <h2><span class="icon bg-purple">&#x1F64B;</span>身体 Body</h2>
         <p class="section-intro">认识自己的身体部位！</p>
         <div class="word-grid" data-group="body">
-          <div class="word-card" data-word="body"><span class="master-check">&#10003;</span><div class="en">body <button class="speak-btn" onclick="event.stopPropagation();speak('body')">&#x1F50A;</button>
-      <div class="word-card" data-word="smile"><span class="master-check">&#10003;</span><div class="en">smile <button class="speak-btn" onclick="event.stopPropagation();speak('smile')">&#x1F50A;</button></div><div class="phonetic">/smaɪl/</div><div class="cn">微笑</div></div>
-        </div><div class="phonetic">/&#x02C8;b&#x0252;di/</div><div class="cn">身体</div></div>
+          <div class="word-card" data-word="body"><span class="master-check">&#10003;</span><div class="en">body <button class="speak-btn" onclick="event.stopPropagation();speak('body')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;b&#x0252;di/</div><div class="cn">身体</div></div>
           <div class="word-card" data-word="head"><span class="master-check">&#10003;</span><div class="en">head <button class="speak-btn" onclick="event.stopPropagation();speak('head')">&#x1F50A;</button></div><div class="phonetic">/hed/</div><div class="cn">头</div></div>
           <div class="word-card" data-word="face"><span class="master-check">&#10003;</span><div class="en">face <button class="speak-btn" onclick="event.stopPropagation();speak('face')">&#x1F50A;</button></div><div class="phonetic">/fe&#x026A;s/</div><div class="cn">脸</div></div>
           <div class="word-card" data-word="eye"><span class="master-check">&#10003;</span><div class="en">eye <button class="speak-btn" onclick="event.stopPropagation();speak('eye')">&#x1F50A;</button></div><div class="phonetic">/a&#x026A;/</div><div class="cn">眼睛</div></div>
@@ -408,7 +415,9 @@
           <div class="word-card" data-word="arm"><span class="master-check">&#10003;</span><div class="en">arm <button class="speak-btn" onclick="event.stopPropagation();speak('arm')">&#x1F50A;</button></div><div class="phonetic">/&#x0251;&#x02D0;rm/</div><div class="cn">胳膊</div></div>
           <div class="word-card" data-word="leg"><span class="master-check">&#10003;</span><div class="en">leg <button class="speak-btn" onclick="event.stopPropagation();speak('leg')">&#x1F50A;</button></div><div class="phonetic">/le&#x0261;/</div><div class="cn">腿</div></div>
           <div class="word-card" data-word="foot"><span class="master-check">&#10003;</span><div class="en">foot <button class="speak-btn" onclick="event.stopPropagation();speak('foot')">&#x1F50A;</button></div><div class="phonetic">/f&#x028A;t/</div><div class="cn">脚</div></div>
-        </div>
+        
+          <div class="word-card" data-word="smile"><span class="master-check">&#10003;</span><div class="en">smile <button class="speak-btn" onclick="event.stopPropagation();speak('smile')">&#x1F50A;</button></div><div class="phonetic">/smaɪl/</div><div class="cn">微笑</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">Touch your <span class="highlight">nose</span>.</td><td class="cn-sentence">摸摸你的鼻子。</td></tr>
@@ -420,17 +429,13 @@
       </section>
 
       <!-- ====== 5. ANIMALS ====== -->
-      <section id="animals">
+            <!-- ====== 第二章 我的世界 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x1F30D;</span><span class="chap-num">第二章</span>我的世界</div>
+<section id="animals">
         <h2><span class="icon bg-yellow">&#x1F43E;</span>动物 Animals</h2>
         <p class="section-intro">小朋友们喜欢的小动物！</p>
         <div class="word-grid" data-group="animals">
-          <div class="word-card" data-word="cat"><span class="master-check">&#10003;</span><div class="en">cat <button class="speak-btn" onclick="event.stopPropagation();speak('cat')">&#x1F50A;</button>
-      <div class="word-card" data-word="fox"><span class="master-check">&#10003;</span><div class="en">fox <button class="speak-btn" onclick="event.stopPropagation();speak('fox')">&#x1F50A;</button></div><div class="phonetic">/fɒks/</div><div class="cn">狐狸</div></div>
-      <div class="word-card" data-word="lizard"><span class="master-check">&#10003;</span><div class="en">lizard <button class="speak-btn" onclick="event.stopPropagation();speak('lizard')">&#x1F50A;</button></div><div class="phonetic">/ˈlɪzərd/</div><div class="cn">蜥蜴</div></div>
-      <div class="word-card" data-word="zebra"><span class="master-check">&#10003;</span><div class="en">zebra <button class="speak-btn" onclick="event.stopPropagation();speak('zebra')">&#x1F50A;</button></div><div class="phonetic">/ˈzebrə/</div><div class="cn">斑马</div></div>
-      <div class="word-card" data-word="zoo"><span class="master-check">&#10003;</span><div class="en">zoo <button class="speak-btn" onclick="event.stopPropagation();speak('zoo')">&#x1F50A;</button></div><div class="phonetic">/zuː/</div><div class="cn">动物园</div></div>
-      <div class="word-card" data-word="pet"><span class="master-check">&#10003;</span><div class="en">pet <button class="speak-btn" onclick="event.stopPropagation();speak('pet')">&#x1F50A;</button></div><div class="phonetic">/pet/</div><div class="cn">宠物</div></div>
-        </div><div class="phonetic">/k&#x00E6;t/</div><div class="cn">猫</div></div>
+          <div class="word-card" data-word="cat"><span class="master-check">&#10003;</span><div class="en">cat <button class="speak-btn" onclick="event.stopPropagation();speak('cat')">&#x1F50A;</button></div><div class="phonetic">/k&#x00E6;t/</div><div class="cn">猫</div></div>
           <div class="word-card" data-word="dog"><span class="master-check">&#10003;</span><div class="en">dog <button class="speak-btn" onclick="event.stopPropagation();speak('dog')">&#x1F50A;</button></div><div class="phonetic">/d&#x0254;&#x02D0;&#x0261;/</div><div class="cn">狗</div></div>
           <div class="word-card" data-word="bird"><span class="master-check">&#10003;</span><div class="en">bird <button class="speak-btn" onclick="event.stopPropagation();speak('bird')">&#x1F50A;</button></div><div class="phonetic">/b&#x025C;&#x02D0;rd/</div><div class="cn">鸟</div></div>
           <div class="word-card" data-word="fish"><span class="master-check">&#10003;</span><div class="en">fish <button class="speak-btn" onclick="event.stopPropagation();speak('fish')">&#x1F50A;</button></div><div class="phonetic">/f&#x026A;&#x0283;/</div><div class="cn">鱼</div></div>
@@ -454,7 +459,13 @@
           <div class="word-card" data-word="sheep"><span class="master-check">&#10003;</span><div class="en">sheep <button class="speak-btn" onclick="event.stopPropagation();speak('sheep')">&#x1F50A;</button></div><div class="phonetic">/&#x0283;i&#x02D0;p/</div><div class="cn">绵羊</div></div>
           <div class="word-card" data-word="panda"><span class="master-check">&#10003;</span><div class="en">panda <button class="speak-btn" onclick="event.stopPropagation();speak('panda')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;p&#x00E6;nd&#x0259;/</div><div class="cn">熊猫</div></div>
           <div class="word-card" data-word="tail"><span class="master-check">&#10003;</span><div class="en">tail <button class="speak-btn" onclick="event.stopPropagation();speak('tail')">&#x1F50A;</button></div><div class="phonetic">/te&#x026A;l/</div><div class="cn">尾巴</div></div>
-        </div>
+        
+          <div class="word-card" data-word="fox"><span class="master-check">&#10003;</span><div class="en">fox <button class="speak-btn" onclick="event.stopPropagation();speak('fox')">&#x1F50A;</button></div><div class="phonetic">/fɒks/</div><div class="cn">狐狸</div></div>
+          <div class="word-card" data-word="lizard"><span class="master-check">&#10003;</span><div class="en">lizard <button class="speak-btn" onclick="event.stopPropagation();speak('lizard')">&#x1F50A;</button></div><div class="phonetic">/ˈlɪzərd/</div><div class="cn">蜥蜴</div></div>
+          <div class="word-card" data-word="zebra"><span class="master-check">&#10003;</span><div class="en">zebra <button class="speak-btn" onclick="event.stopPropagation();speak('zebra')">&#x1F50A;</button></div><div class="phonetic">/ˈzebrə/</div><div class="cn">斑马</div></div>
+          <div class="word-card" data-word="zoo"><span class="master-check">&#10003;</span><div class="en">zoo <button class="speak-btn" onclick="event.stopPropagation();speak('zoo')">&#x1F50A;</button></div><div class="phonetic">/zuː/</div><div class="cn">动物园</div></div>
+          <div class="word-card" data-word="pet"><span class="master-check">&#10003;</span><div class="en">pet <button class="speak-btn" onclick="event.stopPropagation();speak('pet')">&#x1F50A;</button></div><div class="phonetic">/pet/</div><div class="cn">宠物</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">I have a <span class="highlight">cat</span>.</td><td class="cn-sentence">我有一只猫。</td></tr>
@@ -466,21 +477,13 @@
       </section>
 
       <!-- ====== 6. SCHOOL ====== -->
-      <section id="school">
+            <!-- ====== 第三章 日常生活 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x1F3E0;</span><span class="chap-num">第三章</span>日常生活</div>
+<section id="school">
         <h2><span class="icon bg-blue">&#x1F4DA;</span>学校 School</h2>
         <p class="section-intro">每天上学都会用到的词汇！</p>
         <div class="word-grid" data-group="school">
-          <div class="word-card" data-word="school"><span class="master-check">&#10003;</span><div class="en">school <button class="speak-btn" onclick="event.stopPropagation();speak('school')">&#x1F50A;</button>
-      <div class="word-card" data-word="pen"><span class="master-check">&#10003;</span><div class="en">pen <button class="speak-btn" onclick="event.stopPropagation();speak('pen')">&#x1F50A;</button></div><div class="phonetic">/pen/</div><div class="cn">钢笔</div></div>
-      <div class="word-card" data-word="pencil"><span class="master-check">&#10003;</span><div class="en">pencil <button class="speak-btn" onclick="event.stopPropagation();speak('pencil')">&#x1F50A;</button></div><div class="phonetic">/ˈpensəl/</div><div class="cn">铅笔</div></div>
-      <div class="word-card" data-word="ruler"><span class="master-check">&#10003;</span><div class="en">ruler <button class="speak-btn" onclick="event.stopPropagation();speak('ruler')">&#x1F50A;</button></div><div class="phonetic">/ˈruːlər/</div><div class="cn">尺子</div></div>
-      <div class="word-card" data-word="eraser"><span class="master-check">&#10003;</span><div class="en">eraser <button class="speak-btn" onclick="event.stopPropagation();speak('eraser')">&#x1F50A;</button></div><div class="phonetic">/ɪˈreɪsər/</div><div class="cn">橡皮</div></div>
-      <div class="word-card" data-word="board"><span class="master-check">&#10003;</span><div class="en">board <button class="speak-btn" onclick="event.stopPropagation();speak('board')">&#x1F50A;</button></div><div class="phonetic">/bɔːrd/</div><div class="cn">黑板</div></div>
-      <div class="word-card" data-word="page"><span class="master-check">&#10003;</span><div class="en">page <button class="speak-btn" onclick="event.stopPropagation();speak('page')">&#x1F50A;</button></div><div class="phonetic">/peɪdʒ/</div><div class="cn">页</div></div>
-      <div class="word-card" data-word="letter"><span class="master-check">&#10003;</span><div class="en">letter <button class="speak-btn" onclick="event.stopPropagation();speak('letter')">&#x1F50A;</button></div><div class="phonetic">/ˈletər/</div><div class="cn">字母</div></div>
-      <div class="word-card" data-word="lesson"><span class="master-check">&#10003;</span><div class="en">lesson <button class="speak-btn" onclick="event.stopPropagation();speak('lesson')">&#x1F50A;</button></div><div class="phonetic">/ˈlesən/</div><div class="cn">课</div></div>
-      <div class="word-card" data-word="class"><span class="master-check">&#10003;</span><div class="en">class <button class="speak-btn" onclick="event.stopPropagation();speak('class')">&#x1F50A;</button></div><div class="phonetic">/klɑːs/</div><div class="cn">班级</div></div>
-        </div><div class="phonetic">/sku&#x02D0;l/</div><div class="cn">学校</div></div>
+          <div class="word-card" data-word="school"><span class="master-check">&#10003;</span><div class="en">school <button class="speak-btn" onclick="event.stopPropagation();speak('school')">&#x1F50A;</button></div><div class="phonetic">/sku&#x02D0;l/</div><div class="cn">学校</div></div>
           <div class="word-card" data-word="classroom"><span class="master-check">&#10003;</span><div class="en">classroom <button class="speak-btn" onclick="event.stopPropagation();speak('classroom')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;kl&#x00E6;sru&#x02D0;m/</div><div class="cn">教室</div></div>
           <div class="word-card" data-word="teacher"><span class="master-check">&#10003;</span><div class="en">teacher <button class="speak-btn" onclick="event.stopPropagation();speak('teacher')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;ti&#x02D0;t&#x0283;&#x0259;r/</div><div class="cn">老师</div></div>
           <div class="word-card" data-word="book"><span class="master-check">&#10003;</span><div class="en">book <button class="speak-btn" onclick="event.stopPropagation();speak('book')">&#x1F50A;</button></div><div class="phonetic">/b&#x028A;k/</div><div class="cn">书</div></div>
@@ -498,7 +501,17 @@
           <div class="word-card" data-word="paper"><span class="master-check">&#10003;</span><div class="en">paper <button class="speak-btn" onclick="event.stopPropagation();speak('paper')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;pe&#x026A;p&#x0259;r/</div><div class="cn">纸</div></div>
           <div class="word-card" data-word="computer"><span class="master-check">&#10003;</span><div class="en">computer <button class="speak-btn" onclick="event.stopPropagation();speak('computer')">&#x1F50A;</button></div><div class="phonetic">/k&#x0259;m&#x02C8;pju&#x02D0;t&#x0259;r/</div><div class="cn">电脑</div></div>
           <div class="word-card" data-word="picture"><span class="master-check">&#10003;</span><div class="en">picture <button class="speak-btn" onclick="event.stopPropagation();speak('picture')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;p&#x026A;kt&#x0283;&#x0259;r/</div><div class="cn">图片</div></div>
-        </div>
+        
+          <div class="word-card" data-word="pen"><span class="master-check">&#10003;</span><div class="en">pen <button class="speak-btn" onclick="event.stopPropagation();speak('pen')">&#x1F50A;</button></div><div class="phonetic">/pen/</div><div class="cn">钢笔</div></div>
+          <div class="word-card" data-word="pencil"><span class="master-check">&#10003;</span><div class="en">pencil <button class="speak-btn" onclick="event.stopPropagation();speak('pencil')">&#x1F50A;</button></div><div class="phonetic">/ˈpensəl/</div><div class="cn">铅笔</div></div>
+          <div class="word-card" data-word="ruler"><span class="master-check">&#10003;</span><div class="en">ruler <button class="speak-btn" onclick="event.stopPropagation();speak('ruler')">&#x1F50A;</button></div><div class="phonetic">/ˈruːlər/</div><div class="cn">尺子</div></div>
+          <div class="word-card" data-word="eraser"><span class="master-check">&#10003;</span><div class="en">eraser <button class="speak-btn" onclick="event.stopPropagation();speak('eraser')">&#x1F50A;</button></div><div class="phonetic">/ɪˈreɪsər/</div><div class="cn">橡皮</div></div>
+          <div class="word-card" data-word="board"><span class="master-check">&#10003;</span><div class="en">board <button class="speak-btn" onclick="event.stopPropagation();speak('board')">&#x1F50A;</button></div><div class="phonetic">/bɔːrd/</div><div class="cn">黑板</div></div>
+          <div class="word-card" data-word="page"><span class="master-check">&#10003;</span><div class="en">page <button class="speak-btn" onclick="event.stopPropagation();speak('page')">&#x1F50A;</button></div><div class="phonetic">/peɪdʒ/</div><div class="cn">页</div></div>
+          <div class="word-card" data-word="letter"><span class="master-check">&#10003;</span><div class="en">letter <button class="speak-btn" onclick="event.stopPropagation();speak('letter')">&#x1F50A;</button></div><div class="phonetic">/ˈletər/</div><div class="cn">字母</div></div>
+          <div class="word-card" data-word="lesson"><span class="master-check">&#10003;</span><div class="en">lesson <button class="speak-btn" onclick="event.stopPropagation();speak('lesson')">&#x1F50A;</button></div><div class="phonetic">/ˈlesən/</div><div class="cn">课</div></div>
+          <div class="word-card" data-word="class"><span class="master-check">&#10003;</span><div class="en">class <button class="speak-btn" onclick="event.stopPropagation();speak('class')">&#x1F50A;</button></div><div class="phonetic">/klɑːs/</div><div class="cn">班级</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">This is my <span class="highlight">book</span>.</td><td class="cn-sentence">这是我的书。</td></tr>
@@ -548,6 +561,17 @@
           <tr><td class="en-sentence">Do you like <span class="highlight">bananas</span>?</td><td class="cn-sentence">你喜欢香蕉吗？</td></tr>
           <tr><td class="en-sentence">Can I have some <span class="highlight">water</span>?</td><td class="cn-sentence">我能喝点水吗？</td></tr>
         </tbody></table></div>
+        <h3>更多食物</h3>
+        <div class="word-grid" data-group="food-more">
+          <div class="word-card" data-word="bread"><span class="master-check">&#10003;</span><div class="en">bread <button class="speak-btn" onclick="event.stopPropagation();speak('bread')">&#x1F50A;</button></div><div class="phonetic">/bred/</div><div class="cn">面包</div></div>
+          <div class="word-card" data-word="cheese"><span class="master-check">&#10003;</span><div class="en">cheese <button class="speak-btn" onclick="event.stopPropagation();speak('cheese')">&#x1F50A;</button></div><div class="phonetic">/t&#x0283;i&#x02D0;z/</div><div class="cn">奶酪</div></div>
+          <div class="word-card" data-word="meat"><span class="master-check">&#10003;</span><div class="en">meat <button class="speak-btn" onclick="event.stopPropagation();speak('meat')">&#x1F50A;</button></div><div class="phonetic">/mi&#x02D0;t/</div><div class="cn">肉</div></div>
+          <div class="word-card" data-word="salad"><span class="master-check">&#10003;</span><div class="en">salad <button class="speak-btn" onclick="event.stopPropagation();speak('salad')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;s&#x00E6;l&#x0259;d/</div><div class="cn">沙拉</div></div>
+          <div class="word-card" data-word="breakfast"><span class="master-check">&#10003;</span><div class="en">breakfast <button class="speak-btn" onclick="event.stopPropagation();speak('breakfast')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;brekf&#x0259;st/</div><div class="cn">早餐</div></div>
+          <div class="word-card" data-word="lunch"><span class="master-check">&#10003;</span><div class="en">lunch <button class="speak-btn" onclick="event.stopPropagation();speak('lunch')">&#x1F50A;</button></div><div class="phonetic">/l&#x028Cnt&#x0283;/</div><div class="cn">午餐</div></div>
+          <div class="word-card" data-word="dinner"><span class="master-check">&#10003;</span><div class="en">dinner <button class="speak-btn" onclick="event.stopPropagation();speak('dinner')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;d&#x026An&#x0259;r/</div><div class="cn">晚餐</div></div>
+          <div class="word-card" data-word="eat"><span class="master-check">&#10003;</span><div class="en">eat <button class="speak-btn" onclick="event.stopPropagation();speak('eat')">&#x1F50A;</button></div><div class="phonetic">/i&#x02D0;t/</div><div class="cn">吃</div></div>
+        </div>
       </section>
 
       <!-- ====== 8. CLOTHES ====== -->
@@ -555,20 +579,7 @@
         <h2><span class="icon bg-pink">&#x1F455;</span>衣服 Clothes</h2>
         <p class="section-intro">每天穿什么，用英语说一说！</p>
         <div class="word-grid" data-group="clothes">
-          <div class="word-card" data-word="T-shirt"><span class="master-check">&#10003;</span><div class="en">T-shirt <button class="speak-btn" onclick="event.stopPropagation();speak('T-shirt')">&#x1F50A;</button>
-      <div class="word-card" data-word="boots"><span class="master-check">&#10003;</span><div class="en">boots <button class="speak-btn" onclick="event.stopPropagation();speak('boots')">&#x1F50A;</button></div><div class="phonetic">/buːts/</div><div class="cn">靴子</div></div>
-      <div class="word-card" data-word="cap"><span class="master-check">&#10003;</span><div class="en">cap <button class="speak-btn" onclick="event.stopPropagation();speak('cap')">&#x1F50A;</button></div><div class="phonetic">/kæp/</div><div class="cn">鸭舌帽</div></div>
-      <div class="word-card" data-word="coat"><span class="master-check">&#10003;</span><div class="en">coat <button class="speak-btn" onclick="event.stopPropagation();speak('coat')">&#x1F50A;</button></div><div class="phonetic">/koʊt/</div><div class="cn">外套</div></div>
-      <div class="word-card" data-word="dress"><span class="master-check">&#10003;</span><div class="en">dress <button class="speak-btn" onclick="event.stopPropagation();speak('dress')">&#x1F50A;</button></div><div class="phonetic">/dres/</div><div class="cn">连衣裙</div></div>
-      <div class="word-card" data-word="glasses"><span class="master-check">&#10003;</span><div class="en">glasses <button class="speak-btn" onclick="event.stopPropagation();speak('glasses')">&#x1F50A;</button></div><div class="phonetic">/ˈɡlɑːsɪz/</div><div class="cn">眼镜</div></div>
-      <div class="word-card" data-word="jacket"><span class="master-check">&#10003;</span><div class="en">jacket <button class="speak-btn" onclick="event.stopPropagation();speak('jacket')">&#x1F50A;</button></div><div class="phonetic">/ˈdʒækɪt/</div><div class="cn">夹克</div></div>
-      <div class="word-card" data-word="jeans"><span class="master-check">&#10003;</span><div class="en">jeans <button class="speak-btn" onclick="event.stopPropagation();speak('jeans')">&#x1F50A;</button></div><div class="phonetic">/dʒiːnz/</div><div class="cn">牛仔裤</div></div>
-      <div class="word-card" data-word="shorts"><span class="master-check">&#10003;</span><div class="en">shorts <button class="speak-btn" onclick="event.stopPropagation();speak('shorts')">&#x1F50A;</button></div><div class="phonetic">/ʃɔːrts/</div><div class="cn">短裤</div></div>
-      <div class="word-card" data-word="skirt"><span class="master-check">&#10003;</span><div class="en">skirt <button class="speak-btn" onclick="event.stopPropagation();speak('skirt')">&#x1F50A;</button></div><div class="phonetic">/skɜːrt/</div><div class="cn">裙子</div></div>
-      <div class="word-card" data-word="sock"><span class="master-check">&#10003;</span><div class="en">sock <button class="speak-btn" onclick="event.stopPropagation();speak('sock')">&#x1F50A;</button></div><div class="phonetic">/sɒk/</div><div class="cn">袜子</div></div>
-      <div class="word-card" data-word="trousers"><span class="master-check">&#10003;</span><div class="en">trousers <button class="speak-btn" onclick="event.stopPropagation();speak('trousers')">&#x1F50A;</button></div><div class="phonetic">/ˈtraʊzərz/</div><div class="cn">长裤</div></div>
-      <div class="word-card" data-word="T-shirt"><span class="master-check">&#10003;</span><div class="en">T-shirt <button class="speak-btn" onclick="event.stopPropagation();speak('T-shirt')">&#x1F50A;</button></div><div class="phonetic">/ˈtiː ʃɜːrt/</div><div class="cn">T恤</div></div>
-        </div><div class="phonetic">/&#x02C8;ti&#x02D0;&#x0283;&#x025C;&#x02D0;rt/</div><div class="cn">T恤衫</div></div>
+          <div class="word-card" data-word="T-shirt"><span class="master-check">&#10003;</span><div class="en">T-shirt <button class="speak-btn" onclick="event.stopPropagation();speak('T-shirt')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;ti&#x02D0;&#x0283;&#x025C;&#x02D0;rt/</div><div class="cn">T恤衫</div></div>
           <div class="word-card" data-word="dress"><span class="master-check">&#10003;</span><div class="en">dress <button class="speak-btn" onclick="event.stopPropagation();speak('dress')">&#x1F50A;</button></div><div class="phonetic">/dres/</div><div class="cn">连衣裙</div></div>
           <div class="word-card" data-word="shirt"><span class="master-check">&#10003;</span><div class="en">shirt <button class="speak-btn" onclick="event.stopPropagation();speak('shirt')">&#x1F50A;</button></div><div class="phonetic">/&#x0283;&#x025C;&#x02D0;rt/</div><div class="cn">衬衫</div></div>
           <div class="word-card" data-word="jacket"><span class="master-check">&#10003;</span><div class="en">jacket <button class="speak-btn" onclick="event.stopPropagation();speak('jacket')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;d&#x0292;&#x00E6;k&#x026A;t/</div><div class="cn">夹克</div></div>
@@ -581,7 +592,20 @@
           <div class="word-card" data-word="boots"><span class="master-check">&#10003;</span><div class="en">boots <button class="speak-btn" onclick="event.stopPropagation();speak('boots')">&#x1F50A;</button></div><div class="phonetic">/bu&#x02D0;ts/</div><div class="cn">靴子</div></div>
           <div class="word-card" data-word="hat"><span class="master-check">&#10003;</span><div class="en">hat <button class="speak-btn" onclick="event.stopPropagation();speak('hat')">&#x1F50A;</button></div><div class="phonetic">/h&#x00E6;t/</div><div class="cn">帽子</div></div>
           <div class="word-card" data-word="glasses"><span class="master-check">&#10003;</span><div class="en">glasses <button class="speak-btn" onclick="event.stopPropagation();speak('glasses')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;&#x0261;l&#x00E6;s&#x026A;z/</div><div class="cn">眼镜</div></div>
-        </div>
+        
+          <div class="word-card" data-word="boots"><span class="master-check">&#10003;</span><div class="en">boots <button class="speak-btn" onclick="event.stopPropagation();speak('boots')">&#x1F50A;</button></div><div class="phonetic">/buːts/</div><div class="cn">靴子</div></div>
+          <div class="word-card" data-word="cap"><span class="master-check">&#10003;</span><div class="en">cap <button class="speak-btn" onclick="event.stopPropagation();speak('cap')">&#x1F50A;</button></div><div class="phonetic">/kæp/</div><div class="cn">鸭舌帽</div></div>
+          <div class="word-card" data-word="coat"><span class="master-check">&#10003;</span><div class="en">coat <button class="speak-btn" onclick="event.stopPropagation();speak('coat')">&#x1F50A;</button></div><div class="phonetic">/koʊt/</div><div class="cn">外套</div></div>
+          <div class="word-card" data-word="dress"><span class="master-check">&#10003;</span><div class="en">dress <button class="speak-btn" onclick="event.stopPropagation();speak('dress')">&#x1F50A;</button></div><div class="phonetic">/dres/</div><div class="cn">连衣裙</div></div>
+          <div class="word-card" data-word="glasses"><span class="master-check">&#10003;</span><div class="en">glasses <button class="speak-btn" onclick="event.stopPropagation();speak('glasses')">&#x1F50A;</button></div><div class="phonetic">/ˈɡlɑːsɪz/</div><div class="cn">眼镜</div></div>
+          <div class="word-card" data-word="jacket"><span class="master-check">&#10003;</span><div class="en">jacket <button class="speak-btn" onclick="event.stopPropagation();speak('jacket')">&#x1F50A;</button></div><div class="phonetic">/ˈdʒækɪt/</div><div class="cn">夹克</div></div>
+          <div class="word-card" data-word="jeans"><span class="master-check">&#10003;</span><div class="en">jeans <button class="speak-btn" onclick="event.stopPropagation();speak('jeans')">&#x1F50A;</button></div><div class="phonetic">/dʒiːnz/</div><div class="cn">牛仔裤</div></div>
+          <div class="word-card" data-word="shorts"><span class="master-check">&#10003;</span><div class="en">shorts <button class="speak-btn" onclick="event.stopPropagation();speak('shorts')">&#x1F50A;</button></div><div class="phonetic">/ʃɔːrts/</div><div class="cn">短裤</div></div>
+          <div class="word-card" data-word="skirt"><span class="master-check">&#10003;</span><div class="en">skirt <button class="speak-btn" onclick="event.stopPropagation();speak('skirt')">&#x1F50A;</button></div><div class="phonetic">/skɜːrt/</div><div class="cn">裙子</div></div>
+          <div class="word-card" data-word="sock"><span class="master-check">&#10003;</span><div class="en">sock <button class="speak-btn" onclick="event.stopPropagation();speak('sock')">&#x1F50A;</button></div><div class="phonetic">/sɒk/</div><div class="cn">袜子</div></div>
+          <div class="word-card" data-word="trousers"><span class="master-check">&#10003;</span><div class="en">trousers <button class="speak-btn" onclick="event.stopPropagation();speak('trousers')">&#x1F50A;</button></div><div class="phonetic">/ˈtraʊzərz/</div><div class="cn">长裤</div></div>
+          <div class="word-card" data-word="T-shirt"><span class="master-check">&#10003;</span><div class="en">T-shirt <button class="speak-btn" onclick="event.stopPropagation();speak('T-shirt')">&#x1F50A;</button></div><div class="phonetic">/ˈtiː ʃɜːrt/</div><div class="cn">T恤</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">This is my <span class="highlight">T-shirt</span>.</td><td class="cn-sentence">这是我的T恤衫。</td></tr>
@@ -626,6 +650,26 @@
         </tbody></table></div>
       </section>
 
+      <!-- ====== 交通工具 TRANSPORT ====== -->
+      <section id="transport">
+        <h2><span class="icon bg-blue">&#x1F68C;</span>交通工具 Transport</h2>
+        <p class="section-intro">认识各种交通工具！</p>
+        <div class="word-grid" data-group="transport">
+          <div class="word-card" data-word="bus"><span class="master-check">&#10003;</span><div class="en">bus <button class="speak-btn" onclick="event.stopPropagation();speak('bus')">&#x1F50A;</button></div><div class="phonetic">/b&#028Cs;/</div><div class="cn">公交车</div></div>
+          <div class="word-card" data-word="car"><span class="master-check">&#10003;</span><div class="en">car <button class="speak-btn" onclick="event.stopPropagation();speak('car')">&#x1F50A;</button></div><div class="phonetic">/k&#0251;&#02D0;r/</div><div class="cn">汽车</div></div>
+          <div class="word-card" data-word="bike"><span class="master-check">&#10003;</span><div class="en">bike <button class="speak-btn" onclick="event.stopPropagation();speak('bike')">&#x1F50A;</button></div><div class="phonetic">/ba&#026Ak;/</div><div class="cn">自行车</div></div>
+          <div class="word-card" data-word="boat"><span class="master-check">&#10003;</span><div class="en">boat <button class="speak-btn" onclick="event.stopPropagation();speak('boat')">&#x1F50A;</button></div><div class="phonetic">/bo&#028At;/</div><div class="cn">小船</div></div>
+          <div class="word-card" data-word="plane"><span class="master-check">&#10003;</span><div class="en">plane <button class="speak-btn" onclick="event.stopPropagation();speak('plane')">&#x1F50A;</button></div><div class="phonetic">/ple&#026An;/</div><div class="cn">飞机</div></div>
+          <div class="word-card" data-word="train"><span class="master-check">&#10003;</span><div class="en">train <button class="speak-btn" onclick="event.stopPropagation();speak('train')">&#x1F50A;</button></div><div class="phonetic">/tre&#026An;/</div><div class="cn">火车</div></div>
+          <div class="word-card" data-word="truck"><span class="master-check">&#10003;</span><div class="en">truck <button class="speak-btn" onclick="event.stopPropagation();speak('truck')">&#x1F50A;</button></div><div class="phonetic">/tr&#028Ck;/</div><div class="cn">卡车</div></div>
+          <div class="word-card" data-word="van"><span class="master-check">&#10003;</span><div class="en">van <button class="speak-btn" onclick="event.stopPropagation();speak('van')">&#x1F50A;</button></div><div class="phonetic">/v&#00E6;n/</div><div class="cn">面包车</div></div>
+          <div class="word-card" data-word="ship"><span class="master-check">&#10003;</span><div class="en">ship <button class="speak-btn" onclick="event.stopPropagation();speak('ship')">&#x1F50A;</button></div><div class="phonetic">/&#0283;&#026Ap;/</div><div class="cn">轮船</div></div>
+          <div class="word-card" data-word="helicopter"><span class="master-check">&#10003;</span><div class="en">helicopter <button class="speak-btn" onclick="event.stopPropagation();speak('helicopter')">&#x1F50A;</button></div><div class="phonetic">/&#02C8;hel&#026Ak&#0252;pt&#0259;r/</div><div class="cn">直升机</div></div>
+          <div class="word-card" data-word="drive"><span class="master-check">&#10003;</span><div class="en">drive <button class="speak-btn" onclick="event.stopPropagation();speak('drive')">&#x1F50A;</button></div><div class="phonetic">/dra&#026Av;/</div><div class="cn">驾驶</div></div>
+          <div class="word-card" data-word="ride"><span class="master-check">&#10003;</span><div class="en">ride <button class="speak-btn" onclick="event.stopPropagation();speak('ride')">&#x1F50A;</button></div><div class="phonetic">/ra&#026Ad;/</div><div class="cn">骑</div></div>
+        </div>
+      </section>
+
       <!-- ====== 10. TOYS ====== -->
       <section id="toys">
         <h2><span class="icon bg-purple">&#x26BD;</span>玩具与活动 Toys</h2>
@@ -654,8 +698,31 @@
         </tbody></table></div>
       </section>
 
+      <!-- ====== 运动休闲 SPORTS ====== -->
+      <section id="sports">
+        <h2><span class="icon bg-green">&#x26BD;</span>运动休闲 Sports</h2>
+        <p class="section-intro">动起来！运动词汇大全！</p>
+        <div class="word-grid" data-group="sports">
+          <div class="word-card" data-word="ball"><span class="master-check">&#10003;</span><div class="en">ball <button class="speak-btn" onclick="event.stopPropagation();speak('ball')">&#x1F50A;</button></div><div class="phonetic">/b&#0254;&#02D0;l/</div><div class="cn">球</div></div>
+          <div class="word-card" data-word="football"><span class="master-check">&#10003;</span><div class="en">football <button class="speak-btn" onclick="event.stopPropagation();speak('football')">&#x1F50A;</button></div><div class="phonetic">/&#02C8;f&#028Ct;b&#0254;&#02D0;l/</div><div class="cn">足球</div></div>
+          <div class="word-card" data-word="basketball"><span class="master-check">&#10003;</span><div class="en">basketball <button class="speak-btn" onclick="event.stopPropagation();speak('basketball')">&#x1F50A;</button></div><div class="phonetic">/&#02C8;b&#0251;&#02D0;sk&#026At;b&#0254;&#02D0;l/</div><div class="cn">篮球</div></div>
+          <div class="word-card" data-word="swim"><span class="master-check">&#10003;</span><div class="en">swim <button class="speak-btn" onclick="event.stopPropagation();speak('swim')">&#x1F50A;</button></div><div class="phonetic">/sw&#026Am;/</div><div class="cn">游泳</div></div>
+          <div class="word-card" data-word="run"><span class="master-check">&#10003;</span><div class="en">run <button class="speak-btn" onclick="event.stopPropagation();speak('run')">&#x1F50A;</button></div><div class="phonetic">/r&#028Cn;/</div><div class="cn">跑步</div></div>
+          <div class="word-card" data-word="jump"><span class="master-check">&#10003;</span><div class="en">jump <button class="speak-btn" onclick="event.stopPropagation();speak('jump')">&#x1F50A;</button></div><div class="phonetic">/d&#0292;&#028Cmp;/</div><div class="cn">跳</div></div>
+          <div class="word-card" data-word="kick"><span class="master-check">&#10003;</span><div class="en">kick <button class="speak-btn" onclick="event.stopPropagation();speak('kick')">&#x1F50A;</button></div><div class="phonetic">/k&#026Ak;/</div><div class="cn">踢</div></div>
+          <div class="word-card" data-word="kite"><span class="master-check">&#10003;</span><div class="en">kite <button class="speak-btn" onclick="event.stopPropagation();speak('kite')">&#x1F50A;</button></div><div class="phonetic">/ka&#026At;/</div><div class="cn">风筝</div></div>
+          <div class="word-card" data-word="skateboard"><span class="master-check">&#10003;</span><div class="en">skateboard <button class="speak-btn" onclick="event.stopPropagation();speak('skateboard')">&#x1F50A;</button></div><div class="phonetic">/&#02C8;ske&#026At;b&#0254;&#02D0;rd/</div><div class="cn">滑板</div></div>
+          <div class="word-card" data-word="dance"><span class="master-check">&#10003;</span><div class="en">dance <button class="speak-btn" onclick="event.stopPropagation();speak('dance')">&#x1F50A;</button></div><div class="phonetic">/d&#0251;&#02D0;ns/</div><div class="cn">跳舞</div></div>
+          <div class="word-card" data-word="sing"><span class="master-check">&#10003;</span><div class="en">sing <button class="speak-btn" onclick="event.stopPropagation();speak('sing')">&#x1F50A;</button></div><div class="phonetic">/s&#026A;&#014B;/</div><div class="cn">唱歌</div></div>
+          <div class="word-card" data-word="song"><span class="master-check">&#10003;</span><div class="en">song <button class="speak-btn" onclick="event.stopPropagation();speak('song')">&#x1F50A;</button></div><div class="phonetic">/s&#0252;&#014B;/</div><div class="cn">歌曲</div></div>
+          <div class="word-card" data-word="play"><span class="master-check">&#10003;</span><div class="en">play <button class="speak-btn" onclick="event.stopPropagation();speak('play')">&#x1F50A;</button></div><div class="phonetic">/ple&#026A;/</div><div class="cn">玩</div></div>
+        </div>
+      </section>
+
       <!-- ====== 11. ADJECTIVES ====== -->
-      <section id="adjectives">
+            <!-- ====== 第四章 描述与表达 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x1F4AC;</span><span class="chap-num">第四章</span>描述与表达</div>
+<section id="adjectives">
         <h2><span class="icon bg-pink">&#x2B50;</span>形容词 Adjectives</h2>
         <p class="section-intro">用来描述东西的样子和感受！</p>
         <h3>大小与外观</h3>
@@ -672,12 +739,7 @@
         </div>
         <h3>感受与评价</h3>
         <div class="word-grid" data-group="adj-feeling">
-          <div class="word-card" data-word="happy"><span class="master-check">&#10003;</span><div class="en">happy <button class="speak-btn" onclick="event.stopPropagation();speak('happy')">&#x1F50A;</button>
-      <div class="word-card" data-word="angry"><span class="master-check">&#10003;</span><div class="en">angry <button class="speak-btn" onclick="event.stopPropagation();speak('angry')">&#x1F50A;</button></div><div class="phonetic">/ˈæŋɪri/</div><div class="cn">生气的</div></div>
-      <div class="word-card" data-word="scared"><span class="master-check">&#10003;</span><div class="en">scared <button class="speak-btn" onclick="event.stopPropagation();speak('scared')">&#x1F50A;</button></div><div class="phonetic">/skeərd/</div><div class="cn">害怕的</div></div>
-      <div class="word-card" data-word="tired"><span class="master-check">&#10003;</span><div class="en">tired <button class="speak-btn" onclick="event.stopPropagation();speak('tired')">&#x1F50A;</button></div><div class="phonetic">/ˈtaɪərd/</div><div class="cn">累的</div></div>
-      <div class="word-card" data-word="sorry"><span class="master-check">&#10003;</span><div class="en">sorry <button class="speak-btn" onclick="event.stopPropagation();speak('sorry')">&#x1F50A;</button></div><div class="phonetic">/ˈsɒri/</div><div class="cn">抱歉的</div></div>
-        </div><div class="phonetic">/&#x02C8;h&#x00E6;pi/</div><div class="cn">开心的</div></div>
+          <div class="word-card" data-word="happy"><span class="master-check">&#10003;</span><div class="en">happy <button class="speak-btn" onclick="event.stopPropagation();speak('happy')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;h&#x00E6;pi/</div><div class="cn">开心的</div></div>
           <div class="word-card" data-word="sad"><span class="master-check">&#10003;</span><div class="en">sad <button class="speak-btn" onclick="event.stopPropagation();speak('sad')">&#x1F50A;</button></div><div class="phonetic">/s&#x00E6;d/</div><div class="cn">伤心的</div></div>
           <div class="word-card" data-word="angry"><span class="master-check">&#10003;</span><div class="en">angry <button class="speak-btn" onclick="event.stopPropagation();speak('angry')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;&#x00E6;&#x014B;&#x0261;ri/</div><div class="cn">生气的</div></div>
           <div class="word-card" data-word="scared"><span class="master-check">&#10003;</span><div class="en">scared <button class="speak-btn" onclick="event.stopPropagation();speak('scared')">&#x1F50A;</button></div><div class="phonetic">/skerd/</div><div class="cn">害怕的</div></div>
@@ -687,7 +749,12 @@
           <div class="word-card" data-word="nice"><span class="master-check">&#10003;</span><div class="en">nice <button class="speak-btn" onclick="event.stopPropagation();speak('nice')">&#x1F50A;</button></div><div class="phonetic">/na&#x026A;s/</div><div class="cn">好的/棒的</div></div>
           <div class="word-card" data-word="beautiful"><span class="master-check">&#10003;</span><div class="en">beautiful <button class="speak-btn" onclick="event.stopPropagation();speak('beautiful')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;bju&#x02D0;t&#x026A;fl/</div><div class="cn">美丽的</div></div>
           <div class="word-card" data-word="funny"><span class="master-check">&#10003;</span><div class="en">funny <button class="speak-btn" onclick="event.stopPropagation();speak('funny')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;f&#x028C;ni/</div><div class="cn">好笑的</div></div>
-        </div>
+        
+          <div class="word-card" data-word="angry"><span class="master-check">&#10003;</span><div class="en">angry <button class="speak-btn" onclick="event.stopPropagation();speak('angry')">&#x1F50A;</button></div><div class="phonetic">/ˈæŋɪri/</div><div class="cn">生气的</div></div>
+          <div class="word-card" data-word="scared"><span class="master-check">&#10003;</span><div class="en">scared <button class="speak-btn" onclick="event.stopPropagation();speak('scared')">&#x1F50A;</button></div><div class="phonetic">/skeərd/</div><div class="cn">害怕的</div></div>
+          <div class="word-card" data-word="tired"><span class="master-check">&#10003;</span><div class="en">tired <button class="speak-btn" onclick="event.stopPropagation();speak('tired')">&#x1F50A;</button></div><div class="phonetic">/ˈtaɪərd/</div><div class="cn">累的</div></div>
+          <div class="word-card" data-word="sorry"><span class="master-check">&#10003;</span><div class="en">sorry <button class="speak-btn" onclick="event.stopPropagation();speak('sorry')">&#x1F50A;</button></div><div class="phonetic">/ˈsɒri/</div><div class="cn">抱歉的</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">The <span class="highlight">big</span> elephant.</td><td class="cn-sentence">那头大象很大。</td></tr>
@@ -791,20 +858,20 @@
         <h2><span class="icon bg-orange">&#x23F0;</span>时间 Time</h2>
         <p class="section-intro">一天中的时间！</p>
         <div class="word-grid" data-group="time">
-          <div class="word-card" data-word="morning"><span class="master-check">&#10003;</span><div class="en">morning <button class="speak-btn" onclick="event.stopPropagation();speak('morning')">&#x1F50A;</button>
-      <div class="word-card" data-word="birthday"><span class="master-check">&#10003;</span><div class="en">birthday <button class="speak-btn" onclick="event.stopPropagation();speak('birthday')">&#x1F50A;</button></div><div class="phonetic">/ˈbɜːrθdeɪ/</div><div class="cn">生日</div></div>
-      <div class="word-card" data-word="year"><span class="master-check">&#10003;</span><div class="en">year <button class="speak-btn" onclick="event.stopPropagation();speak('year')">&#x1F50A;</button></div><div class="phonetic">/jɪər/</div><div class="cn">年</div></div>
-      <div class="word-card" data-word="afternoon"><span class="master-check">&#10003;</span><div class="en">afternoon <button class="speak-btn" onclick="event.stopPropagation();speak('afternoon')">&#x1F50A;</button></div><div class="phonetic">/ˌæftərˈnuːn/</div><div class="cn">下午</div></div>
-      <div class="word-card" data-word="evening"><span class="master-check">&#10003;</span><div class="en">evening <button class="speak-btn" onclick="event.stopPropagation();speak('evening')">&#x1F50A;</button></div><div class="phonetic">/ˈiːvnɪŋ/</div><div class="cn">晚上</div></div>
-      <div class="word-card" data-word="night"><span class="master-check">&#10003;</span><div class="en">night <button class="speak-btn" onclick="event.stopPropagation();speak('night')">&#x1F50A;</button></div><div class="phonetic">/naɪt/</div><div class="cn">夜晚</div></div>
-      <div class="word-card" data-word="day"><span class="master-check">&#10003;</span><div class="en">day <button class="speak-btn" onclick="event.stopPropagation();speak('day')">&#x1F50A;</button></div><div class="phonetic">/deɪ/</div><div class="cn">天</div></div>
-        </div><div class="phonetic">/&#x02C8;m&#x0254;&#x02D0;rn&#x026A;&#x014B;/</div><div class="cn">早上</div></div>
+          <div class="word-card" data-word="morning"><span class="master-check">&#10003;</span><div class="en">morning <button class="speak-btn" onclick="event.stopPropagation();speak('morning')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;m&#x0254;&#x02D0;rn&#x026A;&#x014B;/</div><div class="cn">早上</div></div>
           <div class="word-card" data-word="afternoon"><span class="master-check">&#10003;</span><div class="en">afternoon <button class="speak-btn" onclick="event.stopPropagation();speak('afternoon')">&#x1F50A;</button></div><div class="phonetic">/&#x02CC;&#x0251;&#x02D0;ft&#x0259;r&#x02C8;nu&#x02D0;n/</div><div class="cn">下午</div></div>
           <div class="word-card" data-word="evening"><span class="master-check">&#10003;</span><div class="en">evening <button class="speak-btn" onclick="event.stopPropagation();speak('evening')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;i&#x02D0;vn&#x026A;&#x014B;/</div><div class="cn">傍晚</div></div>
           <div class="word-card" data-word="night"><span class="master-check">&#10003;</span><div class="en">night <button class="speak-btn" onclick="event.stopPropagation();speak('night')">&#x1F50A;</button></div><div class="phonetic">/na&#x026A;t/</div><div class="cn">夜晚</div></div>
           <div class="word-card" data-word="today"><span class="master-check">&#10003;</span><div class="en">today <button class="speak-btn" onclick="event.stopPropagation();speak('today')">&#x1F50A;</button></div><div class="phonetic">/t&#x0259;&#x02C8;de&#x026A;/</div><div class="cn">今天</div></div>
           <div class="word-card" data-word="birthday"><span class="master-check">&#10003;</span><div class="en">birthday <button class="speak-btn" onclick="event.stopPropagation();speak('birthday')">&#x1F50A;</button></div><div class="phonetic">/&#x02C8;b&#x025C;&#x02D0;&#x03B8;de&#x026A;/</div><div class="cn">生日</div></div>
-        </div>
+        
+          <div class="word-card" data-word="birthday"><span class="master-check">&#10003;</span><div class="en">birthday <button class="speak-btn" onclick="event.stopPropagation();speak('birthday')">&#x1F50A;</button></div><div class="phonetic">/ˈbɜːrθdeɪ/</div><div class="cn">生日</div></div>
+          <div class="word-card" data-word="year"><span class="master-check">&#10003;</span><div class="en">year <button class="speak-btn" onclick="event.stopPropagation();speak('year')">&#x1F50A;</button></div><div class="phonetic">/jɪər/</div><div class="cn">年</div></div>
+          <div class="word-card" data-word="afternoon"><span class="master-check">&#10003;</span><div class="en">afternoon <button class="speak-btn" onclick="event.stopPropagation();speak('afternoon')">&#x1F50A;</button></div><div class="phonetic">/ˌæftərˈnuːn/</div><div class="cn">下午</div></div>
+          <div class="word-card" data-word="evening"><span class="master-check">&#10003;</span><div class="en">evening <button class="speak-btn" onclick="event.stopPropagation();speak('evening')">&#x1F50A;</button></div><div class="phonetic">/ˈiːvnɪŋ/</div><div class="cn">晚上</div></div>
+          <div class="word-card" data-word="night"><span class="master-check">&#10003;</span><div class="en">night <button class="speak-btn" onclick="event.stopPropagation();speak('night')">&#x1F50A;</button></div><div class="phonetic">/naɪt/</div><div class="cn">夜晚</div></div>
+          <div class="word-card" data-word="day"><span class="master-check">&#10003;</span><div class="en">day <button class="speak-btn" onclick="event.stopPropagation();speak('day')">&#x1F50A;</button></div><div class="phonetic">/deɪ/</div><div class="cn">天</div></div>
+</div>
         <h3>例句</h3>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">Good <span class="highlight">morning</span>!</td><td class="cn-sentence">早上好！</td></tr>
@@ -815,7 +882,9 @@
       <!-- ==================== GRAMMAR ==================== -->
 
       <!-- GRAMMAR 1 -->
-      <section id="grammar1">
+            <!-- ====== 第五章 语法专题 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x270D;</span><span class="chap-num">第五章</span>语法专题</div>
+<section id="grammar1">
         <h2><span class="icon bg-blue">&#x1F4D6;</span>语法一：be 动词 am / is / are</h2>
         <p class="section-intro">be 动词就像中文里的"是"。</p>
         <div class="grammar-box">
@@ -1056,14 +1125,54 @@
         <p class="section-intro">and 表示"和"，but 表示"但是"，or 表示"或者"。</p>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
           <tr><td class="en-sentence">I like cats <span class="highlight">and</span> dogs.</td><td class="cn-sentence">我喜欢猫和狗。</td></tr>
-          <tr><td class="en-sentence">I like apples, <span class="highlight">but</span> I don'''t like bananas.</td><td class="cn-sentence">我喜欢苹果，但是我不喜欢香蕉。</td></tr>
+          <tr><td class="en-sentence">I like apples, <span class="highlight">but</span> I don't like bananas.</td><td class="cn-sentence">我喜欢苹果，但是我不喜欢香蕉。</td></tr>
+          <tr><td class="en-sentence">Would you like tea <span class="highlight">or</span> juice?</td><td class="cn-sentence">你想要茶还是果汁？</td></tr>
+        </tbody></table></div>
+        <div class="tip"><strong>小贴士：</strong>and 连接同类事物，but 表示转折，or 表示选择。</div>
+      </section>
+
+      <!-- GRAMMAR 11 -->
+      <section id="grammar11">
+        <h2><span class="icon bg-yellow">&#x270D;</span>物主代词</h2>
+        <p class="section-intro">表示"……是我的/你的/他的"。</p>
+        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
+          <tr><td class="en-sentence">This book is <span class="highlight">mine</span>.</td><td class="cn-sentence">这本书是我的。</td></tr>
+          <tr><td class="en-sentence">Is this pen <span class="highlight">yours</span>?</td><td class="cn-sentence">这支笔是你的吗？</td></tr>
+          <tr><td class="en-sentence">The toy is <span class="highlight">his</span>.</td><td class="cn-sentence">这个玩具是他的。</td></tr>
+          <tr><td class="en-sentence">The doll is <span class="highlight">hers</span>.</td><td class="cn-sentence">这个娃娃是她的。</td></tr>
+          <tr><td class="en-sentence">This room is <span class="highlight">ours</span>.</td><td class="cn-sentence">这个房间是我们的。</td></tr>
+        </tbody></table></div>
+        <div class="tip"><strong>小贴士：</strong>mine = my + 名词，yours = your + 名词，后面不再加名词！</div>
+      </section>
+
+      <!-- GRAMMAR 12 -->
+      <section id="grammar12">
+        <h2><span class="icon bg-yellow">&#x270D;</span>指示代词 these/those</h2>
+        <p class="section-intro">these 表示"这些"（近处），those 表示"那些"（远处）。</p>
+        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
+          <tr><td class="en-sentence"><span class="highlight">These</span> are my books.</td><td class="cn-sentence">这些是我的书。</td></tr>
+          <tr><td class="en-sentence"><span class="highlight">Those</span> are red cars.</td><td class="cn-sentence">那些是红色的汽车。</td></tr>
+          <tr><td class="en-sentence">Are <span class="highlight">these</span> your pens?</td><td class="cn-sentence">这些是你的钢笔吗？</td></tr>
+        </tbody></table></div>
+        <div class="tip"><strong>小贴士：</strong>this → these（这个→这些），that → those（那个→那些）。</div>
+      </section>
+
+      <!-- GRAMMAR 13 -->
+      <section id="grammar13">
+        <h2><span class="icon bg-yellow">&#x270D;</span>连词 and / but / or</h2>
+        <p class="section-intro">and 表示"和"，but 表示"但是"，or 表示"或者"。</p>
+        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
+          <tr><td class="en-sentence">I like cats <span class="highlight">and</span> dogs.</td><td class="cn-sentence">我喜欢猫和狗。</td></tr>
+          <tr><td class="en-sentence">I like apples, <span class="highlight">but</span> I don't like bananas.</td><td class="cn-sentence">我喜欢苹果，但是我不喜欢香蕉。</td></tr>
           <tr><td class="en-sentence">Would you like tea <span class="highlight">or</span> juice?</td><td class="cn-sentence">你想要茶还是果汁？</td></tr>
         </tbody></table></div>
         <div class="tip"><strong>小贴士：</strong>and 连接同类事物，but 表示转折，or 表示选择。</div>
       </section>
 
       <!-- PHRASES -->
-      <section id="phrases">
+            <!-- ====== 第六章 实用短句 ====== -->
+      <div class="chapter-header"><span class="chap-icon">&#x2B50;</span><span class="chap-num">第六章</span>实用短句</div>
+<section id="phrases">
         <h2><span class="icon bg-yellow">&#x1F4AC;</span>常用短句 Useful Phrases</h2>
         <p class="section-intro">课堂和日常必备！</p>
         <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
@@ -1082,71 +1191,6 @@
           <tr><td class="en-sentence">Well done!</td><td class="cn-sentence">做得好！</td></tr>
           <tr><td class="en-sentence">Me too!</td><td class="cn-sentence">我也是！</td></tr>
         </tbody></table></div>
-      </section>
-
-      <!-- ====== 交通工具 TRANSPORT ====== -->
-      <section id="transport">
-        <h2><span class="icon bg-blue">&#x1F68C;</span>交通工具 Transport</h2>
-        <p class="section-intro">认识各种交通工具！</p>
-        <div class="word-grid" data-group="transport">
-      <div class="word-card" data-word="bus"><span class="master-check">&#10003;</span><div class="en">bus <button class="speak-btn" onclick="event.stopPropagation();speak('bus')">&#x1F50A;</button></div><div class="phonetic">/bʌs/</div><div class="cn">公交车</div></div>
-      <div class="word-card" data-word="car"><span class="master-check">&#10003;</span><div class="en">car <button class="speak-btn" onclick="event.stopPropagation();speak('car')">&#x1F50A;</button></div><div class="phonetic">/kɑːr/</div><div class="cn">汽车</div></div>
-      <div class="word-card" data-word="bike"><span class="master-check">&#10003;</span><div class="en">bike <button class="speak-btn" onclick="event.stopPropagation();speak('bike')">&#x1F50A;</button></div><div class="phonetic">/baɪk/</div><div class="cn">自行车</div></div>
-      <div class="word-card" data-word="boat"><span class="master-check">&#10003;</span><div class="en">boat <button class="speak-btn" onclick="event.stopPropagation();speak('boat')">&#x1F50A;</button></div><div class="phonetic">/boʊt/</div><div class="cn">小船</div></div>
-      <div class="word-card" data-word="plane"><span class="master-check">&#10003;</span><div class="en">plane <button class="speak-btn" onclick="event.stopPropagation();speak('plane')">&#x1F50A;</button></div><div class="phonetic">/pleɪn/</div><div class="cn">飞机</div></div>
-      <div class="word-card" data-word="train"><span class="master-check">&#10003;</span><div class="en">train <button class="speak-btn" onclick="event.stopPropagation();speak('train')">&#x1F50A;</button></div><div class="phonetic">/treɪn/</div><div class="cn">火车</div></div>
-      <div class="word-card" data-word="truck"><span class="master-check">&#10003;</span><div class="en">truck <button class="speak-btn" onclick="event.stopPropagation();speak('truck')">&#x1F50A;</button></div><div class="phonetic">/trʌk/</div><div class="cn">卡车</div></div>
-      <div class="word-card" data-word="van"><span class="master-check">&#10003;</span><div class="en">van <button class="speak-btn" onclick="event.stopPropagation();speak('van')">&#x1F50A;</button></div><div class="phonetic">/væn/</div><div class="cn">面包车</div></div>
-      <div class="word-card" data-word="ship"><span class="master-check">&#10003;</span><div class="en">ship <button class="speak-btn" onclick="event.stopPropagation();speak('ship')">&#x1F50A;</button></div><div class="phonetic">/ʃɪp/</div><div class="cn">轮船</div></div>
-      <div class="word-card" data-word="helicopter"><span class="master-check">&#10003;</span><div class="en">helicopter <button class="speak-btn" onclick="event.stopPropagation();speak('helicopter')">&#x1F50A;</button></div><div class="phonetic">/ˈhelɪkɒptər/</div><div class="cn">直升机</div></div>
-      <div class="word-card" data-word="drive"><span class="master-check">&#10003;</span><div class="en">drive <button class="speak-btn" onclick="event.stopPropagation();speak('drive')">&#x1F50A;</button></div><div class="phonetic">/draɪv/</div><div class="cn">驾驶</div></div>
-      <div class="word-card" data-word="ride"><span class="master-check">&#10003;</span><div class="en">ride <button class="speak-btn" onclick="event.stopPropagation();speak('ride')">&#x1F50A;</button></div><div class="phonetic">/raɪd/</div><div class="cn">骑</div></div>
-        </div>
-      </section>
-
-      <!-- ====== 运动休闲 SPORTS ====== -->
-      <section id="sports">
-        <h2><span class="icon bg-green">&#x26BD;</span>运动休闲 Sports</h2>
-        <p class="section-intro">动起来！运动词汇大全！</p>
-        <div class="word-grid" data-group="sports">
-      <div class="word-card" data-word="ball"><span class="master-check">&#10003;</span><div class="en">ball <button class="speak-btn" onclick="event.stopPropagation();speak('ball')">&#x1F50A;</button></div><div class="phonetic">/bɔːl/</div><div class="cn">球</div></div>
-      <div class="word-card" data-word="football"><span class="master-check">&#10003;</span><div class="en">football <button class="speak-btn" onclick="event.stopPropagation();speak('football')">&#x1F50A;</button></div><div class="phonetic">/ˈfʊtbɔːl/</div><div class="cn">足球</div></div>
-      <div class="word-card" data-word="basketball"><span class="master-check">&#10003;</span><div class="en">basketball <button class="speak-btn" onclick="event.stopPropagation();speak('basketball')">&#x1F50A;</button></div><div class="phonetic">/ˈbɑːskɪtbɔːl/</div><div class="cn">篮球</div></div>
-      <div class="word-card" data-word="swim"><span class="master-check">&#10003;</span><div class="en">swim <button class="speak-btn" onclick="event.stopPropagation();speak('swim')">&#x1F50A;</button></div><div class="phonetic">/swɪm/</div><div class="cn">游泳</div></div>
-      <div class="word-card" data-word="run"><span class="master-check">&#10003;</span><div class="en">run <button class="speak-btn" onclick="event.stopPropagation();speak('run')">&#x1F50A;</button></div><div class="phonetic">/rʌn/</div><div class="cn">跑步</div></div>
-      <div class="word-card" data-word="jump"><span class="master-check">&#10003;</span><div class="en">jump <button class="speak-btn" onclick="event.stopPropagation();speak('jump')">&#x1F50A;</button></div><div class="phonetic">/dʒʌmp/</div><div class="cn">跳</div></div>
-      <div class="word-card" data-word="kick"><span class="master-check">&#10003;</span><div class="en">kick <button class="speak-btn" onclick="event.stopPropagation();speak('kick')">&#x1F50A;</button></div><div class="phonetic">/kɪk/</div><div class="cn">踢</div></div>
-      <div class="word-card" data-word="kite"><span class="master-check">&#10003;</span><div class="en">kite <button class="speak-btn" onclick="event.stopPropagation();speak('kite')">&#x1F50A;</button></div><div class="phonetic">/kaɪt/</div><div class="cn">风筝</div></div>
-      <div class="word-card" data-word="skateboard"><span class="master-check">&#10003;</span><div class="en">skateboard <button class="speak-btn" onclick="event.stopPropagation();speak('skateboard')">&#x1F50A;</button></div><div class="phonetic">/ˈskeɪtbɔːrd/</div><div class="cn">滑板</div></div>
-      <div class="word-card" data-word="dance"><span class="master-check">&#10003;</span><div class="en">dance <button class="speak-btn" onclick="event.stopPropagation();speak('dance')">&#x1F50A;</button></div><div class="phonetic">/dɑːns/</div><div class="cn">跳舞</div></div>
-      <div class="word-card" data-word="sing"><span class="master-check">&#10003;</span><div class="en">sing <button class="speak-btn" onclick="event.stopPropagation();speak('sing')">&#x1F50A;</button></div><div class="phonetic">/sɪŋ/</div><div class="cn">唱歌</div></div>
-      <div class="word-card" data-word="song"><span class="master-check">&#10003;</span><div class="en">song <button class="speak-btn" onclick="event.stopPropagation();speak('song')">&#x1F50A;</button></div><div class="phonetic">/sɒŋ/</div><div class="cn">歌曲</div></div>
-      <div class="word-card" data-word="game"><span class="master-check">&#10003;</span><div class="en">game <button class="speak-btn" onclick="event.stopPropagation();speak('game')">&#x1F50A;</button></div><div class="phonetic">/ɡeɪm/</div><div class="cn">游戏</div></div>
-      <div class="word-card" data-word="play"><span class="master-check">&#10003;</span><div class="en">play <button class="speak-btn" onclick="event.stopPropagation();speak('play')">&#x1F50A;</button></div><div class="phonetic">/pleɪ/</div><div class="cn">玩</div></div>
-        </div>
-      </section>
-
-      <!-- ====== 更多食物 FOOD ====== -->
-      <section id="food-more">
-        <h2><span class="icon bg-yellow">&#x1F35E;</span>更多食物 Food</h2>
-        <p class="section-intro">好吃的食物还有哪些？</p>
-        <div class="word-grid" data-group="food-more">
-      <div class="word-card" data-word="bread"><span class="master-check">&#10003;</span><div class="en">bread <button class="speak-btn" onclick="event.stopPropagation();speak('bread')">&#x1F50A;</button></div><div class="phonetic">/bred/</div><div class="cn">面包</div></div>
-      <div class="word-card" data-word="cake"><span class="master-check">&#10003;</span><div class="en">cake <button class="speak-btn" onclick="event.stopPropagation();speak('cake')">&#x1F50A;</button></div><div class="phonetic">/keɪk/</div><div class="cn">蛋糕</div></div>
-      <div class="word-card" data-word="cheese"><span class="master-check">&#10003;</span><div class="en">cheese <button class="speak-btn" onclick="event.stopPropagation();speak('cheese')">&#x1F50A;</button></div><div class="phonetic">/tʃiːz/</div><div class="cn">奶酪</div></div>
-      <div class="word-card" data-word="egg"><span class="master-check">&#10003;</span><div class="en">egg <button class="speak-btn" onclick="event.stopPropagation();speak('egg')">&#x1F50A;</button></div><div class="phonetic">/eɡ/</div><div class="cn">鸡蛋</div></div>
-      <div class="word-card" data-word="meat"><span class="master-check">&#10003;</span><div class="en">meat <button class="speak-btn" onclick="event.stopPropagation();speak('meat')">&#x1F50A;</button></div><div class="phonetic">/miːt/</div><div class="cn">肉</div></div>
-      <div class="word-card" data-word="rice"><span class="master-check">&#10003;</span><div class="en">rice <button class="speak-btn" onclick="event.stopPropagation();speak('rice')">&#x1F50A;</button></div><div class="phonetic">/raɪs/</div><div class="cn">米饭</div></div>
-      <div class="word-card" data-word="potato"><span class="master-check">&#10003;</span><div class="en">potato <button class="speak-btn" onclick="event.stopPropagation();speak('potato')">&#x1F50A;</button></div><div class="phonetic">/pəˈteɪtoʊ/</div><div class="cn">土豆</div></div>
-      <div class="word-card" data-word="salad"><span class="master-check">&#10003;</span><div class="en">salad <button class="speak-btn" onclick="event.stopPropagation();speak('salad')">&#x1F50A;</button></div><div class="phonetic">/ˈsæləd/</div><div class="cn">沙拉</div></div>
-      <div class="word-card" data-word="pizza"><span class="master-check">&#10003;</span><div class="en">pizza <button class="speak-btn" onclick="event.stopPropagation();speak('pizza')">&#x1F50A;</button></div><div class="phonetic">/ˈpiːtsə/</div><div class="cn">披萨</div></div>
-      <div class="word-card" data-word="chocolate"><span class="master-check">&#10003;</span><div class="en">chocolate <button class="speak-btn" onclick="event.stopPropagation();speak('chocolate')">&#x1F50A;</button></div><div class="phonetic">/ˈtʃɒklət/</div><div class="cn">巧克力</div></div>
-      <div class="word-card" data-word="ice cream"><span class="master-check">&#10003;</span><div class="en">ice cream <button class="speak-btn" onclick="event.stopPropagation();speak('ice cream')">&#x1F50A;</button></div><div class="phonetic">/ˈaɪs kriːm/</div><div class="cn">冰淇淋</div></div>
-      <div class="word-card" data-word="breakfast"><span class="master-check">&#10003;</span><div class="en">breakfast <button class="speak-btn" onclick="event.stopPropagation();speak('breakfast')">&#x1F50A;</button></div><div class="phonetic">/ˈbrekfəst/</div><div class="cn">早餐</div></div>
-      <div class="word-card" data-word="lunch"><span class="master-check">&#10003;</span><div class="en">lunch <button class="speak-btn" onclick="event.stopPropagation();speak('lunch')">&#x1F50A;</button></div><div class="phonetic">/lʌntʃ/</div><div class="cn">午餐</div></div>
-      <div class="word-card" data-word="dinner"><span class="master-check">&#10003;</span><div class="en">dinner <button class="speak-btn" onclick="event.stopPropagation();speak('dinner')">&#x1F50A;</button></div><div class="phonetic">/ˈdɪnər/</div><div class="cn">晚餐</div></div>
-      <div class="word-card" data-word="eat"><span class="master-check">&#10003;</span><div class="en">eat <button class="speak-btn" onclick="event.stopPropagation();speak('eat')">&#x1F50A;</button></div><div class="phonetic">/iːt/</div><div class="cn">吃</div></div>
-        </div>
       </section>
 
     </div><!-- /content -->
