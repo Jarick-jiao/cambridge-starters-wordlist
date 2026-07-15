@@ -107,17 +107,26 @@
     .chapter-header{margin:2.5rem 0 1rem;padding:0.9rem 1.5rem;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);border-radius:12px;color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.6rem;box-shadow:0 2px 8px rgba(61,181,230,0.25);}
     .chapter-header .chap-num{background:rgba(255,255,255,0.2);padding:0.25rem 0.7rem;border-radius:8px;font-size:0.85rem;font-weight:800;}
     .chapter-header .chap-icon{font-size:1.3rem;}
-    .toc{margin:0 0 1.5rem;border:1.5px solid var(--rule);border-radius:14px;overflow:hidden;background:var(--bg2);}
-    .toc-toggle{width:100%;padding:0.8rem 1.2rem;border:none;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.5rem;text-align:left;}
-    .toc-toggle .arrow{margin-left:auto;transition:transform 0.3s;font-size:0.8rem;}
-    .toc-toggle.open .arrow{transform:rotate(90deg);}
-    .toc-body{display:none;padding:0.6rem 0.8rem;}
-    .toc-body.open{display:block;}
-    .toc-chap{font-size:0.8rem;font-weight:700;color:var(--accent);padding:0.5rem 0.6rem 0.15rem;border-bottom:1px dashed var(--rule);margin-top:0.3rem;}
-    .toc-chap:first-child{margin-top:0;}
-    .toc-items{display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0 0.5rem 0.4rem;}
-    .toc-items a{display:inline-block;padding:0.2rem 0.6rem;border-radius:14px;font-size:0.75rem;font-weight:600;text-decoration:none;color:var(--ink);background:var(--bg);border:1px solid var(--rule);transition:all 0.15s;}
-    .toc-items a:hover,.toc-items a:focus{background:var(--accent);color:#fff;border-color:var(--accent);}
+    .toc-sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--bg);border-right:1.5px solid var(--rule);z-index:100;overflow-y:auto;transform:translateX(-100%);transition:transform 0.3s ease;-webkit-overflow-scrolling:touch;}
+    .toc-sidebar.open{transform:translateX(0);}
+    .toc-sidebar .toc-header{padding:0.8rem 1rem;font-weight:800;font-size:0.95rem;color:var(--accent);border-bottom:1.5px solid var(--rule);position:sticky;top:0;background:var(--bg);z-index:1;display:flex;align-items:center;gap:0.4rem;}
+    .toc-sidebar .toc-chap{font-size:0.72rem;font-weight:700;color:var(--accent);padding:0.55rem 1rem 0.1rem;text-transform:uppercase;letter-spacing:0.03em;}
+    .toc-sidebar .toc-chap:first-child{padding-top:0.5rem;}
+    .toc-sidebar .toc-items{padding:0.15rem 0.6rem 0.4rem;}
+    .toc-sidebar .toc-items a{display:block;padding:0.28rem 0.6rem;border-radius:8px;font-size:0.78rem;font-weight:600;text-decoration:none;color:var(--ink);transition:all 0.15s;margin-bottom:1px;}
+    .toc-sidebar .toc-items a:hover,.toc-sidebar .toc-items a.active{background:var(--accent);color:#fff;}
+    .toc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:99;display:none;}
+    .toc-overlay.open{display:block;}
+    .toc-fab{position:fixed;left:0.8rem;bottom:1.2rem;z-index:50;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 3px 12px rgba(61,181,230,0.4);display:flex;align-items:center;justify-content:center;transition:transform 0.2s;}
+    .toc-fab:hover{transform:scale(1.1);}
+    .toc-fab.hide{transform:scale(0);pointer-events:none;}
+    .page-content-with-toc{padding-left:0;}
+    @media(min-width:900px){
+      .toc-sidebar{transform:translateX(0);box-shadow:none;border-right:1.5px solid var(--rule);}
+      .toc-overlay{display:none!important;}
+      .toc-fab{display:none;}
+      .page-content-with-toc .content{margin-left:230px;}
+    }
     .chapter-wrap{padding:0 0.5rem;}
     .chapter-wrap + .chapter-wrap{margin-top:0.5rem;}
 
@@ -181,7 +190,7 @@
     .voice-hint .vol-icon { font-size: 1rem; }
 
     @media print {
-      .page-nav, .cat-nav, .toc, .voice-hint, .speak-btn, .progress-section { display: none !important; }
+      .page-nav, .cat-nav, .toc-sidebar, .toc-overlay, .toc-fab, .voice-hint, .speak-btn, .progress-section { display: none !important; }
       .hero { border-radius: 0; }
       .word-card { border-color: transparent !important; }
       .word-card:hover { transform: none; }
@@ -291,61 +300,61 @@
   <section id="page-content" class="page-section" style="display:none;">
 <div class="content">
 
-      <!-- TABLE OF CONTENTS -->
-      <div class="toc" id="toc">
-        <button class="toc-toggle" onclick="toggleToc()">&#x1F4D6; 学习目录 <span class="arrow">&#9654;</span></button>
-        <div class="toc-body" id="toc-body">
-          <div class="toc-chap">第一章 基础认知</div>
-          <div class="toc-items">
-            <a href="#numbers">数字</a>
-            <a href="#colors">颜色</a>
-            <a href="#family">家庭</a>
-            <a href="#body">身体</a>
-          </div>
-          <div class="toc-chap">第二章 我的世界</div>
-          <div class="toc-items">
-            <a href="#animals">动物</a>
-            <a href="#food">食物</a>
-            <a href="#clothes">衣服</a>
-            <a href="#places">场所</a>
-            <a href="#transport">交通工具</a>
-            <a href="#toys">玩具</a>
-          </div>
-          <div class="toc-chap">第三章 日常生活</div>
-          <div class="toc-items">
-            <a href="#school">学校</a>
-            <a href="#sports">运动</a>
-          </div>
-          <div class="toc-chap">第四章 描述与表达</div>
-          <div class="toc-items">
-            <a href="#adjectives">形容词</a>
-            <a href="#verbs">动词</a>
-            <a href="#prepositions">介词</a>
-            <a href="#questions">疑问词</a>
-            <a href="#time">时间</a>
-          </div>
-          <div class="toc-chap">第五章 语法专题</div>
-          <div class="toc-items">
-            <a href="#grammar1">be动词</a>
-            <a href="#grammar2">冠词</a>
-            <a href="#grammar3">this/that</a>
-            <a href="#grammar4">like</a>
-            <a href="#grammar5">祈使句</a>
-            <a href="#grammar6">can</a>
-            <a href="#grammar7">have got</a>
-            <a href="#grammar8">there is</a>
-            <a href="#grammar9">疑问句</a>
-            <a href="#grammar10">现在进行时</a>
-            <a href="#grammar11">物主代词</a>
-            <a href="#grammar12">these/those</a>
-            <a href="#grammar13">连词</a>
-          </div>
-          <div class="toc-chap">第六章 实用短句</div>
-          <div class="toc-items">
-            <a href="#phrases">常用短句</a>
-          </div>
+      <!-- TABLE OF CONTENTS SIDEBAR -->
+      <div class="toc-overlay" id="toc-overlay" onclick="closeToc()"></div>
+      <nav class="toc-sidebar" id="toc-sidebar">
+        <div class="toc-header">&#x1F4D6; 学习目录</div>
+        <div class="toc-chap">第一章 基础认知</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('numbers')">数字</a>
+          <a href="javascript:scrollToSection('colors')">颜色</a>
+          <a href="javascript:scrollToSection('family')">家庭</a>
+          <a href="javascript:scrollToSection('body')">身体</a>
         </div>
-      </div>
+        <div class="toc-chap">第二章 我的世界</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('animals')">动物</a>
+          <a href="javascript:scrollToSection('food')">食物</a>
+          <a href="javascript:scrollToSection('clothes')">衣服</a>
+          <a href="javascript:scrollToSection('places')">场所</a>
+          <a href="javascript:scrollToSection('transport')">交通工具</a>
+          <a href="javascript:scrollToSection('toys')">玩具</a>
+        </div>
+        <div class="toc-chap">第三章 日常生活</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('school')">学校</a>
+          <a href="javascript:scrollToSection('sports')">运动</a>
+        </div>
+        <div class="toc-chap">第四章 描述与表达</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('adjectives')">形容词</a>
+          <a href="javascript:scrollToSection('verbs')">动词</a>
+          <a href="javascript:scrollToSection('prepositions')">介词</a>
+          <a href="javascript:scrollToSection('questions')">疑问词</a>
+          <a href="javascript:scrollToSection('time')">时间</a>
+        </div>
+        <div class="toc-chap">第五章 语法专题</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('grammar1')">be动词</a>
+          <a href="javascript:scrollToSection('grammar2')">冠词</a>
+          <a href="javascript:scrollToSection('grammar3')">this/that</a>
+          <a href="javascript:scrollToSection('grammar4')">like</a>
+          <a href="javascript:scrollToSection('grammar5')">祈使句</a>
+          <a href="javascript:scrollToSection('grammar6')">can</a>
+          <a href="javascript:scrollToSection('grammar7')">have got</a>
+          <a href="javascript:scrollToSection('grammar8')">there is</a>
+          <a href="javascript:scrollToSection('grammar9')">疑问句</a>
+          <a href="javascript:scrollToSection('grammar10')">现在进行时</a>
+          <a href="javascript:scrollToSection('grammar11')">物主代词</a>
+          <a href="javascript:scrollToSection('grammar12')">these/those</a>
+          <a href="javascript:scrollToSection('grammar13')">连词</a>
+        </div>
+        <div class="toc-chap">第六章 实用短句</div>
+        <div class="toc-items">
+          <a href="javascript:scrollToSection('phrases')">常用短句</a>
+        </div>
+      </nav>
+      <button class="toc-fab" id="toc-fab" onclick="toggleTocSidebar()">&#x1F4D6;</button>
 
       <!-- VOICE HINT -->
       <div class="voice-hint">
@@ -1372,11 +1381,22 @@
     }
 
     // ===== PAGE NAVIGATION =====
-    function toggleToc() {
-      var body = document.getElementById('toc-body');
-      var btn = document.querySelector('.toc-toggle');
-      body.classList.toggle('open');
-      btn.classList.toggle('open');
+    function toggleTocSidebar() {
+      document.getElementById('toc-sidebar').classList.toggle('open');
+      document.getElementById('toc-overlay').classList.toggle('open');
+    }
+    function closeToc() {
+      document.getElementById('toc-sidebar').classList.remove('open');
+      document.getElementById('toc-overlay').classList.remove('open');
+    }
+    function scrollToSection(id) {
+      closeToc();
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // highlight active
+      document.querySelectorAll('.toc-sidebar a').forEach(function(a) { a.classList.remove('active'); });
+      var links = document.querySelectorAll('.toc-sidebar a');
+      links.forEach(function(a) { if (a.textContent.trim() && a.getAttribute('href') && a.getAttribute('href').indexOf("'" + id + "'") !== -1) a.classList.add('active'); });
     }
 
     function showPage(page) {
@@ -1396,6 +1416,18 @@
 
       // Show/hide category nav (only for English page)
       document.getElementById('cat-nav').style.display = (page === 'content') ? 'flex' : 'none';
+
+      // Show/hide TOC sidebar & FAB (only for English page)
+      var fab = document.getElementById('toc-fab');
+      var sidebar = document.getElementById('toc-sidebar');
+      if (page === 'content') {
+        if (fab) fab.classList.remove('hide');
+        if (window.innerWidth >= 900 && sidebar) sidebar.classList.add('open');
+      } else {
+        if (fab) fab.classList.add('hide');
+        if (sidebar) sidebar.classList.remove('open');
+        closeToc();
+      }
 
       // Update page-nav active state
       document.querySelectorAll('#page-nav a').forEach(function(a) {
