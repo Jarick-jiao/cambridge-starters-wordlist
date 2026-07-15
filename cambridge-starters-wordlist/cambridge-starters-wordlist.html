@@ -107,6 +107,17 @@
     .chapter-header{margin:2.5rem 0 1rem;padding:0.9rem 1.5rem;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);border-radius:12px;color:#fff;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:0.6rem;box-shadow:0 2px 8px rgba(61,181,230,0.25);}
     .chapter-header .chap-num{background:rgba(255,255,255,0.2);padding:0.25rem 0.7rem;border-radius:8px;font-size:0.85rem;font-weight:800;}
     .chapter-header .chap-icon{font-size:1.3rem;}
+    .toc{margin:0 0 1.5rem;border:1.5px solid var(--rule);border-radius:14px;overflow:hidden;background:var(--bg2);}
+    .toc-toggle{width:100%;padding:0.8rem 1.2rem;border:none;background:linear-gradient(90deg,var(--accent) 0%,var(--accent2) 100%);color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:0.5rem;text-align:left;}
+    .toc-toggle .arrow{margin-left:auto;transition:transform 0.3s;font-size:0.8rem;}
+    .toc-toggle.open .arrow{transform:rotate(90deg);}
+    .toc-body{display:none;padding:0.6rem 0.8rem;}
+    .toc-body.open{display:block;}
+    .toc-chap{font-size:0.8rem;font-weight:700;color:var(--accent);padding:0.5rem 0.6rem 0.15rem;border-bottom:1px dashed var(--rule);margin-top:0.3rem;}
+    .toc-chap:first-child{margin-top:0;}
+    .toc-items{display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0 0.5rem 0.4rem;}
+    .toc-items a{display:inline-block;padding:0.2rem 0.6rem;border-radius:14px;font-size:0.75rem;font-weight:600;text-decoration:none;color:var(--ink);background:var(--bg);border:1px solid var(--rule);transition:all 0.15s;}
+    .toc-items a:hover,.toc-items a:focus{background:var(--accent);color:#fff;border-color:var(--accent);}
     .chapter-wrap{padding:0 0.5rem;}
     .chapter-wrap + .chapter-wrap{margin-top:0.5rem;}
 
@@ -170,7 +181,7 @@
     .voice-hint .vol-icon { font-size: 1rem; }
 
     @media print {
-      .page-nav, .cat-nav, .voice-hint, .speak-btn, .progress-section { display: none !important; }
+      .page-nav, .cat-nav, .toc, .voice-hint, .speak-btn, .progress-section { display: none !important; }
       .hero { border-radius: 0; }
       .word-card { border-color: transparent !important; }
       .word-card:hover { transform: none; }
@@ -279,6 +290,62 @@
   </section>
   <section id="page-content" class="page-section" style="display:none;">
 <div class="content">
+
+      <!-- TABLE OF CONTENTS -->
+      <div class="toc" id="toc">
+        <button class="toc-toggle" onclick="toggleToc()">&#x1F4D6; 学习目录 <span class="arrow">&#9654;</span></button>
+        <div class="toc-body" id="toc-body">
+          <div class="toc-chap">第一章 基础认知</div>
+          <div class="toc-items">
+            <a href="#numbers">数字</a>
+            <a href="#colors">颜色</a>
+            <a href="#family">家庭</a>
+            <a href="#body">身体</a>
+          </div>
+          <div class="toc-chap">第二章 我的世界</div>
+          <div class="toc-items">
+            <a href="#animals">动物</a>
+            <a href="#food">食物</a>
+            <a href="#clothes">衣服</a>
+            <a href="#places">场所</a>
+            <a href="#transport">交通工具</a>
+            <a href="#toys">玩具</a>
+          </div>
+          <div class="toc-chap">第三章 日常生活</div>
+          <div class="toc-items">
+            <a href="#school">学校</a>
+            <a href="#sports">运动</a>
+          </div>
+          <div class="toc-chap">第四章 描述与表达</div>
+          <div class="toc-items">
+            <a href="#adjectives">形容词</a>
+            <a href="#verbs">动词</a>
+            <a href="#prepositions">介词</a>
+            <a href="#questions">疑问词</a>
+            <a href="#time">时间</a>
+          </div>
+          <div class="toc-chap">第五章 语法专题</div>
+          <div class="toc-items">
+            <a href="#grammar1">be动词</a>
+            <a href="#grammar2">冠词</a>
+            <a href="#grammar3">this/that</a>
+            <a href="#grammar4">like</a>
+            <a href="#grammar5">祈使句</a>
+            <a href="#grammar6">can</a>
+            <a href="#grammar7">have got</a>
+            <a href="#grammar8">there is</a>
+            <a href="#grammar9">疑问句</a>
+            <a href="#grammar10">现在进行时</a>
+            <a href="#grammar11">物主代词</a>
+            <a href="#grammar12">these/those</a>
+            <a href="#grammar13">连词</a>
+          </div>
+          <div class="toc-chap">第六章 实用短句</div>
+          <div class="toc-items">
+            <a href="#phrases">常用短句</a>
+          </div>
+        </div>
+      </div>
 
       <!-- VOICE HINT -->
       <div class="voice-hint">
@@ -1131,44 +1198,6 @@
         <div class="tip"><strong>小贴士：</strong>and 连接同类事物，but 表示转折，or 表示选择。</div>
       </section>
 
-      <!-- GRAMMAR 11 -->
-      <section id="grammar11">
-        <h2><span class="icon bg-yellow">&#x270D;</span>物主代词</h2>
-        <p class="section-intro">表示"……是我的/你的/他的"。</p>
-        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
-          <tr><td class="en-sentence">This book is <span class="highlight">mine</span>.</td><td class="cn-sentence">这本书是我的。</td></tr>
-          <tr><td class="en-sentence">Is this pen <span class="highlight">yours</span>?</td><td class="cn-sentence">这支笔是你的吗？</td></tr>
-          <tr><td class="en-sentence">The toy is <span class="highlight">his</span>.</td><td class="cn-sentence">这个玩具是他的。</td></tr>
-          <tr><td class="en-sentence">The doll is <span class="highlight">hers</span>.</td><td class="cn-sentence">这个娃娃是她的。</td></tr>
-          <tr><td class="en-sentence">This room is <span class="highlight">ours</span>.</td><td class="cn-sentence">这个房间是我们的。</td></tr>
-        </tbody></table></div>
-        <div class="tip"><strong>小贴士：</strong>mine = my + 名词，yours = your + 名词，后面不再加名词！</div>
-      </section>
-
-      <!-- GRAMMAR 12 -->
-      <section id="grammar12">
-        <h2><span class="icon bg-yellow">&#x270D;</span>指示代词 these/those</h2>
-        <p class="section-intro">these 表示"这些"（近处），those 表示"那些"（远处）。</p>
-        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
-          <tr><td class="en-sentence"><span class="highlight">These</span> are my books.</td><td class="cn-sentence">这些是我的书。</td></tr>
-          <tr><td class="en-sentence"><span class="highlight">Those</span> are red cars.</td><td class="cn-sentence">那些是红色的汽车。</td></tr>
-          <tr><td class="en-sentence">Are <span class="highlight">these</span> your pens?</td><td class="cn-sentence">这些是你的钢笔吗？</td></tr>
-        </tbody></table></div>
-        <div class="tip"><strong>小贴士：</strong>this → these（这个→这些），that → those（那个→那些）。</div>
-      </section>
-
-      <!-- GRAMMAR 13 -->
-      <section id="grammar13">
-        <h2><span class="icon bg-yellow">&#x270D;</span>连词 and / but / or</h2>
-        <p class="section-intro">and 表示"和"，but 表示"但是"，or 表示"或者"。</p>
-        <div class="table-wrap"><table><thead><tr><th>英文</th><th>中文</th></tr></thead><tbody>
-          <tr><td class="en-sentence">I like cats <span class="highlight">and</span> dogs.</td><td class="cn-sentence">我喜欢猫和狗。</td></tr>
-          <tr><td class="en-sentence">I like apples, <span class="highlight">but</span> I don't like bananas.</td><td class="cn-sentence">我喜欢苹果，但是我不喜欢香蕉。</td></tr>
-          <tr><td class="en-sentence">Would you like tea <span class="highlight">or</span> juice?</td><td class="cn-sentence">你想要茶还是果汁？</td></tr>
-        </tbody></table></div>
-        <div class="tip"><strong>小贴士：</strong>and 连接同类事物，but 表示转折，or 表示选择。</div>
-      </section>
-
       <!-- PHRASES -->
             <!-- ====== 第六章 实用短句 ====== -->
       <div class="chapter-header"><span class="chap-icon">&#x2B50;</span><span class="chap-num">第六章</span>实用短句</div>
@@ -1343,6 +1372,13 @@
     }
 
     // ===== PAGE NAVIGATION =====
+    function toggleToc() {
+      var body = document.getElementById('toc-body');
+      var btn = document.querySelector('.toc-toggle');
+      body.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+
     function showPage(page) {
       document.querySelectorAll('.page-section').forEach(function(el) {
         el.style.display = 'none';
