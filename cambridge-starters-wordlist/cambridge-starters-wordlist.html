@@ -48,9 +48,7 @@
     .page-nav a { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--bg2); border: 1.5px solid var(--rule); transition: all 0.2s; white-space: nowrap; }
     .page-nav a:hover, .page-nav a:focus { background: var(--accent); color: #fff; border-color: var(--accent); }
     .page-nav a.active { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
-    .cat-nav { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.6rem 1.5rem; margin-bottom: 1rem; position: sticky; top: 46px; background: var(--bg); z-index: 10; }
-    .cat-nav a { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 16px; font-size: 0.73rem; font-weight: 600; text-decoration: none; color: var(--ink); background: var(--bg2); border: 1px solid var(--rule); transition: all 0.2s; white-space: nowrap; }
-    .cat-nav a:hover, .cat-nav a:focus { background: var(--accent); color: #fff; border-color: var(--accent); }
+    
 
     .content { padding: 0 1.5rem 3rem; }
     section { margin-bottom: 2.5rem; }
@@ -190,7 +188,7 @@
     .voice-hint .vol-icon { font-size: 1rem; }
 
     @media print {
-      .page-nav, .cat-nav, .toc-sidebar, .toc-overlay, .toc-fab, .voice-hint, .speak-btn, .progress-section { display: none !important; }
+      .page-nav, .toc-sidebar, .toc-overlay, .toc-fab, .voice-hint, .speak-btn, .progress-section { display: none !important; }
       .hero { border-radius: 0; }
       .word-card { border-color: transparent !important; }
       .word-card:hover { transform: none; }
@@ -224,40 +222,6 @@
       <a href="#math" onclick="showPage('math');return false;">数学练习</a>
       <a href="#dashboard" class="active" onclick="showPage('dashboard');return false;">仪表盘</a>
       <a href="#tasks" onclick="showPage('tasks');return false;">任务</a>
-    </nav>
-    <!-- 英语分类导航（仅在英语学习页显示） -->
-    <nav class="cat-nav" id="cat-nav" style="display:none;">
-      <a href="#numbers">数字</a>
-      <a href="#colors">颜色</a>
-      <a href="#family">家庭</a>
-      <a href="#body">身体</a>
-      <a href="#animals">动物</a>
-      <a href="#school">学校</a>
-      <a href="#food">食物</a>
-      <a href="#clothes">衣服</a>
-      <a href="#places">场所</a>
-      <a href="#toys">玩具</a>
-      <a href="#adjectives">形容词</a>
-      <a href="#verbs">动词</a>
-      <a href="#prepositions">介词</a>
-      <a href="#questions">疑问词</a>
-      <a href="#time">时间</a>
-      <a href="#grammar1">语法:be动词</a>
-      <a href="#grammar2">语法:冠词</a>
-      <a href="#grammar3">语法:this/that</a>
-      <a href="#grammar4">语法:like</a>
-      <a href="#grammar5">语法:祈使句</a>
-      <a href="#grammar6">语法:can</a>
-      <a href="#grammar7">语法:have got</a>
-      <a href="#grammar8">语法:there is</a>
-      <a href="#grammar9">语法:疑问句</a>
-      <a href="#grammar10">语法:现在进行时</a>
-      <a href="#grammar11">语法:物主代词</a>
-      <a href="#grammar12">语法:these/those</a>
-      <a href="#grammar13">语法:连词</a>
-      <a href="#phrases">常用短句</a>
-      <a href="#transport">交通工具</a>
-      <a href="#sports">运动</a>
     </nav>
 
   <!-- ========== DASHBOARD PAGE ========== -->
@@ -306,52 +270,52 @@
         <div class="toc-header">&#x1F4D6; 学习目录</div>
         <div class="toc-chap">第一章 基础认知</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('numbers')">数字</a>
-          <a href="javascript:scrollToSection('colors')">颜色</a>
-          <a href="javascript:scrollToSection('family')">家庭</a>
-          <a href="javascript:scrollToSection('body')">身体</a>
+          <a href="#" onclick="scrollToSection('numbers');return false;">数字</a>
+          <a href="#" onclick="scrollToSection('colors');return false;">颜色</a>
+          <a href="#" onclick="scrollToSection('family');return false;">家庭</a>
+          <a href="#" onclick="scrollToSection('body');return false;">身体</a>
         </div>
         <div class="toc-chap">第二章 我的世界</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('animals')">动物</a>
-          <a href="javascript:scrollToSection('food')">食物</a>
-          <a href="javascript:scrollToSection('clothes')">衣服</a>
-          <a href="javascript:scrollToSection('places')">场所</a>
-          <a href="javascript:scrollToSection('transport')">交通工具</a>
-          <a href="javascript:scrollToSection('toys')">玩具</a>
+          <a href="#" onclick="scrollToSection('animals');return false;">动物</a>
+          <a href="#" onclick="scrollToSection('food');return false;">食物</a>
+          <a href="#" onclick="scrollToSection('clothes');return false;">衣服</a>
+          <a href="#" onclick="scrollToSection('places');return false;">场所</a>
+          <a href="#" onclick="scrollToSection('transport');return false;">交通工具</a>
+          <a href="#" onclick="scrollToSection('toys');return false;">玩具</a>
         </div>
         <div class="toc-chap">第三章 日常生活</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('school')">学校</a>
-          <a href="javascript:scrollToSection('sports')">运动</a>
+          <a href="#" onclick="scrollToSection('school');return false;">学校</a>
+          <a href="#" onclick="scrollToSection('sports');return false;">运动</a>
         </div>
         <div class="toc-chap">第四章 描述与表达</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('adjectives')">形容词</a>
-          <a href="javascript:scrollToSection('verbs')">动词</a>
-          <a href="javascript:scrollToSection('prepositions')">介词</a>
-          <a href="javascript:scrollToSection('questions')">疑问词</a>
-          <a href="javascript:scrollToSection('time')">时间</a>
+          <a href="#" onclick="scrollToSection('adjectives');return false;">形容词</a>
+          <a href="#" onclick="scrollToSection('verbs');return false;">动词</a>
+          <a href="#" onclick="scrollToSection('prepositions');return false;">介词</a>
+          <a href="#" onclick="scrollToSection('questions');return false;">疑问词</a>
+          <a href="#" onclick="scrollToSection('time');return false;">时间</a>
         </div>
         <div class="toc-chap">第五章 语法专题</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('grammar1')">be动词</a>
-          <a href="javascript:scrollToSection('grammar2')">冠词</a>
-          <a href="javascript:scrollToSection('grammar3')">this/that</a>
-          <a href="javascript:scrollToSection('grammar4')">like</a>
-          <a href="javascript:scrollToSection('grammar5')">祈使句</a>
-          <a href="javascript:scrollToSection('grammar6')">can</a>
-          <a href="javascript:scrollToSection('grammar7')">have got</a>
-          <a href="javascript:scrollToSection('grammar8')">there is</a>
-          <a href="javascript:scrollToSection('grammar9')">疑问句</a>
-          <a href="javascript:scrollToSection('grammar10')">现在进行时</a>
-          <a href="javascript:scrollToSection('grammar11')">物主代词</a>
-          <a href="javascript:scrollToSection('grammar12')">these/those</a>
-          <a href="javascript:scrollToSection('grammar13')">连词</a>
+          <a href="#" onclick="scrollToSection('grammar1');return false;">be动词</a>
+          <a href="#" onclick="scrollToSection('grammar2');return false;">冠词</a>
+          <a href="#" onclick="scrollToSection('grammar3');return false;">this/that</a>
+          <a href="#" onclick="scrollToSection('grammar4');return false;">like</a>
+          <a href="#" onclick="scrollToSection('grammar5');return false;">祈使句</a>
+          <a href="#" onclick="scrollToSection('grammar6');return false;">can</a>
+          <a href="#" onclick="scrollToSection('grammar7');return false;">have got</a>
+          <a href="#" onclick="scrollToSection('grammar8');return false;">there is</a>
+          <a href="#" onclick="scrollToSection('grammar9');return false;">疑问句</a>
+          <a href="#" onclick="scrollToSection('grammar10');return false;">现在进行时</a>
+          <a href="#" onclick="scrollToSection('grammar11');return false;">物主代词</a>
+          <a href="#" onclick="scrollToSection('grammar12');return false;">these/those</a>
+          <a href="#" onclick="scrollToSection('grammar13');return false;">连词</a>
         </div>
         <div class="toc-chap">第六章 实用短句</div>
         <div class="toc-items">
-          <a href="javascript:scrollToSection('phrases')">常用短句</a>
+          <a href="#" onclick="scrollToSection('phrases');return false;">常用短句</a>
         </div>
       </nav>
       <button class="toc-fab" id="toc-fab" onclick="toggleTocSidebar()">&#x1F4D6;</button>
@@ -1413,9 +1377,6 @@
       }
       window.scrollTo(0, 0);
       currentPage = page;
-
-      // Show/hide category nav (only for English page)
-      document.getElementById('cat-nav').style.display = (page === 'content') ? 'flex' : 'none';
 
       // Show/hide TOC sidebar & FAB (only for English page)
       var fab = document.getElementById('toc-fab');
