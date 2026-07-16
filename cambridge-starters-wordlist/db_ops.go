@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -83,6 +84,12 @@ func (c *MCPClient) initDB() error {
 	c.call("tools/call", json.RawMessage(`{
 		"name": "execute",
 		"arguments": {"sql": "CREATE INDEX IF NOT EXISTS idx_log_date ON learning_log(log_date)"}
+	}`))
+
+	// user_stats (key-value store for points, etc.)
+	c.call("tools/call", json.RawMessage(`{
+		"name": "execute",
+		"arguments": {"sql": "CREATE TABLE IF NOT EXISTS user_stats (key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '0')"}
 	}`))
 
 	return nil
@@ -540,4 +547,122 @@ func (c *MCPClient) getStatsSummary(days int) (map[string]interface{}, error) {
 		"activity":       activitySummary,
 		"daily_activity": dailyActivity,
 	}, nil
+}
+
+// ========== Points System ==========
+
+// getPoints returns the total accumulated points.
+func (c *MCPClient) getPoints() (int, error) {
+	result, err := c.call("tools/call", json.RawMessage(`{
+		"name": "query",
+		"arguments": {"sql": "SELECT value FROM user_stats WHERE key = 'total_points'"}
+	}`))
+	if err != nil {
+		return 0, err
+	}
+	tr, err := parseToolResult(result)
+	if err != nil {
+		return 0, err
+	}
+	rows, err := parseRows[struct{ Value string `json:"value"` }](tr)
+	if err != nil || len(rows) == 0 {
+		return 0, nil
+	}
+	points, _ := strconv.Atoi(rows[0].Value)
+	return points, nil
+}
+
+// addPoints increases (or decreases) total points by delta and returns the new total.
+func (c *MCPClient) addPoints(delta int) (int, error) {
+	current, err := c.getPoints()
+	if err != nil {
+		return 0, err
+	}
+	newPoints := current + delta
+	val := strconv.Itoa(newPoints)
+	_, err = c.call("tools/call", json.RawMessage(fmt.Sprintf(`{
+		"name": "execute",
+		"arguments": {"sql": "INSERT INTO user_stats (key, value) VALUES ('total_points', '%s') ON CONFLICT(key) DO UPDATE SET value = '%s'"}
+	}`, sqlEscape(val), sqlEscape(val))))
+	if err != nil {
+		return 0, err
+	}
+	return newPoints, nil
+}
+
+// getTodayPoints returns the points earned today.
+func (c *MCPClient) getTodayPoints() (int, error) {
+	result, err := c.call("tools/call", json.RawMessage(`{
+		"name": "query",
+		"arguments": {"sql": "SELECT value FROM user_stats WHERE key = 'today_points'"}
+	}`))
+	if err != nil {
+		return 0, err
+	}
+	tr, err := parseToolResult(result)
+	if err != nil {
+		return 0, err
+	}
+	rows, err := parseRows[struct{ Value string `json:"value"` }](tr)
+	if err != nil || len(rows) == 0 {
+		return 0, nil
+	}
+	points, _ := strconv.Atoi(rows[0].Value)
+	return points, nil
+}
+
+// addTodayPoints increases today's points by delta and returns the new today total.
+func (c *MCPClient) addTodayPoints(delta int) (int, error) {
+	current, err := c.getTodayPoints()
+	if err != nil {
+		return 0, err
+	}
+	newPoints := current + delta
+	val := strconv.Itoa(newPoints)
+	_, err = c.call("tools/call", json.RawMessage(fmt.Sprintf(`{
+		"name": "execute",
+		"arguments": {"sql": "INSERT INTO user_stats (key, value) VALUES ('today_points', '%s') ON CONFLICT(key) DO UPDATE SET value = '%s'"}
+	}`, sqlEscape(val), sqlEscape(val))))
+	if err != nil {
+		return 0, err
+	}
+	return newPoints, nil
+}
+
+// resetTodayPointsIfNeeded checks whether the date has changed since last activity
+// and resets today_points to 0 if so.
+func (c *MCPClient) resetTodayPointsIfNeeded() error {
+	today := time.Now().Format("2006-01-02")
+	result, err := c.call("tools/call", json.RawMessage(`{
+		"name": "query",
+		"arguments": {"sql": "SELECT value FROM user_stats WHERE key = 'last_active_date'"}
+	}`))
+	if err != nil {
+		return err
+	}
+	tr, err := parseToolResult(result)
+	if err != nil {
+		return err
+	}
+	rows, err := parseRows[struct{ Value string `json:"value"` }](tr)
+	if err != nil {
+		return err
+	}
+
+	if len(rows) == 0 || rows[0].Value != today {
+		// Date changed — reset today_points and update last_active_date
+		_, err = c.call("tools/call", json.RawMessage(fmt.Sprintf(`{
+			"name": "execute",
+			"arguments": {"sql": "INSERT INTO user_stats (key, value) VALUES ('last_active_date', '%s') ON CONFLICT(key) DO UPDATE SET value = '%s'"}
+		}`, today, today)))
+		if err != nil {
+			return err
+		}
+		_, err = c.call("tools/call", json.RawMessage(`{
+			"name": "execute",
+			"arguments": {"sql": "INSERT INTO user_stats (key, value) VALUES ('today_points', '0') ON CONFLICT(key) DO UPDATE SET value = '0'"}
+		}`))
+		return err
+	}
+	return nil
 }

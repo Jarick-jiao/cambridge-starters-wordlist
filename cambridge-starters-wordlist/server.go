@@ -48,6 +48,10 @@ func serve(dir, port, dbPath string) error {
 		api.GET("/dashboard", apiGetDashboard)
 		api.GET("/stats/timeline", apiGetTimeline)
 		api.GET("/stats/summary", apiGetStatsSummary)
+
+		// Points
+		api.GET("/points", apiGetPoints)
+		api.POST("/points", apiAddPoints)
 	}
 
 	// --- Page routes ---

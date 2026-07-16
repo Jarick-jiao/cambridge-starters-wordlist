@@ -332,6 +332,9 @@ func apiGetDashboard(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	// Include total points in dashboard response
+	points, _ := mcpClient.getPoints()
+	data["total_points"] = points
 	c.JSON(http.StatusOK, data)
 }
 
@@ -365,4 +368,110 @@ func apiGetStatsSummary(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, data)
+}
+
+// ========== Points Handlers ==========
+
+// calcLevel computes the user level based on total points.
+func calcLevel(points int) int {
+	if points < 10 {
+		return 1
+	}
+	if points < 30 {
+		return 2
+	}
+	if points < 60 {
+		return 3
+	}
+	if points < 100 {
+		return 4
+	}
+	if points < 150 {
+		return 5
+	}
+	if points < 220 {
+		return 6
+	}
+	if points < 300 {
+		return 7
+	}
+	if points < 400 {
+		return 8
+	}
+	if points < 520 {
+		return 9
+	}
+	return 10
+}
+
+func apiGetPoints(c *gin.Context) {
+	// Reset today_points if the date has changed
+	_ = mcpClient.resetTodayPointsIfNeeded()
+
+	total, err := mcpClient.getPoints()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	today, err := mcpClient.getTodayPoints()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Retrieve streak from dashboard
+	dash, _ := mcpClient.getDashboardData(time.Now().Format("2006-01-02"))
+	streak := 0
+	if s, ok := dash["streak_days"].(int); ok {
+		streak = s
+	}
+	bonusMultiplier := 0
+	if streak >= 3 {
+		bonusMultiplier = streak
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"total_points":  total,
+		"today_points":  today,
+		"streak_days":   streak,
+		"streak_bonus":  bonusMultiplier,
+		"level":         calcLevel(total),
+	})
+}
+
+type AddPointsRequest struct {
+	Reason string `json:"reason"` // "word_mastered", "math_correct", "math_wrong", "task_complete", "streak_bonus"
+	Count  int    `json:"count"`  // points to add
+}
+
+func apiAddPoints(c *gin.Context) {
+	var req AddPointsRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+	if req.Count <= 0 {
+		req.Count = 1
+	}
+
+	total, err := mcpClient.addPoints(req.Count)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	today, err := mcpClient.addTodayPoints(req.Count)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Log the points earning activity
+	_ = mcpClient.logActivity("earn_points", req.Count, req.Reason)
+
+	c.JSON(http.StatusOK, gin.H{
+		"total_points": total,
+		"today_points": today,
+		"earned":       req.Count,
+		"reason":       req.Reason,
+	})
 }
