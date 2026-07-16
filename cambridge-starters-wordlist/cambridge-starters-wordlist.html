@@ -237,6 +237,24 @@
       .grammar-box { padding: 0.8rem; }
       .stage-tab { font-size: 0.82rem; padding: 0.4rem 0.9rem; }
     }
+    /* Timeline heatmap */
+    .timeline-grid{display:grid;grid-template-rows:repeat(7,28px);grid-auto-flow:column;gap:3px;margin-top:0.8rem;}
+    .timeline-cell{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--muted);position:relative;}
+    .timeline-cell.l0{background:var(--bg2);}
+    .timeline-cell.l1{background:#fde8cd;}
+    .timeline-cell.l2{background:var(--yellow);}
+    .timeline-cell.l3{background:var(--green);color:#fff;}
+    .timeline-cell.today{border:2px solid var(--accent);}
+    .timeline-labels{display:grid;grid-template-rows:repeat(7,28px);gap:3px;margin-right:0.4rem;}
+    .timeline-labels span{height:28px;display:flex;align-items:center;font-size:0.65rem;color:var(--muted);}
+    .timeline-months{display:flex;gap:0;justify-content:flex-start;margin-bottom:0.3rem;padding-left:calc(2.2rem + 0.4rem);}
+    .timeline-months span{font-size:0.7rem;color:var(--muted);font-weight:600;}
+    .filter-group{display:inline-flex;gap:0.25rem;vertical-align:middle;}
+    .filter-btn{padding:0.15rem 0.5rem;border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--muted);font-size:0.7rem;cursor:pointer;transition:all 0.15s;}
+    .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+    .filter-btn:hover{border-color:var(--accent);}
+    .group-header{display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0.6rem;}
+    .group-header h3{margin:0;}
   </style>
 </head>
 <body>
@@ -399,6 +417,10 @@
         <div id="dashboard-progress" style="margin:1rem 0;">
           <h3>学习进度</h3>
           <div id="dash-progress-bars"></div>
+        </div>
+        <div id="dashboard-timeline" style="margin:1rem 0;">
+          <h3>学习活跃度</h3>
+          <div id="timeline-heatmap" style="width:100%;min-height:200px;"></div>
         </div>
         <div style="text-align:center;margin:1.5rem 0;">
           <button onclick="showPage('english')" style="padding:0.6rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">开始学习</button>
@@ -1883,7 +1905,12 @@
 
         if (ch.groups) {
           ch.groups.forEach(function(g) {
-            if (g.label) html += '<h3>' + g.label + '</h3>';
+            if (g.label) html += '<div class="group-header"><h3>' + g.label + '</h3>'
+              + '<div class="filter-group">'
+              + '<button class="filter-btn active" data-filter="all" onclick="filterWords(this,\'all\')">全部</button>'
+              + '<button class="filter-btn" data-filter="unmastered" onclick="filterWords(this,\'unmastered\')">未掌握</button>'
+              + '<button class="filter-btn" data-filter="mastered" onclick="filterWords(this,\'mastered\')">已掌握</button>'
+              + '</div></div>';
             if (g.words && g.words.length > 0) {
               html += renderWordGrid(g.words, g.id);
             }
@@ -1938,7 +1965,12 @@
             if (ch.intro) html += '<p class="section-intro">' + ch.intro + '</p>';
             if (ch.groups) {
               ch.groups.forEach(function(g) {
-                if (g.label) html += '<h3>' + g.label + '</h3>';
+                if (g.label) html += '<div class="group-header"><h3>' + g.label + '</h3>'
+                  + '<div class="filter-group">'
+                  + '<button class="filter-btn active" data-filter="all" onclick="filterWords(this,\'all\')">全部</button>'
+                  + '<button class="filter-btn" data-filter="unmastered" onclick="filterWords(this,\'unmastered\')">未掌握</button>'
+                  + '<button class="filter-btn" data-filter="mastered" onclick="filterWords(this,\'mastered\')">已掌握</button>'
+                  + '</div></div>';
                 if (g.words && g.words.length > 0) {
                   html += renderWordGrid(g.words, g.id);
                 }
@@ -1988,6 +2020,8 @@
     function switchPhase(phase) {
       currentPhase = phase;
       currentChapterKey = null;
+      localStorage.setItem('cam_learn_phase', currentPhase);
+      localStorage.setItem('cam_learn_chapter', '');
 
       // Update stage tabs
       document.querySelectorAll('#stage-tabs .stage-tab').forEach(function(tab) {
@@ -2018,6 +2052,8 @@
 
     function showChapter(chapterKey) {
       currentChapterKey = chapterKey;
+      localStorage.setItem('cam_learn_phase', currentPhase);
+      localStorage.setItem('cam_learn_chapter', chapterKey);
       closeToc();
 
       // Update chapter nav active
@@ -2365,6 +2401,99 @@
           document.getElementById('dash-progress-bars').innerHTML = progHTML;
         })
         .catch(function(err) { console.warn('Dashboard load failed', err); });
+
+      // Load timeline heatmap
+      fetch(API + '/stats/timeline?days=30')
+        .then(function(r) {
+          if (!r.ok) throw new Error('API error');
+          return r.json();
+        })
+        .then(function(data) {
+          if (!data || data.length === 0) {
+            document.getElementById('timeline-heatmap').innerHTML = '<p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">暂无学习记录</p>';
+            return;
+          }
+          var actMap = {};
+          data.forEach(function(d) { actMap[d.date] = d.activities || 0; });
+
+          var today = new Date();
+          today.setHours(0,0,0,0);
+          var endDate = new Date(today);
+          var startDate = new Date(today);
+          startDate.setDate(startDate.getDate() - 29);
+
+          var dayLabels = ['一','二','三','四','五','六','日'];
+          var html = '<div class="timeline-months"></div>';
+          html += '<div style="display:flex;">';
+          html += '<div class="timeline-labels">';
+          dayLabels.forEach(function(l) { html += '<span>' + l + '</span>'; });
+          html += '</div>';
+          html += '<div class="timeline-grid">';
+
+          // Adjust to Monday-based week: getDay() 0=Sun -> 6, 1=Mon -> 0, ...
+          function toMondayBased(d) { return d.getDay() === 0 ? 6 : d.getDay() - 1; }
+
+          var startDow = toMondayBased(startDate);
+          var monthSpans = {};
+          var cur = new Date(startDate);
+
+          // Pad empty cells before start date
+          for (var p = 0; p < startDow; p++) {
+            html += '<div class="timeline-cell l0"></div>';
+          }
+
+          // Iterate through 30 days
+          var totalCells = startDow; // count includes padding
+          for (var i = 0; i < 30; i++) {
+            var d = new Date(startDate);
+            d.setDate(d.getDate() + i);
+            var dateStr = d.getFullYear() + '-'
+              + String(d.getMonth()+1).padStart(2,'0') + '-'
+              + String(d.getDate()).padStart(2,'0');
+            var count = actMap[dateStr] || 0;
+            var level = count === 0 ? 'l0' : (count <= 2 ? 'l1' : (count <= 5 ? 'l2' : 'l3'));
+            var isToday = (d.getTime() === today.getTime());
+            html += '<div class="timeline-cell ' + level + (isToday ? ' today' : '') + '" title="' + dateStr + ': ' + count + '次">' + d.getDate() + '</div>';
+
+            // Track month spans for labels
+            var mKey = d.getFullYear() + '-' + (d.getMonth()+1);
+            if (!monthSpans[mKey]) monthSpans[mKey] = { start: totalCells, label: (d.getMonth()+1) + '月' };
+            monthSpans[mKey].end = totalCells;
+
+            totalCells++;
+          }
+
+          // Pad remaining cells to complete last week column
+          var remain = totalCells % 7;
+          if (remain > 0) {
+            for (var r = 0; r < 7 - remain; r++) {
+              html += '<div class="timeline-cell l0"></div>';
+            }
+          }
+
+          html += '</div></div>';
+
+          // Build month labels
+          var monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+          var monthsHTML = '';
+          var cols = Math.ceil(totalCells / 7);
+          var cellW = 28 + 3; // cell width + gap
+          for (var mk in monthSpans) {
+            var ms = monthSpans[mk];
+            var colStart = Math.floor(ms.start / 7);
+            var colEnd = Math.floor(ms.end / 7);
+            var spanCols = colEnd - colStart + 1;
+            monthsHTML += '<span style="display:inline-block;width:' + (spanCols * cellW) + 'px;text-align:left;">' + ms.label + '</span>';
+          }
+
+          document.getElementById('timeline-heatmap').innerHTML = html;
+          var monthBar = document.getElementById('timeline-heatmap').querySelector('.timeline-months');
+          if (monthBar) monthBar.innerHTML = monthsHTML;
+        })
+        .catch(function(err) {
+          console.warn('Timeline load failed', err);
+          document.getElementById('timeline-heatmap').innerHTML = '<p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;">暂无学习记录</p>';
+        });
     }
     loadDashboard();
 
@@ -2665,12 +2794,46 @@
     window.deleteTask = deleteTask;
     window.showToast = showToast;
 
+    window.filterWords = function(btn, filter) {
+      var filterGroup = btn.closest('.filter-group');
+      var groupHeader = filterGroup.closest('.group-header');
+      var grid = groupHeader ? groupHeader.nextElementSibling : filterGroup.nextElementSibling;
+      while (grid && !grid.classList.contains('word-grid')) grid = grid.nextElementSibling;
+      filterGroup.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (!grid) return;
+      grid.querySelectorAll('.word-card').forEach(function(card) {
+        if (filter === 'all') { card.style.display = ''; }
+        else if (filter === 'mastered') { card.style.display = card.classList.contains('mastered') ? '' : 'none'; }
+        else if (filter === 'unmastered') { card.style.display = card.classList.contains('mastered') ? 'none' : ''; }
+      });
+    };
+
     // ================================================================
     // 16. INITIALIZATION
     // ================================================================
 
     // Default: show dashboard
     // User can switch to english via stage tabs
+
+    // Restore phase/chapter from localStorage
+    var savedPhase = localStorage.getItem('cam_learn_phase');
+    var savedChapter = localStorage.getItem('cam_learn_chapter');
+    if (savedPhase && PHASES[savedPhase]) {
+      currentPhase = savedPhase;
+      document.querySelectorAll('.stage-tab').forEach(function(t) {
+        t.classList.toggle('active', t.dataset.phase === currentPhase);
+      });
+      renderTOC();
+      renderChapterNav();
+      if (savedChapter) {
+        showChapter(savedChapter);
+      } else {
+        var chapters = getChapters();
+        if (chapters.length) showChapter(chapters[0].key);
+      }
+      showPage('english');
+    }
 
   })();
   </script>
