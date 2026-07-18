@@ -519,15 +519,8 @@
               <div class="progress-total" id="progress-total"></div>
               <button class="reset-btn" onclick="resetProgress()">重置全部进度</button>
             </div>
-            <!-- GAME MODE TABS — 游戏化学习入口 -->
-            <div class="game-mode-tabs" id="game-mode-tabs">
-              <button class="game-mode-tab active" data-mode="browse" onclick="switchGameMode('browse')">📖 浏览学习</button>
-              <button class="game-mode-tab" data-mode="chapters" onclick="switchGameMode('chapters')">🗺️ 章节闯关</button>
-              <button class="game-mode-tab" data-mode="memory" onclick="switchGameMode('memory')">🃏 翻牌配对</button>
-              <button class="game-mode-tab" data-mode="listen" onclick="switchGameMode('listen')">👂 听音选词</button>
-              <button class="game-mode-tab" data-mode="spell" onclick="switchGameMode('spell')">🔤 拼字游戏</button>
-              <button class="game-mode-tab" data-mode="picture" onclick="switchGameMode('picture')">🖼️ 看图选词</button>
-            </div>
+            <!-- GAME MODE TABS — 游戏化学习入口（动态从 GameRegistry 渲染） -->
+            <div class="game-mode-tabs" id="game-mode-tabs"></div>
             <!-- DYNAMIC CONTENT AREA -->
             <div id="english-content"></div>
             <!-- GAME PLAY AREA (for memory/listen modes) -->
@@ -654,6 +647,8 @@
 
   </article>
 
+  <!-- 外部数据模块：word-emoji 映射，独立维护便于扩展 -->
+  <script src="word-emoji-data.js"></script>
   <script>
   (function() {
     'use strict';
@@ -2242,10 +2237,13 @@
     }
 
     function switchPhase(phase) {
+      var prev = currentPhase;
       currentPhase = phase;
       currentChapterKey = null;
       localStorage.setItem('cam_learn_phase', currentPhase);
       localStorage.setItem('cam_learn_chapter', '');
+      // 广播阶段切换事件
+      EventBus.emit(EVT.PHASE_CHANGE, { from: prev, to: phase });
 
       // Update stage tabs
       document.querySelectorAll('#stage-tabs .stage-tab').forEach(function(tab) {
@@ -2275,10 +2273,13 @@
     }
 
     function showChapter(chapterKey) {
+      var prev = currentChapterKey;
       currentChapterKey = chapterKey;
       localStorage.setItem('cam_learn_phase', currentPhase);
       localStorage.setItem('cam_learn_chapter', chapterKey);
       closeToc();
+      // 广播章节切换事件
+      EventBus.emit(EVT.CHAPTER_CHANGE, { from: prev, to: chapterKey, phase: currentPhase });
 
       // Update chapter nav active
       document.querySelectorAll('#chapter-nav a').forEach(function(a) {
@@ -2489,6 +2490,8 @@
         // 获取点击坐标，飞出积分动画
         var rect = card.getBoundingClientRect();
         earnPoints('word_mastered', 1, rect.left + rect.width/2, rect.top);
+        // 广播单词掌握事件，便于成就/统计模块订阅
+        EventBus.emit(EVT.WORD_MASTERED, { word: word, group: groupId, phase: currentPhase });
       }
       updateBars();
 
@@ -3094,11 +3097,12 @@
     }
 
     function earnPoints(reason, count, x, y) {
+      count = count || 1;
       // 调用 API
       fetch(API + '/points', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({reason: reason, count: count || 1})
+        body: JSON.stringify({reason: reason, count: count})
       }).then(function(r) { return r.json(); }).then(function(data) {
         if (data.error) return;
         updatePointsDisplay(data.total_points, data.today_points);
@@ -3108,7 +3112,7 @@
       if (x !== undefined && y !== undefined) {
         var fly = document.createElement('div');
         fly.className = 'points-fly';
-        fly.textContent = '+' + (count || 1);
+        fly.textContent = '+' + count;
         fly.style.left = x + 'px';
         fly.style.top = y + 'px';
         document.body.appendChild(fly);
@@ -3120,6 +3124,9 @@
       icon.classList.remove('points-pulse');
       void icon.offsetWidth; // 触发 reflow
       icon.classList.add('points-pulse');
+
+      // 广播积分事件，便于其他模块（成就/任务联动）订阅
+      EventBus.emit(EVT.POINTS_EARNED, { reason: reason, count: count, x: x, y: y });
     }
 
     // ================================================================
@@ -3156,54 +3163,450 @@
     }
 
     // ================================================================
+    // 8.5 CORE EXTENSION MODULES — 可扩展性基础设施
+    // ----------------------------------------------------------------
+    // 提供六个解耦模块，后期新增游戏/功能可直接复用，无需侵入核心代码：
+    //   EventBus         跨模块事件总线（pub/sub）
+    //   Storage          命名空间化 localStorage 封装
+    //   AppConfig        集中配置（游戏参数/难度/积分规则）
+    //   Theme            运行时主题切换（CSS 变量驱动）
+    //   WordDataProvider 词汇数据抽象层（屏蔽 getChapters 实现细节）
+    //   Logger           通过 EventBus 自动收集关键事件日志
+    // ================================================================
+
+    // ---- EventBus 跨模块事件总线 ----
+    var EventBus = {
+      _handlers: {},
+      // 订阅事件，返回回调本身便于配对 off
+      on: function(event, cb) {
+        if (!event || typeof cb !== 'function') return cb;
+        (this._handlers[event] = this._handlers[event] || []).push(cb);
+        return cb;
+      },
+      // 取消订阅；不传 cb 则清空该事件全部订阅
+      off: function(event, cb) {
+        if (!this._handlers[event]) return;
+        if (!cb) { this._handlers[event] = []; return; }
+        var idx = this._handlers[event].indexOf(cb);
+        if (idx >= 0) this._handlers[event].splice(idx, 1);
+      },
+      // 只订阅一次
+      once: function(event, cb) {
+        var self = this;
+        var wrap = function(data) { self.off(event, wrap); cb(data); };
+        return this.on(event, wrap);
+      },
+      // 触发事件（handler 异常不影响其他 handler）
+      emit: function(event, data) {
+        var list = this._handlers[event];
+        if (!list) return;
+        list.slice().forEach(function(cb) {
+          try { cb(data); }
+          catch(e) { console.error('[EventBus] handler error for', event, e); }
+        });
+      }
+    };
+    // 事件名常量（约定，便于检索与重命名）
+    var EVT = {
+      GAME_START:    'game:start',
+      GAME_COMPLETE: 'game:complete',
+      GAME_WIN:      'game:win',
+      GAME_EXIT:     'game:exit',
+      POINTS_EARNED: 'points:earned',
+      WORD_MASTERED: 'word:mastered',
+      PHASE_CHANGE:  'phase:change',
+      CHAPTER_CHANGE:'chapter:change',
+      THEME_CHANGE:  'theme:change',
+      CONFIG_CHANGE: 'config:change'
+    };
+
+    // ---- Storage 命名空间化存储封装 ----
+    // 自动加 cam_learn_ 前缀；后期可平滑迁移到 IndexedDB / 服务端
+    var Storage = {
+      NS: 'cam_learn_',
+      _k: function(key) { return this.NS + key; },
+      get: function(key, def) {
+        try { var v = localStorage.getItem(this._k(key)); return v === null ? def : v; }
+        catch(e) { return def; }
+      },
+      set: function(key, val) {
+        try { localStorage.setItem(this._k(key), val); return true; }
+        catch(e) { console.warn('[Storage] set failed', key, e); return false; }
+      },
+      remove: function(key) {
+        try { localStorage.removeItem(this._k(key)); } catch(e) {}
+      },
+      getJSON: function(key, def) {
+        var v = this.get(key, null);
+        if (v === null) return def;
+        try { return JSON.parse(v); } catch(e) { return def; }
+      },
+      setJSON: function(key, val) {
+        try { return this.set(key, JSON.stringify(val)); }
+        catch(e) { return false; }
+      }
+    };
+
+    // ---- AppConfig 集中配置 ----
+    // 各游戏的轮数/积分/难度在此统一维护；可在运行时覆盖（便于家长模式/难度切换）
+    var AppConfig = {
+      games: {
+        memory:  { pairs: 6, pointsPerMatch: 2, bonusPerStar: 5, timeBonusMax: 30, description: '翻牌配对' },
+        listen:  { total: 10, pointsPerCorrect: 2, pointsPerComplete: 3, description: '听音选词' },
+        spell:   { total: 8, wordLenMin: 3, wordLenMax: 6, pointsPerCorrect: 3, pointsPerHint: 1, description: '拼字游戏' },
+        picture: { total: 10, pointsPerCorrect: 2, pointsPerComplete: 3, description: '看图选词' }
+      },
+      // 难度等级（未来可扩展为 easy/normal/hard 切换）
+      difficulty: { easy: 1, normal: 2, hard: 3 },
+      // 积分全局规则
+      points: { dailyCap: 500 },
+      _overrides: {},
+      // 读取某游戏某参数（带 override 优先级）
+      get: function(gameId, key, def) {
+        var base = this.games[gameId] || {};
+        var ov = this._overrides[gameId] || {};
+        var v = (key in ov) ? ov[key] : base[key];
+        return v === undefined ? def : v;
+      },
+      // 运行时覆盖某游戏配置（不修改源对象）
+      override: function(gameId, cfg) {
+        this._overrides[gameId] = Object.assign({}, this._overrides[gameId], cfg);
+        EventBus.emit(EVT.CONFIG_CHANGE, { gameId: gameId, cfg: cfg });
+      },
+      // 重置覆盖（恢复默认）
+      reset: function(gameId) {
+        if (gameId) delete this._overrides[gameId];
+        else this._overrides = {};
+      }
+    };
+
+    // ---- Theme 运行时主题切换 ----
+    // 把 CSS 变量抽象为 JS 对象，运行时可通过 Theme.apply(name) 切换
+    // 后期新增主题只需 Theme.register(name, tokens)，无需改 :root
+    var Theme = {
+      _themes: {},
+      _current: null,
+      register: function(name, tokens) {
+        if (!name || !tokens) return;
+        this._themes[name] = tokens;
+      },
+      get: function(name) { return this._themes[name] || null; },
+      list: function() { return Object.keys(this._themes); },
+      current: function() { return this._current; },
+      // 应用主题：把 tokens 写入 :root 作为 CSS 变量
+      apply: function(name) {
+        var tokens = this._themes[name];
+        if (!tokens) { console.warn('[Theme] 未知主题:', name); return; }
+        this._current = name;
+        var root = document.documentElement;
+        Object.keys(tokens).forEach(function(k) {
+          var cssVar = k.indexOf('--') === 0 ? k : '--' + k;
+          root.style.setProperty(cssVar, tokens[k]);
+        });
+        EventBus.emit(EVT.THEME_CHANGE, { name: name, tokens: tokens });
+      }
+    };
+    // 默认主题：樱桃暖阳风（与 :root CSS 一致，运行时可被覆盖）
+    Theme.register('cherry-warm-sun', {
+      'bg': '#FFF8F0', 'bg2': '#FFF3E0', 'ink': '#2D2A26', 'muted': '#8A8477',
+      'rule': '#F0E6D8', 'rule-light': '#F7F0E5',
+      'accent': '#D64545', 'accent-light': '#FDE8E8', 'accent-dark': '#B83838',
+      'accent2': '#3DB5E6', 'accent2-light': '#E5F4FF',
+      'surface': '#FFFFFF',
+      'shadow-sm': '0 1px 3px rgba(45,42,38,0.04)',
+      'shadow-md': '0 2px 8px rgba(45,42,38,0.06)',
+      'radius': '12px', 'radius-lg': '16px'
+    });
+    // 预置深色主题示例（未默认启用；调用 Theme.apply('cherry-night') 切换）
+    Theme.register('cherry-night', {
+      'bg': '#1A1614', 'bg2': '#241F1B', 'ink': '#F5EFE5', 'muted': '#9C9485',
+      'rule': '#322B25', 'rule-light': '#28221D',
+      'accent': '#FF6B6B', 'accent-light': '#3D2323', 'accent-dark': '#FF8585',
+      'accent2': '#5BC8F0', 'accent2-light': '#1A3340',
+      'surface': '#241F1B',
+      'shadow-sm': '0 1px 3px rgba(0,0,0,0.3)',
+      'shadow-md': '0 2px 8px rgba(0,0,0,0.4)',
+      'radius': '12px', 'radius-lg': '16px'
+    });
+
+    // ---- WordDataProvider 词汇数据抽象层 ----
+    // 包装现有 getChapters 逻辑，给游戏提供统一数据入口
+    // 后期可替换为 API/IndexedDB 加载，游戏代码无需改动
+    var WordDataProvider = {
+      // 获取某阶段全部词汇（含 word + cn）
+      getWordsByPhase: function(phase) {
+        phase = phase || (typeof currentPhase !== 'undefined' ? currentPhase : 'starters');
+        var chapters = (typeof getChapters === 'function') ? getChapters(phase) : [];
+        var all = [];
+        chapters.forEach(function(ch) {
+          if (ch.type === 'vocab' && ch.groups) {
+            ch.groups.forEach(function(g) {
+              if (g.words) g.words.forEach(function(w) {
+                if (w.word && w.cn) all.push(w);
+              });
+            });
+          }
+        });
+        return all;
+      },
+      // 获取某章节词汇
+      getWordsByChapter: function(chapterKey) {
+        var chapters = (typeof getChapters === 'function') ? getChapters(currentPhase) : [];
+        for (var i = 0; i < chapters.length; i++) {
+          if (chapters[i].key === chapterKey) {
+            var all = [];
+            var ch = chapters[i];
+            if (ch.groups) ch.groups.forEach(function(g) {
+              if (g.words) g.words.forEach(function(w) {
+                if (w.word && w.cn) all.push(w);
+              });
+            });
+            return all;
+          }
+        }
+        return [];
+      },
+      // 按词长筛选（拼字游戏用）
+      getWordsByLength: function(phase, minLen, maxLen) {
+        return this.getWordsByPhase(phase).filter(function(w) {
+          var len = (w.word || '').replace(/\s/g, '').length;
+          return len >= minLen && len <= maxLen;
+        });
+      },
+      // 获取有 emoji 映射的词（看图选词用）
+      getWordsWithEmoji: function(phase) {
+        return this.getWordsByPhase(phase).filter(function(w) {
+          return typeof WORD_EMOJI !== 'undefined' &&
+            WORD_EMOJI[(w.word || '').toLowerCase().trim()];
+        });
+      },
+      // 随机抽取 N 个
+      sample: function(words, n) {
+        if (typeof shuffle === 'function') return shuffle(words).slice(0, n);
+        return words.slice(0, n);
+      }
+    };
+
+    // ---- Logger 日志钩子 ----
+    // 通过 EventBus 自动收集关键事件；保留本地缓冲，可选上报后端 /log
+    var Logger = {
+      _buffer: [],
+      log: function(event, data) {
+        var entry = { t: Date.now(), event: event, data: data || null };
+        this._buffer.push(entry);
+        if (this._buffer.length > 200) this._buffer.shift();
+        // 可选：上报到后端 /log 接口（接口不存在时静默失败）
+        if (typeof API !== 'undefined' && API) {
+          try {
+            fetch(API + '/log', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(entry)
+            }).catch(function() {});
+          } catch(e) {}
+        }
+        return entry;
+      },
+      history: function() { return this._buffer.slice(); },
+      clear: function() { this._buffer = []; }
+    };
+    // 自动收集关键事件
+    EventBus.on(EVT.GAME_START,    function(d){ Logger.log(EVT.GAME_START, d); });
+    EventBus.on(EVT.GAME_COMPLETE, function(d){ Logger.log(EVT.GAME_COMPLETE, d); });
+    EventBus.on(EVT.GAME_WIN,      function(d){ Logger.log(EVT.GAME_WIN, d); });
+    EventBus.on(EVT.POINTS_EARNED, function(d){ Logger.log(EVT.POINTS_EARNED, d); });
+    EventBus.on(EVT.WORD_MASTERED, function(d){ Logger.log(EVT.WORD_MASTERED, d); });
+
+    // ================================================================
     // 9. GAME MODE — 游戏化学习模块
     // ================================================================
 
     var currentGameMode = 'browse';
 
-    // 切换游戏模式
-    window.switchGameMode = function(mode) {
-      currentGameMode = mode;
-      // 更新 tab 状态
-      document.querySelectorAll('#game-mode-tabs .game-mode-tab').forEach(function(t) {
-        t.classList.toggle('active', t.getAttribute('data-mode') === mode);
-      });
-      var playArea = document.getElementById('game-play-area');
-      var contentArea = document.getElementById('english-content');
+    // ================================================================
+    // GameRegistry — 游戏插件化注册中心
+    // ----------------------------------------------------------------
+    // 后期新增游戏只需调用 GameRegistry.register({...}) 即可
+    // 无需修改 switchGameMode 或 tabs 渲染逻辑
+    //
+    // 支持的生命周期钩子（均可选，声明在 register cfg 中）：
+    //   onStart     进入游戏时触发（在 start() 之后）
+    //   onWin       一局胜利时触发（stars >= 2）
+    //   onComplete  一局结束时触发（不论胜负）
+    //   onExit      离开游戏时触发
+    //   pointsRule  自定义积分计算 (result)->int
+    // 所有钩子执行后，对应事件会通过 EventBus 广播，便于其他模块订阅
+    // ================================================================
+    var GameRegistry = {
+      _games: {},
+      _order: [],
+      // 注册一个游戏（插件模式）
+      // cfg: {
+      //   id, label, icon, type:'content'|'play',
+      //   start:fn,
+      //   config:{...},                       // 游戏参数（会合并到 AppConfig.games[id]）
+      //   onWin:fn(result), onComplete:fn(result), onExit:fn(),
+      //   pointsRule:fn(result)->int
+      // }
+      register: function(cfg) {
+        if (!cfg || !cfg.id) { console.warn('[GameRegistry] 注册失败：缺少 id'); return; }
+        if (this._games[cfg.id]) { console.warn('[GameRegistry] 游戏已存在，覆盖:', cfg.id); }
+        if (!cfg.type) cfg.type = 'play';
+        if (!cfg.config) cfg.config = {};
+        this._games[cfg.id] = cfg;
+        if (this._order.indexOf(cfg.id) === -1) this._order.push(cfg.id);
+        EventBus.emit('registry:register', { id: cfg.id, cfg: cfg });
+        return cfg;
+      },
+      get: function(id) { return this._games[id] || null; },
+      getAll: function() { return this._order.map(function(id) { return this._games[id]; }.bind(this)); },
+      has: function(id) { return !!this._games[id]; },
+      // 动态渲染 tabs（从注册表生成，无需硬编码 HTML）
+      renderTabs: function(containerId) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        var html = '';
+        this.getAll().forEach(function(g) {
+          html += '<button class="game-mode-tab' + (g.id === currentGameMode ? ' active' : '') + '" data-mode="' + g.id + '" onclick="switchGameMode(\'' + g.id + '\')">' + (g.icon || '') + ' ' + (g.label || g.id) + '</button>';
+        });
+        container.innerHTML = html;
+      },
+      // 统一的游戏切换逻辑
+      switchTo: function(mode) {
+        var game = this.get(mode);
+        if (!game) { console.warn('[GameRegistry] 未知游戏模式:', mode); return; }
+        var prevMode = currentGameMode;
+        // 退出前一游戏
+        if (prevMode !== mode) {
+          var prev = this.get(prevMode);
+          if (prev && typeof prev.onExit === 'function') {
+            try { prev.onExit(); }
+            catch(e) { console.error('[GameRegistry] onExit error', e); }
+          }
+          EventBus.emit(EVT.GAME_EXIT, { mode: prevMode });
+        }
+        currentGameMode = mode;
+        // 更新 tab 高亮
+        document.querySelectorAll('#game-mode-tabs .game-mode-tab').forEach(function(t) {
+          t.classList.toggle('active', t.getAttribute('data-mode') === mode);
+        });
+        var playArea = document.getElementById('game-play-area');
+        var contentArea = document.getElementById('english-content');
+        // 根据游戏类型切换显示区域
+        if (game.type === 'content') {
+          playArea.style.display = 'none';
+          contentArea.style.display = 'block';
+        } else {
+          contentArea.style.display = 'none';
+          playArea.style.display = 'block';
+        }
+        // 调用游戏的启动函数
+        if (typeof game.start === 'function') {
+          try { game.start(); }
+          catch(e) { console.error('[GameRegistry] 游戏启动失败:', mode, e); }
+        }
+        // onStart 钩子 + 事件广播
+        if (typeof game.onStart === 'function') {
+          try { game.onStart(); }
+          catch(e) { console.error('[GameRegistry] onStart error', e); }
+        }
+        EventBus.emit(EVT.GAME_START, { mode: mode, prev: prevMode });
+      },
+      // 通知某局游戏完成（游戏代码或 showGameResult 调用）
+      // result: { mode?, correct, total, stars, points?, time?, moves? }
+      complete: function(result) {
+        result = result || {};
+        var mode = result.mode || currentGameMode;
+        var game = this.get(mode);
+        result.mode = mode;
+        // 自定义积分规则
+        if (game && typeof game.pointsRule === 'function') {
+          try {
+            var pts = game.pointsRule(result);
+            if (typeof pts === 'number') result.points = pts;
+          } catch(e) { console.error('[GameRegistry] pointsRule error', e); }
+        }
+        // onComplete 钩子
+        if (game && typeof game.onComplete === 'function') {
+          try { game.onComplete(result); }
+          catch(e) { console.error('[GameRegistry] onComplete error', e); }
+        }
+        // onWin 钩子（达到 2 星视为胜利）
+        if (game && typeof game.onWin === 'function' && result.stars && result.stars >= 2) {
+          try { game.onWin(result); }
+          catch(e) { console.error('[GameRegistry] onWin error', e); }
+        }
+        EventBus.emit(EVT.GAME_COMPLETE, result);
+        if (result.stars && result.stars >= 2) EventBus.emit(EVT.GAME_WIN, result);
+        return result;
+      }
+    };
 
-      if (mode === 'browse') {
-        // 浏览模式：恢复原有内容
-        playArea.style.display = 'none';
-        contentArea.style.display = 'block';
+    // ================================================================
+    // 注册所有游戏（配置驱动，便于后期扩展）
+    // 新增游戏只需在此处追加一个 GameRegistry.register({...}) 调用
+    // ================================================================
+    GameRegistry.register({
+      id: 'browse',
+      label: '浏览学习',
+      icon: '📖',
+      type: 'content',
+      start: function() {
         var savedChapter = localStorage.getItem('cam_learn_chapter');
         if (savedChapter) { showChapter(savedChapter); }
         else { var chs = getChapters(); if (chs.length) showChapter(chs[0].key); }
-      } else if (mode === 'chapters') {
-        // 章节闯关模式
-        playArea.style.display = 'none';
-        contentArea.style.display = 'block';
-        renderChapterGameGrid();
-      } else if (mode === 'memory') {
-        // 翻牌记忆游戏
-        contentArea.style.display = 'none';
-        playArea.style.display = 'block';
-        startMemoryGame();
-      } else if (mode === 'listen') {
-        // 听音选词游戏
-        contentArea.style.display = 'none';
-        playArea.style.display = 'block';
-        startListenGame();
-      } else if (mode === 'spell') {
-        // 拼字游戏
-        contentArea.style.display = 'none';
-        playArea.style.display = 'block';
-        startSpellGame();
-      } else if (mode === 'picture') {
-        // 看图选词游戏
-        contentArea.style.display = 'none';
-        playArea.style.display = 'block';
-        startPictureGame();
-      }
+      },
+      config: { description: '默认单词卡片浏览模式' }
+    });
+
+    GameRegistry.register({
+      id: 'chapters',
+      label: '章节闯关',
+      icon: '🗺️',
+      type: 'content',
+      start: function() { renderChapterGameGrid(); },
+      config: { description: '分章卡片展示，星星评级' }
+    });
+
+    GameRegistry.register({
+      id: 'memory',
+      label: '翻牌配对',
+      icon: '🃏',
+      type: 'play',
+      start: function() { startMemoryGame(); },
+      config: { pairs: 6, pointsPerMatch: 2, pointsPerComplete: 'variable', description: '英文-中文记忆配对' }
+    });
+
+    GameRegistry.register({
+      id: 'listen',
+      label: '听音选词',
+      icon: '👂',
+      type: 'play',
+      start: function() { startListenGame(); },
+      config: { total: 10, pointsPerCorrect: 2, pointsPerComplete: 'correct*3', description: 'TTS 发音四选一' }
+    });
+
+    GameRegistry.register({
+      id: 'spell',
+      label: '拼字游戏',
+      icon: '🔤',
+      type: 'play',
+      start: function() { startSpellGame(); },
+      config: { total: 8, wordLenMin: 3, wordLenMax: 6, pointsPerCorrect: 3, pointsPerHint: 1, description: '听音拼词' }
+    });
+
+    GameRegistry.register({
+      id: 'picture',
+      label: '看图选词',
+      icon: '🖼️',
+      type: 'play',
+      start: function() { startPictureGame(); },
+      config: { total: 10, pointsPerCorrect: 2, pointsPerComplete: 'correct*3', description: 'emoji 图标四选一' }
+    });
+
+    // 切换游戏模式（委托给 GameRegistry）
+    window.switchGameMode = function(mode) {
+      GameRegistry.switchTo(mode);
     };
 
     // ---- 章节闯关模式：分章展示卡片 ----
@@ -3480,6 +3883,20 @@
       html += '</div>';
       document.getElementById('game-result-card').innerHTML = html;
       document.getElementById('game-result-overlay').classList.add('show');
+      // 通过 GameRegistry 广播 game:complete / game:win 事件
+      // 解析星星数（⭐ 个数）和积分（"+N 积分" 中的 N）
+      try {
+        var starCount = (String(data.stars || '').match(/⭐/g) || []).length;
+        var ptsMatch = String(data.points || '').match(/-?\d+/);
+        var pts = ptsMatch ? parseInt(ptsMatch[0], 10) : 0;
+        GameRegistry.complete({
+          mode: currentGameMode,
+          stars: starCount,
+          points: pts,
+          title: data.title,
+          score: data.score
+        });
+      } catch(e) { console.warn('[showGameResult] event emit failed', e); }
     }
 
     window.closeGameResult = function() {
@@ -3497,58 +3914,10 @@
     }
 
     // ================================================================
-    // WORD-EMOJI 映射表 — 用于拼字游戏提示和看图选词
+    // WORD-EMOJI 映射表已抽离至 ./word-emoji-data.js（外部脚本全局提供）
+    // 全局变量：WORD_EMOJI / 函数：getWordEmoji(word)
+    // 扩展方式：直接编辑 word-emoji-data.js 追加映射，无需改动本文件
     // ================================================================
-    var WORD_EMOJI = {
-      // Animals
-      'cat':'🐱','dog':'🐶','bird':'🐦','fish':'🐟','rabbit':'🐰','mouse':'🐭','cow':'🐮','horse':'🐎',
-      'duck':'🦆','pig':'🐷','sheep':'🐑','chicken':'🐔','frog':'🐸','snake':'🐍','elephant':'🐘',
-      'monkey':'🐵','tiger':'🐯','bear':'🐻','lion':'🦁','goat':'🐐','spider':'🕷️',
-      // Body
-      'head':'😀','eye':'👁️','ear':'👂','nose':'👃','mouth':'👄','hand':'✋','foot':'🦶','hair':'💇',
-      'arm':'💪','leg':'🦵','tooth':'🦷','face':'😊','finger':'👆','knee':'🦵',
-      // Colors
-      'red':'🔴','blue':'🔵','yellow':'🟡','green':'🟢','black':'⚫','white':'⚪','pink':'🩷','orange':'🟠',
-      'purple':'🟣','brown':'🟤','grey':'🔘','gray':'🔘',
-      // Food
-      'apple':'🍎','banana':'🍌','orange':'🍊','bread':'🍞','cake':'🍰','milk':'🥛','water':'💧',
-      'egg':'🥚','rice':'🍚','meat':'🥩','fish':'🐟','ice cream':'🍦','juice':'🧃','tea':'🍵',
-      'cheese':'🧀','burger':'🍔','cookie':'🍪','candy':'🍬','grape':'🍇','pear':'🍐',
-      // Family
-      'mother':'👩','father':'👨','sister':'👧','brother':'👦','baby':'👶','grandma':'👵','grandpa':'👴',
-      'family':'👨‍👩‍👧‍👦','son':'👦','daughter':'👧',
-      // Numbers
-      'one':'1️⃣','two':'2️⃣','three':'3️⃣','four':'4️⃣','five':'5️⃣','six':'6️⃣','seven':'7️⃣',
-      'eight':'8️⃣','nine':'9️⃣','ten':'🔟',
-      // Clothes
-      'shirt':'👕','pants':'👖','shoes':'👟','hat':'🎩','dress':'👗','sock':'🧦','coat':'🧥','skirt':'👗',
-      // Nature / Environment
-      'sun':'☀️','moon':'🌙','star':'⭐','tree':'🌳','flower':'🌸','grass':'🌱','rain':'🌧️','snow':'❄️',
-      'cloud':'☁️','sky':'🌌','sea':'🌊','river':'🏞️','mountain':'⛰️','beach':'🏖️','wind':'💨','fire':'🔥',
-      // School
-      'book':'📖','pen':'🖊️','pencil':'✏️','bag':'🎒','desk':'🪑','chair':'🪑','teacher':'👩‍🏫','school':'🏫',
-      // Toys
-      'ball':'⚽','doll':'🪆','kite':'🪁','toy':'🧸','bike':'🚲','car':'🚗','plane':'✈️','train':'🚂',
-      // House
-      'house':'🏠','door':'🚪','window':'🪟','bed':'🛏️','table':'🍽️','clock':'🕐','phone':'📱','key':'🔑',
-      // Verbs / actions
-      'run':'🏃','jump':'🤸','swim':'🏊','eat':'🍽️','drink':'🥤','read':'📖','write':'✍️','sing':'🎤',
-      'dance':'💃','play':'🎮','sleep':'😴','sit':'🪑','stand':'🧍','walk':'🚶','fly':'🦅','drive':'🚗',
-      // Transport
-      'bus':'🚌','boat':'⛵','ship':'🚢','truck':'🚚',
-      // Misc
-      'clock':'🕐','phone':'📱','tv':'📺','computer':'💻','umbrella':'☂️','glasses':'👓','hat':'🎩'
-    };
-
-    function getWordEmoji(word) {
-      if (!word) return '📝';
-      var w = word.toLowerCase().trim();
-      if (WORD_EMOJI[w]) return WORD_EMOJI[w];
-      // 尝试匹配多词
-      var parts = w.split(' ');
-      if (parts.length > 1 && WORD_EMOJI[parts[0]]) return WORD_EMOJI[parts[0]];
-      return '📝';
-    }
 
     // ================================================================
     // 拼字游戏 SPELLING GAME
@@ -3830,6 +4199,11 @@
       });
       earnPoints('picture_complete', points);
     }
+
+    // ================================================================
+    // 初始化：动态渲染游戏 tabs（从 GameRegistry 注册表生成）
+    // ================================================================
+    GameRegistry.renderTabs('game-mode-tabs');
 
   })();
   </script>
