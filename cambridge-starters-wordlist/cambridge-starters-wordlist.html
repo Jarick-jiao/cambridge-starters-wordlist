@@ -450,9 +450,65 @@
     .picture-option.wrong { background: #FFF5F5; border-color: #E74C3C; color: #E74C3C; animation: wrongShake 0.4s; }
     .picture-option:disabled { cursor: default; }
     .picture-option .pic-phonetic { display: block; font-size: 0.68rem; color: var(--muted); font-weight: 400; font-style: italic; margin-top: 0.2rem; }
+
+    /* ================================================================
+       UX ENHANCEMENTS — 音效/骨架屏/微交互/暗色模式/无障碍
+       ================================================================ */
+
+    /* ---- 骨架屏加载占位 ---- */
+    .skeleton { background: linear-gradient(90deg, var(--bg2) 25%, var(--rule-light) 50%, var(--bg2) 75%); background-size: 200% 100%; animation: skeletonShimmer 1.4s ease-in-out infinite; border-radius: var(--radius); }
+    .skeleton-line { height: 0.85rem; margin: 0.5rem 0; width: 100%; }
+    .skeleton-line.short { width: 60%; }
+    .skeleton-card { height: 80px; }
+    .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem; }
+    @keyframes skeletonShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* ---- 按钮波纹效果 ---- */
+    .ripple { position: relative; overflow: hidden; }
+    .ripple-wave { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.5); transform: scale(0); animation: rippleSpread 0.6s ease-out; pointer-events: none; }
+    @keyframes rippleSpread { to { transform: scale(4); opacity: 0; } }
+
+    /* ---- 结果弹层增强动画 ---- */
+    .game-result-overlay { opacity: 0; transition: opacity 0.3s ease; }
+    .game-result-overlay.show { opacity: 1; }
+    .game-result-card { animation: resultPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes resultPop { 0% { transform: scale(0.5) translateY(20px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+    .result-stars { animation: starBounce 0.6s ease 0.2s both; }
+    @keyframes starBounce { 0% { transform: scale(0) rotate(-180deg); } 60% { transform: scale(1.2) rotate(10deg); } 100% { transform: scale(1) rotate(0); } }
+
+    /* ---- 单词卡片掌握动画 ---- */
+    .word-card.mastered { animation: masteredPop 0.4s ease; }
+    @keyframes masteredPop { 0% { transform: scale(1); } 50% { transform: scale(1.08); box-shadow: 0 0 0 4px var(--green-light); } 100% { transform: scale(1); } }
+
+    /* ---- 暗色模式切换按钮 ---- */
+    .theme-toggle { position: fixed; top: 0.8rem; right: 0.8rem; z-index: 60; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--rule); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all 0.25s; }
+    .theme-toggle:hover { transform: rotate(20deg) scale(1.1); border-color: var(--accent); box-shadow: var(--shadow-md); }
+    .theme-toggle:active { transform: scale(0.92); }
+
+    /* ---- 音效开关按钮 ---- */
+    .sound-toggle { position: fixed; top: 0.8rem; right: 3.2rem; z-index: 60; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--rule); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all 0.25s; }
+    .sound-toggle:hover { border-color: var(--accent2); transform: scale(1.1); }
+    .sound-toggle.off { opacity: 0.5; }
+    .sound-toggle.off::after { content: ''; position: absolute; width: 28px; height: 2px; background: var(--accent); transform: rotate(-30deg); }
+
+    /* ---- 无障碍 focus-visible ---- */
+    button:focus-visible, a:focus-visible, .word-card:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent2); outline-offset: 2px; border-radius: var(--radius); }
+
+    /* ---- 减少动画偏好（无障碍）---- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ---- 暗色模式下的适配补丁 ---- */
+    .cherry-night-active .word-card { background: var(--surface); }
+    .cherry-night-active .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    .cherry-night-active .skeleton { background: linear-gradient(90deg, var(--bg2) 25%, var(--rule) 50%, var(--bg2) 75%); background-size: 200% 100%; }
   </style>
 </head>
 <body>
+  <!-- UX: 音效开关 + 暗色模式切换（固定右上角） -->
+  <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="音效开关" aria-label="音效开关">🔊</button>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题" aria-label="切换主题">🌙</button>
   <article class="page">
     <div class="hero">
       <h1>樱桃学习 · 剑桥少儿英语平台</h1>
@@ -611,7 +667,9 @@
         <div id="task-manage-list" style="margin:1rem 0;">
           <h3>今日任务</h3>
           <div id="task-manage-items" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
-            <p style="color:var(--muted);">加载中...</p>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line short"></div>
+            <div class="skeleton skeleton-line"></div>
           </div>
         </div>
       </div>
@@ -622,12 +680,19 @@
       <div class="content">
         <h2 style="text-align:center;margin-top:0.5rem;">今日学习仪表盘</h2>
         <!-- Stats cards (rendered by JS) -->
-        <div id="dashboard-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1rem 0;"></div>
+        <div id="dashboard-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1rem 0;">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
         <!-- Today tasks (rendered by JS) -->
         <div id="dashboard-tasks" style="margin:1rem 0;">
           <h3>今日任务</h3>
           <div id="task-list" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
-            <p style="color:var(--muted);">加载中...</p>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line short"></div>
+            <div class="skeleton skeleton-line"></div>
           </div>
         </div>
         <!-- Progress bars (rendered by JS) -->
@@ -2468,6 +2533,136 @@
     };
 
     // ================================================================
+    // 7.5 SOUND FX — Web Audio API 合成音效（无需音频文件）
+    // ----------------------------------------------------------------
+    // 用振荡器合成儿童友好的音效：答对/答错/完成/点击/翻牌
+    // 通过 SoundFX.enabled 控制开关，UI 按钮可切换
+    // ================================================================
+    var SoundFX = {
+      _ctx: null,
+      enabled: true,
+      // 懒加载 AudioContext（需用户交互后才能创建，遵守浏览器策略）
+      _ctxGet: function() {
+        if (!this._ctx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this._ctx = new AC();
+        }
+        if (this._ctx && this._ctx.state === 'suspended') this._ctx.resume();
+        return this._ctx;
+      },
+      // 播放一个音符
+      // freq 频率Hz, duration 秒, type 波形, when 延迟秒, gainVal 音量
+      _tone: function(freq, duration, type, when, gainVal) {
+        if (!this.enabled) return;
+        var ctx = this._ctxGet();
+        if (!ctx) return;
+        when = when || 0;
+        gainVal = gainVal === undefined ? 0.15 : gainVal;
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + when);
+        gain.gain.linearRampToValueAtTime(gainVal, ctx.currentTime + when + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + when + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + when);
+        osc.stop(ctx.currentTime + when + duration);
+      },
+      // 答对：欢快上升音阶 C-E-G
+      correct: function() {
+        this._tone(523.25, 0.12, 'sine', 0, 0.15);     // C5
+        this._tone(659.25, 0.12, 'sine', 0.1, 0.15);   // E5
+        this._tone(783.99, 0.2, 'sine', 0.2, 0.18);    // G5
+      },
+      // 答错：温和下降音（不刺耳，保护儿童情绪）
+      wrong: function() {
+        this._tone(311.13, 0.15, 'triangle', 0, 0.12);  // Eb4
+        this._tone(233.08, 0.25, 'triangle', 0.12, 0.12); // Bb3
+      },
+      // 完成/胜利：庆祝和弦 C-E-G-C
+      complete: function() {
+        this._tone(523.25, 0.15, 'sine', 0, 0.12);
+        this._tone(659.25, 0.15, 'sine', 0.08, 0.12);
+        this._tone(783.99, 0.15, 'sine', 0.16, 0.12);
+        this._tone(1046.5, 0.4, 'sine', 0.24, 0.15);   // C6 高音收尾
+      },
+      // 点击：轻短 tick
+      click: function() {
+        this._tone(800, 0.04, 'square', 0, 0.06);
+      },
+      // 翻牌：清脆音
+      flip: function() {
+        this._tone(1200, 0.06, 'triangle', 0, 0.08);
+        this._tone(1600, 0.06, 'triangle', 0.05, 0.06);
+      },
+      // 积分获得：叮
+      coin: function() {
+        this._tone(988, 0.08, 'sine', 0, 0.1);     // B5
+        this._tone(1319, 0.12, 'sine', 0.06, 0.1); // E6
+      }
+    };
+    // 注意：SoundFX.enabled 在 IIFE 末尾从 Storage 恢复（依赖 Storage 模块定义）
+
+    window.toggleSound = function() {
+      SoundFX.enabled = !SoundFX.enabled;
+      Storage.set('sound_enabled', SoundFX.enabled ? '1' : '0');
+      var btn = document.getElementById('sound-toggle');
+      if (btn) {
+        btn.textContent = SoundFX.enabled ? '🔊' : '🔇';
+        btn.classList.toggle('off', !SoundFX.enabled);
+      }
+      if (SoundFX.enabled) SoundFX.click();
+      showToast(SoundFX.enabled ? '音效已开启' : '音效已关闭', 'info', 1500);
+    };
+
+    // ---- Haptics 触觉反馈（移动端）----
+    var Haptics = {
+      enabled: true, // 默认开启，IIFE 末尾从 Storage 恢复
+      vibrate: function(pattern) {
+        if (!this.enabled) return;
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate(pattern); } catch(e) {}
+        }
+      },
+      light:  function() { this.vibrate(15); },       // 轻触
+      medium: function() { this.vibrate(30); },       // 点击
+      success: function() { this.vibrate([10, 30, 10, 30, 20]); }, // 答对
+      error:  function() { this.vibrate([40, 50, 40]); },          // 答错
+      complete: function() { this.vibrate([20, 40, 20, 40, 60]); } // 完成
+    };
+
+    // ---- 主题切换（激活 Theme 模块）----
+    window.toggleTheme = function() {
+      var current = Theme.current() || 'cherry-warm-sun';
+      var next = current === 'cherry-warm-sun' ? 'cherry-night' : 'cherry-warm-sun';
+      Theme.apply(next);
+      Storage.set('theme', next);
+      document.body.classList.toggle('cherry-night-active', next === 'cherry-night');
+      var btn = document.getElementById('theme-toggle');
+      if (btn) btn.textContent = next === 'cherry-night' ? '☀️' : '🌙';
+      Haptics.light();
+    };
+    // 注意：主题恢复 + 音效按钮图标 在 IIFE 末尾统一执行（依赖 Storage/Theme）
+
+    // ---- 按钮波纹效果（全局委托）----
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('button, .word-card, .listen-option, .picture-option, .memory-card, .chapter-game-card');
+      if (!btn) return;
+      if (!btn.classList.contains('ripple')) btn.classList.add('ripple');
+      var rect = btn.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var wave = document.createElement('span');
+      wave.className = 'ripple-wave';
+      wave.style.width = wave.style.height = size + 'px';
+      wave.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      wave.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      btn.appendChild(wave);
+      setTimeout(function() { wave.remove(); }, 600);
+    }, true); // capture 阶段，确保先于其他 handler
+
+    // ================================================================
     // 8. EVENT DELEGATION (word card click)
     // ================================================================
 
@@ -2490,6 +2685,7 @@
         // 获取点击坐标，飞出积分动画
         var rect = card.getBoundingClientRect();
         earnPoints('word_mastered', 1, rect.left + rect.width/2, rect.top);
+        SoundFX.correct(); Haptics.success();
         // 广播单词掌握事件，便于成就/统计模块订阅
         EventBus.emit(EVT.WORD_MASTERED, { word: word, group: groupId, phase: currentPhase });
       }
@@ -3729,6 +3925,7 @@
 
       card.classList.add('flipped');
       memoryState.flipped.push(idx);
+      SoundFX.flip(); Haptics.light();
       // 播放发音（如果是英文卡）
       var c = memoryState.cards[idx];
       if (c.type === 'en') speak(c.word);
@@ -3748,6 +3945,7 @@
             document.getElementById('mem-matched').textContent = memoryState.matched;
             // 积分奖励
             earnPoints('memory_match', 2);
+            SoundFX.correct(); Haptics.success();
             memoryState.flipped = [];
             if (memoryState.matched === 6) {
               finishMemoryGame();
@@ -3755,6 +3953,7 @@
           }, 500);
         } else {
           // 配对失败，翻回
+          SoundFX.wrong(); Haptics.error();
           setTimeout(function() {
             memoryState.flipped.forEach(function(i) {
               document.querySelector('.memory-card[data-idx="' + i + '"]').classList.remove('flipped');
@@ -3781,6 +3980,7 @@
         onBack: 'switchGameMode(\'browse\')'
       });
       earnPoints('memory_complete', points);
+      SoundFX.complete(); Haptics.complete();
     }
 
     // ---- 听音选词游戏 ----
@@ -3845,12 +4045,14 @@
         listenState.correct++;
         earnPoints('listen_correct', 2);
         speak(listenState.current.word);
+        SoundFX.correct(); Haptics.success();
       } else {
         buttons[idx].classList.add('wrong');
         // 标出正确答案
         var correctIdx = -1;
         listenState.options.forEach(function(w, i) { if (w.word === listenState.current.word) correctIdx = i; });
         if (correctIdx >= 0) buttons[correctIdx].classList.add('correct');
+        SoundFX.wrong(); Haptics.error();
       }
       setTimeout(function() { nextListenRound(); }, 1500);
     };
@@ -3869,6 +4071,7 @@
         onBack: 'switchGameMode(\'browse\')'
       });
       earnPoints('listen_complete', points);
+      SoundFX.complete(); Haptics.complete();
     }
 
     // ---- 游戏结果弹层 ----
@@ -4071,6 +4274,7 @@
         if (!spellState.hintUsed) earnPoints('spell_correct', 3);
         else earnPoints('spell_correct_hint', 1);
         speak(spellState.current.word);
+        SoundFX.correct(); Haptics.success();
         setTimeout(function() { nextSpellRound(); }, 1200);
       } else {
         slots.forEach(function(slot, i) {
@@ -4078,6 +4282,7 @@
             slot.classList.add('wrong');
           }
         });
+        SoundFX.wrong(); Haptics.error();
         setTimeout(function() {
           slots.forEach(function(slot) { slot.classList.remove('wrong'); });
         }, 800);
@@ -4099,6 +4304,7 @@
         onBack: 'switchGameMode(\'browse\')'
       });
       earnPoints('spell_complete', points);
+      SoundFX.complete(); Haptics.complete();
     }
 
     // ================================================================
@@ -4175,11 +4381,13 @@
         pictureState.correct++;
         earnPoints('picture_correct', 2);
         speak(pictureState.current.word);
+        SoundFX.correct(); Haptics.success();
       } else {
         buttons[idx].classList.add('wrong');
         var correctIdx = -1;
         pictureState.options.forEach(function(w, i) { if (w.word === pictureState.current.word) correctIdx = i; });
         if (correctIdx >= 0) buttons[correctIdx].classList.add('correct');
+        SoundFX.wrong(); Haptics.error();
       }
       setTimeout(function() { nextPictureRound(); }, 1500);
     };
@@ -4198,12 +4406,33 @@
         onBack: 'switchGameMode(\'browse\')'
       });
       earnPoints('picture_complete', points);
+      SoundFX.complete(); Haptics.complete();
     }
 
     // ================================================================
     // 初始化：动态渲染游戏 tabs（从 GameRegistry 注册表生成）
     // ================================================================
     GameRegistry.renderTabs('game-mode-tabs');
+
+    // ================================================================
+    // 初始化：UX 模块状态恢复（音效/触觉/主题，依赖 Storage 已定义）
+    // ================================================================
+    SoundFX.enabled = Storage.get('sound_enabled', '1') !== '0';
+    Haptics.enabled = Storage.get('haptics_enabled', '1') !== '0';
+    // 恢复保存的主题
+    var savedThemeInit = Storage.get('theme', '');
+    if (savedThemeInit && Theme.get(savedThemeInit)) {
+      Theme.apply(savedThemeInit);
+      document.body.classList.toggle('cherry-night-active', savedThemeInit === 'cherry-night');
+      var themeBtnInit = document.getElementById('theme-toggle');
+      if (themeBtnInit) themeBtnInit.textContent = savedThemeInit === 'cherry-night' ? '☀️' : '🌙';
+    }
+    // 恢复音效按钮图标
+    var soundBtnInit = document.getElementById('sound-toggle');
+    if (soundBtnInit) {
+      soundBtnInit.textContent = SoundFX.enabled ? '🔊' : '🔇';
+      soundBtnInit.classList.toggle('off', !SoundFX.enabled);
+    }
 
   })();
   </script>
