@@ -1,6 +1,6 @@
-# Starters Learning Server (Gin + MCP SQLite)
+# 樱桃学习 · 剑桥少儿英语平台 (Gin + MCP SQLite)
 
-剑桥 Starters 单词与语法学习平台 —— 含英语词汇/语法卡片、数学运算练习、任务管理、学习仪表盘。
+樱桃学习 —— 剑桥 Starters & Movers 单词与语法学习平台，含英语词汇/语法卡片、数学运算练习、任务管理、学习仪表盘。采用樱桃暖阳风视觉设计。
 
 ## 前置依赖
 
