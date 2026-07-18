@@ -266,6 +266,14 @@
       .game-stats-bar { gap: 0.8rem; font-size: 0.78rem; }
       .game-entry-bar { padding: 0 1rem; }
       .game-back-btn { margin: 0.5rem 1rem; }
+      /* 拼字/看图游戏移动端适配 */
+      .spell-slot { width: 32px; height: 38px; font-size: 1rem; }
+      .spell-tile { width: 36px; height: 36px; font-size: 1rem; }
+      .spell-emoji { font-size: 2.4rem; }
+      .spell-play-btn { width: 48px; height: 48px; font-size: 1.3rem; }
+      .picture-emoji { font-size: 3rem; }
+      .picture-options { grid-template-columns: 1fr; }
+      .picture-option { padding: 0.8rem; font-size: 0.9rem; }
     }
 
     /* 手机端触摸交互优化 */
@@ -402,6 +410,46 @@
     .vocab-mode-area { padding: 0; }
     .game-back-btn { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.8rem; border-radius: var(--radius); font-size: 0.78rem; font-weight: 600; color: var(--accent); background: var(--accent-light); border: none; cursor: pointer; margin: 0.75rem 1.5rem; font-family: var(--font); }
     .game-back-btn:hover { background: var(--accent); color: #fff; }
+
+    /* ================================================================
+       拼字游戏 SPELLING GAME
+       ================================================================ */
+    .spell-game-area { padding: 1rem 1.5rem; text-align: center; }
+    .spell-prompt { background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem 1rem; margin-bottom: 1rem; border: 1px solid var(--rule); }
+    .spell-emoji { font-size: 3rem; margin-bottom: 0.5rem; display: block; }
+    .spell-hint { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+    .spell-play-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--accent2); color: #fff; border: none; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+    .spell-play-btn:hover { transform: scale(1.1); background: #2A9BC7; }
+    .spell-slots { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; min-height: 48px; }
+    .spell-slot { width: 38px; height: 44px; border: 2px dashed var(--rule); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; color: var(--accent); background: var(--bg2); transition: all 0.2s; }
+    .spell-slot.filled { border-style: solid; border-color: var(--accent); background: var(--accent-light); }
+    .spell-slot.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+    .spell-slot.wrong { background: #FFF5F5; border-color: #E74C3C; color: #E74C3C; animation: wrongShake 0.4s; }
+    .spell-tiles { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; max-width: 400px; margin: 0 auto; }
+    .spell-tile { width: 40px; height: 40px; border-radius: 8px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; font-family: var(--font); text-transform: uppercase; user-select: none; }
+    .spell-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .spell-tile:active { transform: scale(0.92); }
+    .spell-tile.used { opacity: 0.25; pointer-events: none; }
+    .spell-actions { margin-top: 1rem; display: flex; gap: 0.6rem; justify-content: center; }
+    .spell-action-btn { padding: 0.4rem 1rem; border-radius: var(--radius); border: none; cursor: pointer; font-weight: 700; font-size: 0.82rem; font-family: var(--font); }
+    .spell-action-btn.clear { background: var(--bg2); color: var(--ink); border: 1px solid var(--rule); }
+    .spell-action-btn.submit { background: var(--accent); color: #fff; }
+    .spell-action-btn.hint { background: var(--yellow); color: #fff; }
+
+    /* ================================================================
+       看图选词游戏 PICTURE-WORD GAME
+       ================================================================ */
+    .picture-game-area { padding: 1rem 1.5rem; text-align: center; }
+    .picture-prompt { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem 1.5rem; margin-bottom: 1rem; border: 1px solid var(--rule); }
+    .picture-emoji { font-size: 4rem; display: block; margin-bottom: 0.5rem; line-height: 1; }
+    .picture-hint { font-size: 0.82rem; color: var(--muted); }
+    .picture-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; max-width: 420px; margin: 0 auto; }
+    .picture-option { padding: 1rem 0.8rem; border-radius: var(--radius); border: 2px solid var(--rule); background: var(--surface); font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--ink); font-family: var(--font); text-align: center; }
+    .picture-option:hover { border-color: var(--accent); background: var(--accent-light); transform: translateY(-1px); }
+    .picture-option.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+    .picture-option.wrong { background: #FFF5F5; border-color: #E74C3C; color: #E74C3C; animation: wrongShake 0.4s; }
+    .picture-option:disabled { cursor: default; }
+    .picture-option .pic-phonetic { display: block; font-size: 0.68rem; color: var(--muted); font-weight: 400; font-style: italic; margin-top: 0.2rem; }
   </style>
 </head>
 <body>
@@ -477,6 +525,8 @@
               <button class="game-mode-tab" data-mode="chapters" onclick="switchGameMode('chapters')">🗺️ 章节闯关</button>
               <button class="game-mode-tab" data-mode="memory" onclick="switchGameMode('memory')">🃏 翻牌配对</button>
               <button class="game-mode-tab" data-mode="listen" onclick="switchGameMode('listen')">👂 听音选词</button>
+              <button class="game-mode-tab" data-mode="spell" onclick="switchGameMode('spell')">🔤 拼字游戏</button>
+              <button class="game-mode-tab" data-mode="picture" onclick="switchGameMode('picture')">🖼️ 看图选词</button>
             </div>
             <!-- DYNAMIC CONTENT AREA -->
             <div id="english-content"></div>
@@ -3143,6 +3193,16 @@
         contentArea.style.display = 'none';
         playArea.style.display = 'block';
         startListenGame();
+      } else if (mode === 'spell') {
+        // 拼字游戏
+        contentArea.style.display = 'none';
+        playArea.style.display = 'block';
+        startSpellGame();
+      } else if (mode === 'picture') {
+        // 看图选词游戏
+        contentArea.style.display = 'none';
+        playArea.style.display = 'block';
+        startPictureGame();
       }
     };
 
@@ -3434,6 +3494,341 @@
         var t = a[i]; a[i] = a[j]; a[j] = t;
       }
       return a;
+    }
+
+    // ================================================================
+    // WORD-EMOJI 映射表 — 用于拼字游戏提示和看图选词
+    // ================================================================
+    var WORD_EMOJI = {
+      // Animals
+      'cat':'🐱','dog':'🐶','bird':'🐦','fish':'🐟','rabbit':'🐰','mouse':'🐭','cow':'🐮','horse':'🐎',
+      'duck':'🦆','pig':'🐷','sheep':'🐑','chicken':'🐔','frog':'🐸','snake':'🐍','elephant':'🐘',
+      'monkey':'🐵','tiger':'🐯','bear':'🐻','lion':'🦁','goat':'🐐','spider':'🕷️',
+      // Body
+      'head':'😀','eye':'👁️','ear':'👂','nose':'👃','mouth':'👄','hand':'✋','foot':'🦶','hair':'💇',
+      'arm':'💪','leg':'🦵','tooth':'🦷','face':'😊','finger':'👆','knee':'🦵',
+      // Colors
+      'red':'🔴','blue':'🔵','yellow':'🟡','green':'🟢','black':'⚫','white':'⚪','pink':'🩷','orange':'🟠',
+      'purple':'🟣','brown':'🟤','grey':'🔘','gray':'🔘',
+      // Food
+      'apple':'🍎','banana':'🍌','orange':'🍊','bread':'🍞','cake':'🍰','milk':'🥛','water':'💧',
+      'egg':'🥚','rice':'🍚','meat':'🥩','fish':'🐟','ice cream':'🍦','juice':'🧃','tea':'🍵',
+      'cheese':'🧀','burger':'🍔','cookie':'🍪','candy':'🍬','grape':'🍇','pear':'🍐',
+      // Family
+      'mother':'👩','father':'👨','sister':'👧','brother':'👦','baby':'👶','grandma':'👵','grandpa':'👴',
+      'family':'👨‍👩‍👧‍👦','son':'👦','daughter':'👧',
+      // Numbers
+      'one':'1️⃣','two':'2️⃣','three':'3️⃣','four':'4️⃣','five':'5️⃣','six':'6️⃣','seven':'7️⃣',
+      'eight':'8️⃣','nine':'9️⃣','ten':'🔟',
+      // Clothes
+      'shirt':'👕','pants':'👖','shoes':'👟','hat':'🎩','dress':'👗','sock':'🧦','coat':'🧥','skirt':'👗',
+      // Nature / Environment
+      'sun':'☀️','moon':'🌙','star':'⭐','tree':'🌳','flower':'🌸','grass':'🌱','rain':'🌧️','snow':'❄️',
+      'cloud':'☁️','sky':'🌌','sea':'🌊','river':'🏞️','mountain':'⛰️','beach':'🏖️','wind':'💨','fire':'🔥',
+      // School
+      'book':'📖','pen':'🖊️','pencil':'✏️','bag':'🎒','desk':'🪑','chair':'🪑','teacher':'👩‍🏫','school':'🏫',
+      // Toys
+      'ball':'⚽','doll':'🪆','kite':'🪁','toy':'🧸','bike':'🚲','car':'🚗','plane':'✈️','train':'🚂',
+      // House
+      'house':'🏠','door':'🚪','window':'🪟','bed':'🛏️','table':'🍽️','clock':'🕐','phone':'📱','key':'🔑',
+      // Verbs / actions
+      'run':'🏃','jump':'🤸','swim':'🏊','eat':'🍽️','drink':'🥤','read':'📖','write':'✍️','sing':'🎤',
+      'dance':'💃','play':'🎮','sleep':'😴','sit':'🪑','stand':'🧍','walk':'🚶','fly':'🦅','drive':'🚗',
+      // Transport
+      'bus':'🚌','boat':'⛵','ship':'🚢','truck':'🚚',
+      // Misc
+      'clock':'🕐','phone':'📱','tv':'📺','computer':'💻','umbrella':'☂️','glasses':'👓','hat':'🎩'
+    };
+
+    function getWordEmoji(word) {
+      if (!word) return '📝';
+      var w = word.toLowerCase().trim();
+      if (WORD_EMOJI[w]) return WORD_EMOJI[w];
+      // 尝试匹配多词
+      var parts = w.split(' ');
+      if (parts.length > 1 && WORD_EMOJI[parts[0]]) return WORD_EMOJI[parts[0]];
+      return '📝';
+    }
+
+    // ================================================================
+    // 拼字游戏 SPELLING GAME
+    // ================================================================
+    var spellState = { current: null, tiles: [], slots: [], round: 0, correct: 0, total: 8, hintUsed: false };
+
+    function startSpellGame() {
+      spellState = { current: null, tiles: [], slots: [], round: 0, correct: 0, total: 8, hintUsed: false };
+      nextSpellRound();
+    }
+
+    function nextSpellRound() {
+      if (spellState.round >= spellState.total) {
+        finishSpellGame();
+        return;
+      }
+      spellState.round++;
+      spellState.hintUsed = false;
+
+      // 选一个较短的单词（3-6个字母，适合小学生拼写）
+      var chapters = getChapters(currentPhase);
+      var candidates = [];
+      chapters.forEach(function(ch) {
+        if (ch.type === 'vocab' && ch.groups) {
+          ch.groups.forEach(function(g) {
+            if (g.words) g.words.forEach(function(w) {
+              if (w.word && w.word.length >= 3 && w.word.length <= 6 && /^[a-zA-Z]+$/.test(w.word)) {
+                candidates.push(w);
+              }
+            });
+          });
+        }
+      });
+      if (candidates.length === 0) {
+        document.getElementById('game-play-area').innerHTML = '<div class="spell-game-area"><p>当前阶段没有适合拼写的单词。</p><button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button></div>';
+        return;
+      }
+      var answer = candidates[Math.floor(Math.random() * candidates.length)];
+      spellState.current = answer;
+
+      // 生成字母 tiles（正确字母 + 2个干扰字母）
+      var letters = answer.word.toUpperCase().split('');
+      var allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      var distractors = [];
+      while (distractors.length < 2) {
+        var d = allLetters[Math.floor(Math.random() * 26)];
+        if (letters.indexOf(d) === -1 && distractors.indexOf(d) === -1) distractors.push(d);
+      }
+      spellState.tiles = shuffle(letters.concat(distractors));
+      spellState.slots = [];
+
+      var html = '<div class="spell-game-area">';
+      html += '<button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button>';
+      html += '<div class="game-stats-bar">';
+      html += '<div class="stat-item">第 <span class="stat-value">' + spellState.round + '</span>/' + spellState.total + ' 题</div>';
+      html += '<div class="stat-item">正确: <span class="stat-value">' + spellState.correct + '</span></div>';
+      html += '</div>';
+      html += '<div class="spell-prompt">';
+      html += '<span class="spell-emoji">' + getWordEmoji(answer.word) + '</span>';
+      html += '<div class="spell-hint">' + answer.cn + ' · 点击喇叭听发音</div>';
+      html += '<button class="spell-play-btn" onclick="speak(\'' + answer.word.replace(/'/g, "\\'") + '\')">🔊</button>';
+      html += '</div>';
+      // 拼字槽
+      html += '<div class="spell-slots" id="spell-slots">';
+      for (var i = 0; i < answer.word.length; i++) {
+        html += '<div class="spell-slot" data-idx="' + i + '"></div>';
+      }
+      html += '</div>';
+      // 字母 tiles
+      html += '<div class="spell-tiles" id="spell-tiles">';
+      spellState.tiles.forEach(function(letter, idx) {
+        html += '<div class="spell-tile" data-idx="' + idx + '" onclick="pickSpellTile(' + idx + ')">' + letter + '</div>';
+      });
+      html += '</div>';
+      // 操作按钮
+      html += '<div class="spell-actions">';
+      html += '<button class="spell-action-btn hint" onclick="useSpellHint()">💡 提示</button>';
+      html += '<button class="spell-action-btn clear" onclick="clearSpellSlots()">清除</button>';
+      html += '<button class="spell-action-btn submit" onclick="submitSpell()">提交</button>';
+      html += '</div>';
+      html += '</div>';
+      document.getElementById('game-play-area').innerHTML = html;
+
+      // 自动播放发音
+      setTimeout(function() { speak(answer.word); }, 400);
+    }
+
+    window.pickSpellTile = function(idx) {
+      if (spellState.slots.length >= spellState.current.word.length) return;
+      var tile = document.querySelector('.spell-tile[data-idx="' + idx + '"]');
+      if (tile.classList.contains('used')) return;
+      tile.classList.add('used');
+      spellState.slots.push({ letter: spellState.tiles[idx], tileIdx: idx });
+      renderSpellSlots();
+    };
+
+    function renderSpellSlots() {
+      var slots = document.querySelectorAll('.spell-slot');
+      slots.forEach(function(slot, i) {
+        if (i < spellState.slots.length) {
+          slot.textContent = spellState.slots[i].letter;
+          slot.classList.add('filled');
+        } else {
+          slot.textContent = '';
+          slot.classList.remove('filled', 'correct', 'wrong');
+        }
+      });
+    }
+
+    window.clearSpellSlots = function() {
+      spellState.slots = [];
+      document.querySelectorAll('.spell-tile').forEach(function(t) { t.classList.remove('used'); });
+      renderSpellSlots();
+    };
+
+    window.useSpellHint = function() {
+      if (spellState.hintUsed) return;
+      spellState.hintUsed = true;
+      // 填入第一个空位对应的正确字母
+      var pos = spellState.slots.length;
+      if (pos >= spellState.current.word.length) return;
+      var correctLetter = spellState.current.word.toUpperCase()[pos];
+      // 找到对应字母的 tile
+      var foundIdx = -1;
+      spellState.tiles.forEach(function(letter, idx) {
+        if (letter === correctLetter && !document.querySelector('.spell-tile[data-idx="' + idx + '"]').classList.contains('used') && foundIdx === -1) {
+          foundIdx = idx;
+        }
+      });
+      if (foundIdx >= 0) {
+        var tile = document.querySelector('.spell-tile[data-idx="' + foundIdx + '"]');
+        tile.classList.add('used');
+        spellState.slots.push({ letter: correctLetter, tileIdx: foundIdx });
+        renderSpellSlots();
+      }
+    };
+
+    window.submitSpell = function() {
+      var answer = spellState.current.word.toUpperCase();
+      var userAnswer = spellState.slots.map(function(s) { return s.letter; }).join('');
+      var slots = document.querySelectorAll('.spell-slot');
+
+      if (userAnswer.length < answer.length) {
+        showToast('请把字母填满！');
+        return;
+      }
+
+      if (userAnswer === answer) {
+        slots.forEach(function(slot) { slot.classList.add('correct'); });
+        spellState.correct++;
+        if (!spellState.hintUsed) earnPoints('spell_correct', 3);
+        else earnPoints('spell_correct_hint', 1);
+        speak(spellState.current.word);
+        setTimeout(function() { nextSpellRound(); }, 1200);
+      } else {
+        slots.forEach(function(slot, i) {
+          if (i < userAnswer.length && userAnswer[i] !== answer[i]) {
+            slot.classList.add('wrong');
+          }
+        });
+        setTimeout(function() {
+          slots.forEach(function(slot) { slot.classList.remove('wrong'); });
+        }, 800);
+        showToast('再试试看！');
+      }
+    };
+
+    function finishSpellGame() {
+      var stars = spellState.correct >= 7 ? 3 : (spellState.correct >= 5 ? 2 : 1);
+      var points = spellState.correct * 4;
+      var starStr = '';
+      for (var s = 0; s < 3; s++) starStr += s < stars ? '⭐' : '☆';
+      showGameResult({
+        stars: starStr,
+        title: stars === 3 ? '拼写大师！' : (stars === 2 ? '拼得不错！' : '继续练习拼写！'),
+        score: '拼对 ' + spellState.correct + ' / ' + spellState.total + ' 个单词',
+        points: '+' + points + ' 积分',
+        onRetry: 'startSpellGame()',
+        onBack: 'switchGameMode(\'browse\')'
+      });
+      earnPoints('spell_complete', points);
+    }
+
+    // ================================================================
+    // 看图选词游戏 PICTURE-WORD GAME
+    // ================================================================
+    var pictureState = { current: null, round: 0, correct: 0, total: 10, options: [] };
+
+    function startPictureGame() {
+      pictureState = { current: null, round: 0, correct: 0, total: 10, options: [] };
+      nextPictureRound();
+    }
+
+    function nextPictureRound() {
+      if (pictureState.round >= pictureState.total) {
+        finishPictureGame();
+        return;
+      }
+      pictureState.round++;
+
+      // 收集有 emoji 映射的单词
+      var chapters = getChapters(currentPhase);
+      var candidates = [];
+      chapters.forEach(function(ch) {
+        if (ch.type === 'vocab' && ch.groups) {
+          ch.groups.forEach(function(g) {
+            if (g.words) g.words.forEach(function(w) {
+              if (w.word && WORD_EMOJI[w.word.toLowerCase().trim()]) {
+                candidates.push(w);
+              }
+            });
+          });
+        }
+      });
+
+      if (candidates.length < 4) {
+        document.getElementById('game-play-area').innerHTML = '<div class="picture-game-area"><p>当前阶段图片单词不足，请切换到 Starters 阶段。</p><button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button></div>';
+        return;
+      }
+
+      var picked = shuffle(candidates).slice(0, 4);
+      var answer = picked[Math.floor(Math.random() * 4)];
+      pictureState.current = answer;
+      pictureState.options = picked;
+
+      var html = '<div class="picture-game-area">';
+      html += '<button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button>';
+      html += '<div class="game-stats-bar">';
+      html += '<div class="stat-item">第 <span class="stat-value">' + pictureState.round + '</span>/' + pictureState.total + ' 题</div>';
+      html += '<div class="stat-item">正确: <span class="stat-value">' + pictureState.correct + '</span></div>';
+      html += '</div>';
+      html += '<div class="picture-prompt">';
+      html += '<span class="picture-emoji">' + getWordEmoji(answer.word) + '</span>';
+      html += '<div class="picture-hint">这是什么？选出正确的英文单词</div>';
+      html += '</div>';
+      html += '<div class="picture-options" id="picture-options">';
+      picked.forEach(function(w, i) {
+        html += '<button class="picture-option" onclick="answerPicture(' + i + ')" data-idx="' + i + '">';
+        html += w.word;
+        html += '<span class="pic-phonetic">' + (w.phonetic || '') + '</span>';
+        html += '</button>';
+      });
+      html += '</div>';
+      html += '</div>';
+      document.getElementById('game-play-area').innerHTML = html;
+    }
+
+    window.answerPicture = function(idx) {
+      var buttons = document.querySelectorAll('.picture-option');
+      var selected = pictureState.options[idx];
+      buttons.forEach(function(b) { b.disabled = true; });
+
+      if (selected.word === pictureState.current.word) {
+        buttons[idx].classList.add('correct');
+        pictureState.correct++;
+        earnPoints('picture_correct', 2);
+        speak(pictureState.current.word);
+      } else {
+        buttons[idx].classList.add('wrong');
+        var correctIdx = -1;
+        pictureState.options.forEach(function(w, i) { if (w.word === pictureState.current.word) correctIdx = i; });
+        if (correctIdx >= 0) buttons[correctIdx].classList.add('correct');
+      }
+      setTimeout(function() { nextPictureRound(); }, 1500);
+    };
+
+    function finishPictureGame() {
+      var stars = pictureState.correct >= 9 ? 3 : (pictureState.correct >= 7 ? 2 : 1);
+      var points = pictureState.correct * 3;
+      var starStr = '';
+      for (var s = 0; s < 3; s++) starStr += s < stars ? '⭐' : '☆';
+      showGameResult({
+        stars: starStr,
+        title: stars === 3 ? '认词达人！' : (stars === 2 ? '认得不错！' : '多看多记！'),
+        score: '选对 ' + pictureState.correct + ' / ' + pictureState.total + ' 题',
+        points: '+' + points + ' 积分',
+        onRetry: 'startPictureGame()',
+        onBack: 'switchGameMode(\'browse\')'
+      });
+      earnPoints('picture_complete', points);
     }
 
   })();
