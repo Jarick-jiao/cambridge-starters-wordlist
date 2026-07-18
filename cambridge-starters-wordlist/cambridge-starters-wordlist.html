@@ -248,6 +248,38 @@
       h2 { font-size: 1.15rem; }
       .grammar-box { padding: 0.8rem; }
       .stage-tab { font-size: 0.82rem; padding: 0.4rem 0.9rem; }
+      /* 游戏模式移动端适配 */
+      .game-mode-tabs { padding: 0.4rem 1rem; gap: 0.3rem; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+      .game-mode-tab { font-size: 0.72rem; padding: 0.3rem 0.7rem; white-space: nowrap; flex-shrink: 0; }
+      .chapter-game-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; padding: 0 1rem 1rem; }
+      .chapter-game-card { padding: 0.8rem 0.6rem; }
+      .chapter-game-card .ch-icon { font-size: 1.6rem; }
+      .chapter-game-card .ch-title { font-size: 0.8rem; }
+      .memory-grid { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+      .memory-face-back { font-size: 1.3rem; }
+      .memory-face-front .mem-en { font-size: 0.72rem; }
+      .memory-face-front .mem-cn { font-size: 0.62rem; }
+      .memory-face-front .mem-phonetic { font-size: 0.52rem; }
+      .listen-options { grid-template-columns: 1fr; }
+      .listen-play-btn { width: 64px; height: 64px; font-size: 1.6rem; }
+      .game-result-card { padding: 1.5rem 1.5rem; max-width: 300px; margin: 0 1rem; }
+      .game-stats-bar { gap: 0.8rem; font-size: 0.78rem; }
+      .game-entry-bar { padding: 0 1rem; }
+      .game-back-btn { margin: 0.5rem 1rem; }
+    }
+
+    /* 手机端触摸交互优化 */
+    @media (max-width: 768px) and (pointer: coarse) {
+      .word-card { min-height: 80px; }
+      .word-card .en { font-size: 1rem; }
+      .speak-btn { width: 32px; height: 32px; font-size: 1rem; }
+      .memory-card { min-height: 90px; }
+      .listen-option { padding: 1.2rem 0.8rem; font-size: 0.95rem; }
+      .game-btn { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+      .chapter-game-card:active { transform: scale(0.97); }
+      .memory-card:active .memory-card-inner { transform: scale(0.97); }
+      .listen-option:active { transform: scale(0.97); }
+      .listen-play-btn:active { transform: scale(0.9); }
     }
     /* Timeline heatmap */
     .timeline-grid{display:grid;grid-template-rows:repeat(7,28px);grid-auto-flow:column;gap:3px;margin-top:0.8rem;}
@@ -289,6 +321,87 @@
     @keyframes pointsFly{0%{opacity:1;transform:translateY(0) scale(1);}60%{opacity:1;transform:translateY(-60px) scale(1.2);}100%{opacity:0;transform:translateY(-100px) scale(0.8);}}
     .points-pulse{animation:pointsPulse 0.3s ease;}
     @keyframes pointsPulse{0%{transform:scale(1);}50%{transform:scale(1.25);}100%{transform:scale(1);}}
+
+    /* ================================================================
+       GAME MODE STYLES — 游戏化学习
+       ================================================================ */
+
+    /* 游戏入口按钮 */
+    .game-entry-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.75rem 0 1rem; padding: 0 1.5rem; }
+    .game-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; border-radius: var(--radius); font-size: 0.82rem; font-weight: 700; cursor: pointer; border: 2px solid var(--accent); background: var(--surface); color: var(--accent); transition: all 0.2s; font-family: var(--font); }
+    .game-btn:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+    .game-btn .game-icon { font-size: 1rem; }
+    .game-btn.active { background: var(--accent); color: #fff; }
+
+    /* 章节游戏化卡片（分章展示入口） */
+    .chapter-game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.8rem; padding: 0 1.5rem 1.5rem; }
+    .chapter-game-card { background: var(--surface); border-radius: var(--radius-lg); padding: 1.2rem 1rem; text-align: center; border: 1px solid var(--rule); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+    .chapter-game-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-md); }
+    .chapter-game-card .ch-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+    .chapter-game-card .ch-title { font-size: 0.9rem; font-weight: 700; color: var(--ink); margin-bottom: 0.3rem; }
+    .chapter-game-card .ch-progress { font-size: 0.72rem; color: var(--muted); }
+    .chapter-game-card .ch-stars { margin-top: 0.4rem; font-size: 0.8rem; letter-spacing: 2px; }
+    .chapter-game-card .ch-mini-bar { height: 4px; background: var(--bg2); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+    .chapter-game-card .ch-mini-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+    .chapter-game-card.locked { opacity: 0.5; cursor: not-allowed; }
+    .chapter-game-card.locked .ch-icon::after { content: ' 🔒'; }
+
+    /* 翻牌记忆游戏 */
+    .memory-game-area { padding: 1rem 1.5rem; }
+    .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; max-width: 500px; margin: 0 auto; }
+    .memory-card { aspect-ratio: 3/4; perspective: 600px; cursor: pointer; }
+    .memory-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+    .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+    .memory-card.matched .memory-card-inner { transform: rotateY(180deg); }
+    .memory-card.matched { pointer-events: none; }
+    .memory-card.matched .memory-face-front { background: var(--green-light); border-color: var(--green); }
+    .memory-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-direction: column; border: 2px solid var(--rule); padding: 0.3rem; text-align: center; }
+    .memory-face-back { background: var(--accent); color: #fff; font-size: 1.8rem; }
+    .memory-face-front { background: var(--surface); transform: rotateY(180deg); }
+    .memory-face-front .mem-en { font-size: 0.85rem; font-weight: 700; color: var(--ink); word-break: break-word; }
+    .memory-face-front .mem-cn { font-size: 0.72rem; color: var(--accent); margin-top: 0.2rem; }
+    .memory-face-front .mem-phonetic { font-size: 0.6rem; color: var(--muted); font-style: italic; }
+    .game-stats-bar { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.85rem; }
+    .game-stats-bar .stat-item { display: flex; align-items: center; gap: 0.3rem; }
+    .game-stats-bar .stat-value { font-weight: 800; color: var(--accent); }
+
+    /* 听音选词游戏 */
+    .listen-game-area { padding: 1rem 1.5rem; text-align: center; }
+    .listen-prompt { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem 1.5rem; margin-bottom: 1rem; border: 1px solid var(--rule); }
+    .listen-play-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 2rem; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-md); }
+    .listen-play-btn:hover { transform: scale(1.1); background: var(--accent-dark); }
+    .listen-play-btn:active { transform: scale(0.95); }
+    .listen-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; max-width: 400px; margin: 0 auto; }
+    .listen-option { padding: 1rem; border-radius: var(--radius); border: 2px solid var(--rule); background: var(--surface); font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; color: var(--ink); font-family: var(--font); }
+    .listen-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .listen-option.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+    .listen-option.wrong { background: #FFF5F5; border-color: #E74C3C; color: #E74C3C; animation: wrongShake 0.4s; }
+    .listen-option:disabled { cursor: default; }
+
+    /* 游戏结果弹层 */
+    .game-result-overlay { position: fixed; inset: 0; background: rgba(45,42,38,0.6); z-index: 500; display: none; align-items: center; justify-content: center; }
+    .game-result-overlay.show { display: flex; }
+    .game-result-card { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem 2.5rem; text-align: center; max-width: 360px; box-shadow: var(--shadow-md); animation: resultBounce 0.5s; }
+    @keyframes resultBounce { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+    .game-result-card .result-stars { font-size: 2.5rem; margin-bottom: 0.5rem; letter-spacing: 4px; }
+    .game-result-card .result-title { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+    .game-result-card .result-score { font-size: 0.95rem; color: var(--muted); margin-bottom: 1rem; }
+    .game-result-card .result-points { font-size: 1.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+    .game-result-card .result-btns { display: flex; gap: 0.6rem; justify-content: center; }
+    .game-result-card .result-btn { padding: 0.5rem 1.2rem; border-radius: var(--radius); border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: var(--font); }
+    .game-result-card .result-btn.primary { background: var(--accent); color: #fff; }
+    .game-result-card .result-btn.secondary { background: var(--bg2); color: var(--ink); border: 1px solid var(--rule); }
+
+    /* 游戏模式切换栏 */
+    .game-mode-tabs { display: flex; gap: 0.4rem; padding: 0.5rem 1.5rem; background: var(--bg); border-bottom: 1px solid var(--rule); }
+    .game-mode-tab { padding: 0.35rem 0.9rem; border-radius: var(--radius); font-size: 0.8rem; font-weight: 700; cursor: pointer; background: var(--bg2); color: var(--ink); border: 1px solid var(--rule); transition: all 0.2s; font-family: var(--font); }
+    .game-mode-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .game-mode-tab:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+    /* 单词学习模式（默认浏览） */
+    .vocab-mode-area { padding: 0; }
+    .game-back-btn { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.8rem; border-radius: var(--radius); font-size: 0.78rem; font-weight: 600; color: var(--accent); background: var(--accent-light); border: none; cursor: pointer; margin: 0.75rem 1.5rem; font-family: var(--font); }
+    .game-back-btn:hover { background: var(--accent); color: #fff; }
   </style>
 </head>
 <body>
@@ -358,8 +471,17 @@
               <div class="progress-total" id="progress-total"></div>
               <button class="reset-btn" onclick="resetProgress()">重置全部进度</button>
             </div>
+            <!-- GAME MODE TABS — 游戏化学习入口 -->
+            <div class="game-mode-tabs" id="game-mode-tabs">
+              <button class="game-mode-tab active" data-mode="browse" onclick="switchGameMode('browse')">📖 浏览学习</button>
+              <button class="game-mode-tab" data-mode="chapters" onclick="switchGameMode('chapters')">🗺️ 章节闯关</button>
+              <button class="game-mode-tab" data-mode="memory" onclick="switchGameMode('memory')">🃏 翻牌配对</button>
+              <button class="game-mode-tab" data-mode="listen" onclick="switchGameMode('listen')">👂 听音选词</button>
+            </div>
             <!-- DYNAMIC CONTENT AREA -->
             <div id="english-content"></div>
+            <!-- GAME PLAY AREA (for memory/listen modes) -->
+            <div id="game-play-area" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -2983,8 +3105,343 @@
       showPage('english');
     }
 
+    // ================================================================
+    // 9. GAME MODE — 游戏化学习模块
+    // ================================================================
+
+    var currentGameMode = 'browse';
+
+    // 切换游戏模式
+    window.switchGameMode = function(mode) {
+      currentGameMode = mode;
+      // 更新 tab 状态
+      document.querySelectorAll('#game-mode-tabs .game-mode-tab').forEach(function(t) {
+        t.classList.toggle('active', t.getAttribute('data-mode') === mode);
+      });
+      var playArea = document.getElementById('game-play-area');
+      var contentArea = document.getElementById('english-content');
+
+      if (mode === 'browse') {
+        // 浏览模式：恢复原有内容
+        playArea.style.display = 'none';
+        contentArea.style.display = 'block';
+        var savedChapter = localStorage.getItem('cam_learn_chapter');
+        if (savedChapter) { showChapter(savedChapter); }
+        else { var chs = getChapters(); if (chs.length) showChapter(chs[0].key); }
+      } else if (mode === 'chapters') {
+        // 章节闯关模式
+        playArea.style.display = 'none';
+        contentArea.style.display = 'block';
+        renderChapterGameGrid();
+      } else if (mode === 'memory') {
+        // 翻牌记忆游戏
+        contentArea.style.display = 'none';
+        playArea.style.display = 'block';
+        startMemoryGame();
+      } else if (mode === 'listen') {
+        // 听音选词游戏
+        contentArea.style.display = 'none';
+        playArea.style.display = 'block';
+        startListenGame();
+      }
+    };
+
+    // ---- 章节闯关模式：分章展示卡片 ----
+    function renderChapterGameGrid() {
+      var chapters = getChapters(currentPhase);
+      var vocabChapters = chapters.filter(function(ch) { return ch.type === 'vocab'; });
+      var html = '<div style="padding:0.5rem 1.5rem 0;"><h2><span class="icon bg-orange">&#x1F3AF;</span>章节闯关 — ' + PHASES[currentPhase].label + '</h2>';
+      html += '<p class="section-intro">选择一个章节开始学习，完成单词掌握即可获得星星奖励！</p></div>';
+      html += '<div class="chapter-game-grid">';
+
+      vocabChapters.forEach(function(ch, idx) {
+        // 计算该章节掌握进度
+        var totalWords = 0;
+        var masteredCount = 0;
+        if (ch.groups) {
+          ch.groups.forEach(function(g) {
+            if (g.words) {
+              totalWords += g.words.length;
+              g.words.forEach(function(w) {
+                if (isWordMastered(w.word)) masteredCount++;
+              });
+            }
+          });
+        }
+        var pct = totalWords > 0 ? Math.round(masteredCount / totalWords * 100) : 0;
+        var stars = pct >= 100 ? 3 : (pct >= 60 ? 2 : (pct >= 30 ? 1 : 0));
+        var starStr = '';
+        for (var s = 0; s < 3; s++) { starStr += s < stars ? '⭐' : '☆'; }
+
+        html += '<div class="chapter-game-card" onclick="showChapter(\'' + ch.key + '\');switchGameMode(\'browse\')">';
+        html += '<span class="ch-icon">' + (ch.icon || '📖') + '</span>';
+        html += '<div class="ch-title">' + ch.title + '</div>';
+        html += '<div class="ch-progress">' + masteredCount + ' / ' + totalWords + ' 词</div>';
+        html += '<div class="ch-stars">' + starStr + '</div>';
+        html += '<div class="ch-mini-bar"><div class="ch-mini-fill" style="width:' + pct + '%"></div></div>';
+        html += '</div>';
+      });
+      html += '</div>';
+      document.getElementById('english-content').innerHTML = html;
+    }
+
+    // 辅助：检查单词是否已掌握（从 DOM 或 localStorage）
+    function isWordMastered(word) {
+      var card = document.querySelector('.word-card[data-word="' + word + '"]');
+      if (card && card.classList.contains('mastered')) return true;
+      // 从 localStorage 读取
+      try {
+        var stored = JSON.parse(localStorage.getItem('cam_mastered_words') || '[]');
+        return stored.indexOf(word) !== -1;
+      } catch(e) { return false; }
+    }
+
+    // ---- 翻牌记忆游戏 ----
+    var memoryState = { cards: [], flipped: [], matched: 0, moves: 0, startTime: 0 };
+
+    function startMemoryGame() {
+      // 从当前 phase 收集单词
+      var chapters = getChapters(currentPhase);
+      var allWords = [];
+      chapters.forEach(function(ch) {
+        if (ch.type === 'vocab' && ch.groups) {
+          ch.groups.forEach(function(g) {
+            if (g.words) {
+              g.words.forEach(function(w) {
+                if (w.word && w.cn) allWords.push(w);
+              });
+            }
+          });
+        }
+      });
+      // 随机选 6 个词，每个词生成两张牌（英文+中文）
+      var picked = shuffle(allWords).slice(0, 6);
+      var cards = [];
+      picked.forEach(function(w, i) {
+        cards.push({ id: i, type: 'en', text: w.word, pair: i, word: w.word, phonetic: w.phonetic || '', cn: w.cn });
+        cards.push({ id: i + 100, type: 'cn', text: w.cn, pair: i, word: w.word, phonetic: w.phonetic || '', cn: w.cn });
+      });
+      cards = shuffle(cards);
+      memoryState = { cards: cards, flipped: [], matched: 0, moves: 0, startTime: Date.now() };
+
+      var html = '<div class="memory-game-area">';
+      html += '<button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button>';
+      html += '<div class="game-stats-bar">';
+      html += '<div class="stat-item">配对: <span class="stat-value" id="mem-matched">0</span>/6</div>';
+      html += '<div class="stat-item">翻牌: <span class="stat-value" id="mem-moves">0</span></div>';
+      html += '<div class="stat-item">用时: <span class="stat-value" id="mem-time">0</span>s</div>';
+      html += '</div>';
+      html += '<div class="memory-grid" id="memory-grid">';
+      cards.forEach(function(c, idx) {
+        html += '<div class="memory-card" data-idx="' + idx + '" onclick="flipMemoryCard(' + idx + ')">';
+        html += '<div class="memory-card-inner">';
+        html += '<div class="memory-face memory-face-back">🍒</div>';
+        if (c.type === 'en') {
+          html += '<div class="memory-face memory-face-front">';
+          html += '<div class="mem-en">' + c.text + '</div>';
+          html += '<div class="mem-phonetic">' + (c.phonetic || '') + '</div>';
+          html += '</div>';
+        } else {
+          html += '<div class="memory-face memory-face-front">';
+          html += '<div class="mem-cn">' + c.text + '</div>';
+          html += '</div>';
+        }
+        html += '</div></div>';
+      });
+      html += '</div></div>';
+      document.getElementById('game-play-area').innerHTML = html;
+
+      // 启动计时器
+      if (memoryState.timer) clearInterval(memoryState.timer);
+      memoryState.timer = setInterval(function() {
+        var el = document.getElementById('mem-time');
+        if (el) el.textContent = Math.floor((Date.now() - memoryState.startTime) / 1000);
+      }, 1000);
+    }
+
+    window.flipMemoryCard = function(idx) {
+      var card = document.querySelector('.memory-card[data-idx="' + idx + '"]');
+      if (!card || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+      if (memoryState.flipped.length >= 2) return;
+
+      card.classList.add('flipped');
+      memoryState.flipped.push(idx);
+      // 播放发音（如果是英文卡）
+      var c = memoryState.cards[idx];
+      if (c.type === 'en') speak(c.word);
+
+      if (memoryState.flipped.length === 2) {
+        memoryState.moves++;
+        document.getElementById('mem-moves').textContent = memoryState.moves;
+        var a = memoryState.cards[memoryState.flipped[0]];
+        var b = memoryState.cards[memoryState.flipped[1]];
+        if (a.pair === b.pair && a.type !== b.type) {
+          // 配对成功
+          setTimeout(function() {
+            memoryState.flipped.forEach(function(i) {
+              document.querySelector('.memory-card[data-idx="' + i + '"]').classList.add('matched');
+            });
+            memoryState.matched++;
+            document.getElementById('mem-matched').textContent = memoryState.matched;
+            // 积分奖励
+            earnPoints('memory_match', 2);
+            memoryState.flipped = [];
+            if (memoryState.matched === 6) {
+              finishMemoryGame();
+            }
+          }, 500);
+        } else {
+          // 配对失败，翻回
+          setTimeout(function() {
+            memoryState.flipped.forEach(function(i) {
+              document.querySelector('.memory-card[data-idx="' + i + '"]').classList.remove('flipped');
+            });
+            memoryState.flipped = [];
+          }, 1000);
+        }
+      }
+    };
+
+    function finishMemoryGame() {
+      if (memoryState.timer) { clearInterval(memoryState.timer); memoryState.timer = null; }
+      var time = Math.floor((Date.now() - memoryState.startTime) / 1000);
+      var stars = memoryState.moves <= 8 ? 3 : (memoryState.moves <= 12 ? 2 : 1);
+      var points = stars * 5 + Math.max(0, 30 - time);
+      var starStr = '';
+      for (var s = 0; s < 3; s++) starStr += s < stars ? '⭐' : '☆';
+      showGameResult({
+        stars: starStr,
+        title: stars === 3 ? '太棒了！' : (stars === 2 ? '做得好！' : '继续加油！'),
+        score: '翻牌 ' + memoryState.moves + ' 次 · 用时 ' + time + ' 秒',
+        points: '+' + points + ' 积分',
+        onRetry: 'startMemoryGame()',
+        onBack: 'switchGameMode(\'browse\')'
+      });
+      earnPoints('memory_complete', points);
+    }
+
+    // ---- 听音选词游戏 ----
+    var listenState = { current: null, round: 0, correct: 0, total: 10, options: [] };
+
+    function startListenGame() {
+      listenState = { current: null, round: 0, correct: 0, total: 10, options: [] };
+      nextListenRound();
+    }
+
+    function nextListenRound() {
+      if (listenState.round >= listenState.total) {
+        finishListenGame();
+        return;
+      }
+      listenState.round++;
+      var chapters = getChapters(currentPhase);
+      var allWords = [];
+      chapters.forEach(function(ch) {
+        if (ch.type === 'vocab' && ch.groups) {
+          ch.groups.forEach(function(g) {
+            if (g.words) g.words.forEach(function(w) { if (w.word && w.cn) allWords.push(w); });
+          });
+        }
+      });
+      var picked = shuffle(allWords).slice(0, 4);
+      var answer = picked[Math.floor(Math.random() * 4)];
+      listenState.current = answer;
+      listenState.options = picked;
+
+      var html = '<div class="listen-game-area">';
+      html += '<button class="game-back-btn" onclick="switchGameMode(\'browse\')">← 返回浏览</button>';
+      html += '<div class="game-stats-bar">';
+      html += '<div class="stat-item">第 <span class="stat-value">' + listenState.round + '</span>/' + listenState.total + ' 题</div>';
+      html += '<div class="stat-item">正确: <span class="stat-value">' + listenState.correct + '</span></div>';
+      html += '</div>';
+      html += '<div class="listen-prompt">';
+      html += '<p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem;">点击喇叭听单词，然后选出正确的中文意思</p>';
+      html += '<button class="listen-play-btn" onclick="playListenWord()">🔊</button>';
+      html += '</div>';
+      html += '<div class="listen-options" id="listen-options">';
+      picked.forEach(function(w, i) {
+        html += '<button class="listen-option" onclick="answerListen(' + i + ')" data-idx="' + i + '">' + w.cn + '</button>';
+      });
+      html += '</div>';
+      html += '</div>';
+      document.getElementById('game-play-area').innerHTML = html;
+      // 自动播放一次
+      setTimeout(function() { playListenWord(); }, 500);
+    }
+
+    window.playListenWord = function() {
+      if (listenState.current) speak(listenState.current.word);
+    };
+
+    window.answerListen = function(idx) {
+      var buttons = document.querySelectorAll('.listen-option');
+      var selected = listenState.options[idx];
+      buttons.forEach(function(b) { b.disabled = true; });
+      if (selected.word === listenState.current.word) {
+        buttons[idx].classList.add('correct');
+        listenState.correct++;
+        earnPoints('listen_correct', 2);
+        speak(listenState.current.word);
+      } else {
+        buttons[idx].classList.add('wrong');
+        // 标出正确答案
+        var correctIdx = -1;
+        listenState.options.forEach(function(w, i) { if (w.word === listenState.current.word) correctIdx = i; });
+        if (correctIdx >= 0) buttons[correctIdx].classList.add('correct');
+      }
+      setTimeout(function() { nextListenRound(); }, 1500);
+    };
+
+    function finishListenGame() {
+      var stars = listenState.correct >= 9 ? 3 : (listenState.correct >= 7 ? 2 : 1);
+      var points = listenState.correct * 3;
+      var starStr = '';
+      for (var s = 0; s < 3; s++) starStr += s < stars ? '⭐' : '☆';
+      showGameResult({
+        stars: starStr,
+        title: stars === 3 ? '听力达人！' : (stars === 2 ? '不错哦！' : '继续练习！'),
+        score: '答对 ' + listenState.correct + ' / ' + listenState.total + ' 题',
+        points: '+' + points + ' 积分',
+        onRetry: 'startListenGame()',
+        onBack: 'switchGameMode(\'browse\')'
+      });
+      earnPoints('listen_complete', points);
+    }
+
+    // ---- 游戏结果弹层 ----
+    function showGameResult(data) {
+      var html = '<div class="result-stars">' + data.stars + '</div>';
+      html += '<div class="result-title">' + data.title + '</div>';
+      html += '<div class="result-score">' + data.score + '</div>';
+      html += '<div class="result-points">' + data.points + '</div>';
+      html += '<div class="result-btns">';
+      html += '<button class="result-btn secondary" onclick="closeGameResult();' + data.onBack + '">返回</button>';
+      html += '<button class="result-btn primary" onclick="closeGameResult();' + data.onRetry + '">再来一局</button>';
+      html += '</div>';
+      document.getElementById('game-result-card').innerHTML = html;
+      document.getElementById('game-result-overlay').classList.add('show');
+    }
+
+    window.closeGameResult = function() {
+      document.getElementById('game-result-overlay').classList.remove('show');
+    };
+
+    // ---- 工具函数 ----
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
   })();
   </script>
   <div class="toast-container" id="toast-container"></div>
+  <!-- 游戏结果弹层 -->
+  <div class="game-result-overlay" id="game-result-overlay" onclick="if(event.target===this)closeGameResult()">
+    <div class="game-result-card" id="game-result-card"></div>
+  </div>
 </body>
 </html>
