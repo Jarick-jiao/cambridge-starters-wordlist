@@ -503,10 +503,73 @@
     .cherry-night-active .word-card { background: var(--surface); }
     .cherry-night-active .toast { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
     .cherry-night-active .skeleton { background: linear-gradient(90deg, var(--bg2) 25%, var(--rule) 50%, var(--bg2) 75%); background-size: 200% 100%; }
+
+    /* ================================================================
+       AVATAR SYSTEM — 微缩头像系统
+       ================================================================ */
+
+    /* ---- 头像基础样式（多尺寸）---- */
+    .avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent-light); border: 2px solid var(--surface); box-shadow: var(--shadow-sm); flex-shrink: 0; line-height: 1; user-select: none; }
+    .avatar-xs { width: 24px; height: 24px; font-size: 0.85rem; border-width: 1.5px; }
+    .avatar-sm { width: 32px; height: 32px; font-size: 1.1rem; }
+    .avatar-md { width: 44px; height: 44px; font-size: 1.5rem; }
+    .avatar-lg { width: 64px; height: 64px; font-size: 2.2rem; border-width: 3px; }
+    .avatar-accent { background: var(--accent2-light); border-color: var(--accent2); }
+
+    /* ---- 右上角头像按钮（与 sound/theme 按钮一组）---- */
+    .avatar-toggle { position: fixed; top: 0.8rem; right: 5.6rem; z-index: 60; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); cursor: pointer; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all 0.25s; padding: 0; line-height: 1; }
+    .avatar-toggle:hover { transform: scale(1.1); box-shadow: var(--shadow-md); border-color: var(--accent-dark); }
+    .avatar-toggle:active { transform: scale(0.92); }
+    .avatar-toggle::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: var(--accent); border: 2px solid var(--surface); border-radius: 50%; }
+
+    /* ---- 积分栏内嵌头像 ---- */
+    .points-bar .points-avatar { margin-right: 0.2rem; }
+
+    /* ---- 头像选择面板（弹层）---- */
+    .avatar-picker-overlay { position: fixed; inset: 0; background: rgba(45,42,38,0.4); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .avatar-picker-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+    .avatar-picker-card { background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 12px 40px rgba(0,0,0,0.2); padding: 1.5rem; max-width: 420px; width: 100%; animation: resultPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .avatar-picker-card h3 { margin-bottom: 0.8rem; text-align: center; color: var(--accent); }
+    .avatar-picker-preview { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .avatar-picker-name { font-weight: 700; color: var(--ink); font-size: 1.05rem; }
+    .avatar-picker-name input { text-align: center; border: 1px solid var(--rule); border-radius: var(--radius); padding: 0.4rem 0.8rem; font-size: 1rem; font-family: var(--font); width: 180px; color: var(--ink); background: var(--bg); }
+    .avatar-picker-name input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+    .avatar-picker-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; max-height: 260px; overflow-y: auto; padding: 0.2rem; }
+    .avatar-option { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border-radius: 50%; background: var(--bg2); border: 2px solid transparent; cursor: pointer; transition: all 0.15s; line-height: 1; }
+    .avatar-option:hover { transform: scale(1.15); background: var(--accent-light); }
+    .avatar-option.selected { border-color: var(--accent); background: var(--accent-light); transform: scale(1.1); }
+    .avatar-picker-actions { display: flex; gap: 0.5rem; justify-content: center; }
+    .avatar-picker-actions button { padding: 0.5rem 1.5rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; border: 1px solid var(--rule); font-family: var(--font); font-size: 0.9rem; }
+    .avatar-picker-actions .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .avatar-picker-actions .btn-secondary { background: var(--bg2); color: var(--ink); }
+
+    /* ---- 仪表盘档案卡（紧凑）---- */
+    .profile-card { display: flex; align-items: center; gap: 0.8rem; background: var(--surface); border-radius: var(--radius); padding: 0.7rem 0.9rem; border: 1px solid var(--rule); }
+    .profile-card .profile-info { flex: 1; min-width: 0; }
+    .profile-card .profile-name { font-weight: 700; font-size: 0.95rem; color: var(--ink); display: flex; align-items: center; gap: 0.4rem; }
+    .profile-card .profile-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+
+    /* ---- 紧凑统计卡片（整体卡片紧凑化）---- */
+    .dash-stat-compact { background: var(--surface); border-radius: 10px; padding: 0.6rem 0.5rem; text-align: center; border: 1px solid var(--rule-light); }
+    .dash-stat-compact .stat-num { font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+    .dash-stat-compact .stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+    .dash-stat-compact .stat-avatar { display: inline-flex; margin-bottom: 0.2rem; }
+
+    /* ---- 今日任务区头像 ---- */
+    .task-list-header { display: flex; align-items: center; gap: 0.5rem; }
+    .task-list-header h3 { margin: 0; }
+
+    /* ---- 移动端头像适配 ---- */
+    @media (max-width: 600px) {
+      .avatar-toggle { right: 5.2rem; }
+      .avatar-picker-grid { grid-template-columns: repeat(5, 1fr); }
+      .avatar-picker-card { padding: 1.2rem; }
+    }
   </style>
 </head>
 <body>
-  <!-- UX: 音效开关 + 暗色模式切换（固定右上角） -->
+  <!-- UX: 头像入口 + 音效开关 + 暗色模式切换（固定右上角） -->
+  <button class="avatar-toggle" id="avatar-toggle" onclick="openAvatarPicker()" title="我的头像" aria-label="设置头像和昵称">👧</button>
   <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="音效开关" aria-label="音效开关">🔊</button>
   <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题" aria-label="切换主题">🌙</button>
   <article class="page">
@@ -518,6 +581,7 @@
     <!-- ===== POINTS BAR ===== -->
     <div id="points-bar" class="points-bar">
       <div class="points-left">
+        <div class="avatar avatar-sm points-avatar" id="points-avatar" title="点击更换头像">👧</div>
         <div class="points-icon" id="points-icon">⭐</div>
         <div class="points-info">
           <div class="points-total"><span id="points-value">0</span> 积分</div>
@@ -665,7 +729,10 @@
           <button onclick="createTask()" style="padding:0.5rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">添加任务</button>
         </div>
         <div id="task-manage-list" style="margin:1rem 0;">
-          <h3>今日任务</h3>
+          <div class="task-list-header">
+            <div class="avatar avatar-xs task-avatar">👧</div>
+            <h3>今日任务</h3>
+          </div>
           <div id="task-manage-items" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
             <div class="skeleton skeleton-line"></div>
             <div class="skeleton skeleton-line short"></div>
@@ -688,7 +755,10 @@
         </div>
         <!-- Today tasks (rendered by JS) -->
         <div id="dashboard-tasks" style="margin:1rem 0;">
-          <h3>今日任务</h3>
+          <div class="task-list-header">
+            <div class="avatar avatar-xs task-avatar" id="task-avatar">👧</div>
+            <h3>今日任务</h3>
+          </div>
           <div id="task-list" style="background:var(--surface);border-radius:8px;padding:0.8rem;">
             <div class="skeleton skeleton-line"></div>
             <div class="skeleton skeleton-line short"></div>
@@ -2533,6 +2603,110 @@
     };
 
     // ================================================================
+    // 7.4 AVATAR SYSTEM — 微缩头像系统
+    // ----------------------------------------------------------------
+    // 预置儿童友好 emoji 头像 + 可自定义昵称
+    // 持久化到 Storage；多处复用：右上角按钮 / 积分栏 / 档案卡 / 任务区
+    // ================================================================
+    var Avatar = {
+      // 预置头像池（儿童友好：动物、人物、表情）
+      presets: [
+        '👧','👦','👶','🧒','👩','👨','👵','👴',
+        '🐱','🐶','🐰','🐼','🐻','🦊','🐨','🐯',
+        '🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦',
+        '🦄','🐲','🌸','🌟','🍎','🍒','🍓','🎈',
+        '🚀','⚽','🎨','📚','🎸','🦋','🐙','🦉'
+      ],
+      // 当前头像 + 昵称
+      emoji: '👧',
+      name: '小樱桃',
+      // 从 Storage 恢复（懒加载，Storage 定义后调用 init）
+      init: function() {
+        var saved = Storage.getJSON('avatar', null);
+        if (saved && saved.emoji) this.emoji = saved.emoji;
+        if (saved && saved.name) this.name = saved.name;
+        this.render();
+      },
+      // 渲染到所有头像位置
+      render: function() {
+        // 右上角头像按钮
+        var toggle = document.getElementById('avatar-toggle');
+        if (toggle) toggle.textContent = this.emoji;
+        // 积分栏头像
+        var pa = document.getElementById('points-avatar');
+        if (pa) pa.textContent = this.emoji;
+        // 档案卡头像
+        var pca = document.getElementById('profile-avatar');
+        if (pca) pca.textContent = this.emoji;
+        // 档案卡昵称
+        var pcn = document.getElementById('profile-name');
+        if (pcn) pcn.textContent = this.name;
+        // 任务区头像（可能有多个，按 class 批量更新）
+        var tlas = document.querySelectorAll('.task-avatar');
+        tlas.forEach(function(el) { el.textContent = this.emoji; }, this);
+        // 选择面板预览
+        var prev = document.getElementById('avatar-preview');
+        if (prev) prev.textContent = this.emoji;
+        var nameInput = document.getElementById('avatar-name-input');
+        if (nameInput) nameInput.value = this.name;
+      },
+      // 保存
+      save: function(emoji, name) {
+        this.emoji = emoji || this.emoji;
+        this.name = (name || this.name || '小樱桃').trim().slice(0, 12);
+        Storage.setJSON('avatar', { emoji: this.emoji, name: this.name });
+        this.render();
+        EventBus.emit('avatar:change', { emoji: this.emoji, name: this.name });
+      }
+    };
+
+    // ---- 头像选择面板交互 ----
+    window.openAvatarPicker = function() {
+      // 渲染头像网格
+      var grid = document.getElementById('avatar-picker-grid');
+      if (grid) {
+        var html = '';
+        Avatar.presets.forEach(function(e) {
+          html += '<button class="avatar-option' + (e === Avatar.emoji ? ' selected' : '') + '" data-emoji="' + e + '" onclick="selectAvatarPreset(\'' + e + '\')">' + e + '</button>';
+        });
+        grid.innerHTML = html;
+      }
+      // 同步预览 + 昵称
+      var prev = document.getElementById('avatar-preview');
+      if (prev) prev.textContent = Avatar.emoji;
+      var nameInput = document.getElementById('avatar-name-input');
+      if (nameInput) nameInput.value = Avatar.name;
+      // 显示面板
+      document.getElementById('avatar-picker-overlay').classList.add('show');
+      Haptics.light();
+    };
+    var _pickerSelected = null;
+    window.selectAvatarPreset = function(emoji) {
+      _pickerSelected = emoji;
+      // 更新预览
+      var prev = document.getElementById('avatar-preview');
+      if (prev) prev.textContent = emoji;
+      // 高亮选中
+      document.querySelectorAll('.avatar-option').forEach(function(b) {
+        b.classList.toggle('selected', b.getAttribute('data-emoji') === emoji);
+      });
+      SoundFX.click(); Haptics.light();
+    };
+    window.saveAvatar = function() {
+      var emoji = _pickerSelected || Avatar.emoji;
+      var name = document.getElementById('avatar-name-input').value || '小樱桃';
+      Avatar.save(emoji, name);
+      document.getElementById('avatar-picker-overlay').classList.remove('show');
+      _pickerSelected = null;
+      SoundFX.complete(); Haptics.success();
+      showToast('头像已更新！', 'success', 1500);
+    };
+    window.closeAvatarPicker = function() {
+      document.getElementById('avatar-picker-overlay').classList.remove('show');
+      _pickerSelected = null;
+    };
+
+    // ================================================================
     // 7.5 SOUND FX — Web Audio API 合成音效（无需音频文件）
     // ----------------------------------------------------------------
     // 用振荡器合成儿童友好的音效：答对/答错/完成/点击/翻牌
@@ -2776,21 +2950,36 @@
           var tasks = data.tasks || [];
           var completed = tasks.filter(function(t) { return t.status === 'completed'; }).length;
 
-          // Render stats cards
+          // Render profile card + compact stats
+          var pvEl = document.getElementById('points-value');
+          var totalPoints = pvEl ? parseInt(pvEl.textContent, 10) || 0 : 0;
+          var level = Math.floor(totalPoints / 50) + 1;
+          var levelNames = ['初学者','小萌新','小学者','小学霸','小学神','小达人','小专家','小大师'];
+          var levelName = levelNames[Math.min(level - 1, levelNames.length - 1)];
           var statsHTML = '';
-          statsHTML += '<div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:700;color:var(--accent);" id="dash-tasks">' + completed + '/' + tasks.length + '</div>'
-            + '<div style="font-size:0.8rem;color:var(--muted);">今日任务</div></div>';
-          statsHTML += '<div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:700;color:var(--green);" id="dash-streak">' + (data.streak_days || 0) + '</div>'
-            + '<div style="font-size:0.8rem;color:var(--muted);">连续天数</div></div>';
-          statsHTML += '<div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:700;color:var(--pink);" id="dash-words">' + (data.word_mastered || 0) + '</div>'
-            + '<div style="font-size:0.8rem;color:var(--muted);">已掌握单词</div></div>';
+          // 档案卡（头像 + 昵称 + 等级）— 紧凑横排
+          statsHTML += '<div class="profile-card" style="grid-column:1 / -1;">'
+            + '<div class="avatar avatar-md" id="profile-avatar">' + Avatar.emoji + '</div>'
+            + '<div class="profile-info">'
+            + '  <div class="profile-name"><span id="profile-name">' + Avatar.name + '</span>'
+            + '    <span style="font-size:0.7rem;background:var(--accent-light);color:var(--accent);padding:0.1rem 0.5rem;border-radius:8px;font-weight:600;">Lv.' + level + ' ' + levelName + '</span>'
+            + '  </div>'
+            + '  <div class="profile-meta">累计 ' + totalPoints + ' 积分 · 坚持 ' + (data.streak_days || 0) + ' 天</div>'
+            + '</div></div>';
+          // 紧凑统计卡片
+          statsHTML += '<div class="dash-stat-compact">'
+            + '<div class="stat-num" style="color:var(--accent);" id="dash-tasks">' + completed + '/' + tasks.length + '</div>'
+            + '<div class="stat-label">今日任务</div></div>';
+          statsHTML += '<div class="dash-stat-compact">'
+            + '<div class="stat-num" style="color:var(--green);" id="dash-streak">' + (data.streak_days || 0) + '</div>'
+            + '<div class="stat-label">连续天数</div></div>';
+          statsHTML += '<div class="dash-stat-compact">'
+            + '<div class="stat-num" style="color:var(--pink);" id="dash-words">' + (data.word_mastered || 0) + '</div>'
+            + '<div class="stat-label">已掌握单词</div></div>';
           var mathAcc = data.math_total > 0 ? Math.round(data.math_correct / data.math_total * 100) : 0;
-          statsHTML += '<div style="background:var(--surface);border-radius:12px;padding:1rem;text-align:center;">'
-            + '<div style="font-size:2rem;font-weight:700;color:var(--purple);" id="dash-math">' + mathAcc + '%</div>'
-            + '<div style="font-size:0.8rem;color:var(--muted);">今日数学正确率</div></div>';
+          statsHTML += '<div class="dash-stat-compact">'
+            + '<div class="stat-num" style="color:var(--purple);" id="dash-math">' + mathAcc + '%</div>'
+            + '<div class="stat-label">数学正确率</div></div>';
           document.getElementById('dashboard-stats').innerHTML = statsHTML;
 
           // Task list (clickable cards)
@@ -4415,10 +4604,12 @@
     GameRegistry.renderTabs('game-mode-tabs');
 
     // ================================================================
-    // 初始化：UX 模块状态恢复（音效/触觉/主题，依赖 Storage 已定义）
+    // 初始化：UX 模块状态恢复（音效/触觉/主题/头像，依赖 Storage 已定义）
     // ================================================================
     SoundFX.enabled = Storage.get('sound_enabled', '1') !== '0';
     Haptics.enabled = Storage.get('haptics_enabled', '1') !== '0';
+    // 初始化头像（从 Storage 恢复并渲染到所有位置）
+    Avatar.init();
     // 恢复保存的主题
     var savedThemeInit = Storage.get('theme', '');
     if (savedThemeInit && Theme.get(savedThemeInit)) {
@@ -4440,6 +4631,23 @@
   <!-- 游戏结果弹层 -->
   <div class="game-result-overlay" id="game-result-overlay" onclick="if(event.target===this)closeGameResult()">
     <div class="game-result-card" id="game-result-card"></div>
+  </div>
+  <!-- 头像选择面板 -->
+  <div class="avatar-picker-overlay" id="avatar-picker-overlay" onclick="if(event.target===this)closeAvatarPicker()">
+    <div class="avatar-picker-card">
+      <h3>选择我的头像</h3>
+      <div class="avatar-picker-preview">
+        <div class="avatar avatar-lg" id="avatar-preview">👧</div>
+        <div class="avatar-picker-name">
+          <input type="text" id="avatar-name-input" placeholder="输入昵称" maxlength="12" value="小樱桃">
+        </div>
+      </div>
+      <div class="avatar-picker-grid" id="avatar-picker-grid"></div>
+      <div class="avatar-picker-actions">
+        <button class="btn-secondary" onclick="closeAvatarPicker()">取消</button>
+        <button class="btn-primary" onclick="saveAvatar()">保存</button>
+      </div>
+    </div>
   </div>
 </body>
 </html>
